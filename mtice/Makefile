@@ -10,7 +10,8 @@ SRC :=	$(SRC_DIR)/main.c \
 		$(SRC_DIR)/lexing.c \
 		$(SRC_DIR)/redirects.c \
 		$(SRC_DIR)/parsing_utils.c \
-		$(SRC_DIR)/free_utils.c
+		$(SRC_DIR)/free_utils.c \
+		$(SRC_DIR)/execution.c
 
 OBJ := $(patsubst $(SRC_DIR)/%,$(OBJ_DIR)/%,$(SRC:.c=.o))
 INCLUDE := inc

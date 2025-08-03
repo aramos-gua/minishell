@@ -12,7 +12,38 @@
 
 #include "../inc/minishell.h"
 
+int	pipes_init(int **pipes, t_data *all)
+{
+	int	i;
+
+	i = 0;
+	pipes = malloc(all->info.total_proc);
+	if (!pipes)
+		return (ft_printf("Error: Malloc Failure\n"), 1);
+	while (i < all->info.total_proc - 1)
+	{
+		pipes[i] = malloc(2 * sizeof(int *));
+		if (!pipes)
+		{
+			while (--i >= 0)
+				free (pipes[i]);
+			free(pipes);
+			return (ft_printf("Error: Malloc Failure\n"), 1);
+		}
+		printf("total_proc: %d\n", all->info.total_proc);
+		ft_printf("1 pipe created\n");
+		i++;
+	}
+	return (0);
+}
+
 int	execution(t_data *all)
 {
-	
+	int	*pipes;
+
+	//if its builtin, dont exit
+	//builtin(all);
+	//if needs fork
+	pipes_init(&pipes, all);
+	return (0);
 }
