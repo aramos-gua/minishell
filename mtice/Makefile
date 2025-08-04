@@ -4,14 +4,14 @@ SRC_DIR := src
 OBJ_DIR := obj
 
 SRC :=	$(SRC_DIR)/main.c \
-		$(SRC_DIR)/envp.c \
-		$(SRC_DIR)/parsing.c \
-		$(SRC_DIR)/input_check.c \
-		$(SRC_DIR)/lexing.c \
-		$(SRC_DIR)/redirects.c \
-		$(SRC_DIR)/parsing_utils.c \
-		$(SRC_DIR)/free_utils.c \
-		$(SRC_DIR)/execution.c
+		$(SRC_DIR)/parsing/envp.c \
+		$(SRC_DIR)/parsing/parsing.c \
+		$(SRC_DIR)/parsing/input_check.c \
+		$(SRC_DIR)/parsing/lexing.c \
+		$(SRC_DIR)/parsing/redirects.c \
+		$(SRC_DIR)/utils/parsing_utils.c \
+		$(SRC_DIR)/utils/free_utils.c \
+		$(SRC_DIR)/execution/execution.c
 
 OBJ := $(patsubst $(SRC_DIR)/%,$(OBJ_DIR)/%,$(SRC:.c=.o))
 INCLUDE := inc
@@ -31,6 +31,9 @@ $(NAME): $(OBJ) $(LIBFT) $(FT_PRINTF) $(GNL)
 		
 $(OBJ): $(OBJ_DIR)%.o:$(SRC_DIR)%.c
 		@mkdir -p $(OBJ_DIR)
+		@mkdir -p $(OBJ_DIR)/execution
+		@mkdir -p $(OBJ_DIR)/parsing
+		@mkdir -p $(OBJ_DIR)/utils
 		@$(CC) $(CFLAGS) -c -o $@ $^
 
 $(LIBFT):
