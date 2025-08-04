@@ -71,4 +71,7 @@ int		is_builtin(char *s);
 void	free_double_char(char **arr);
 void	handle_error(char *message, char exit_status);
 
+//execution.c
+int	execution(t_data *all);
+
 #endif
