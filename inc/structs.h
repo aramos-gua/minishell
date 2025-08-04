@@ -51,7 +51,7 @@ typedef struct s_token
 	struct s_token	*prev;
 	char			*proces;
 	int				pid;
-	int		process_nbr;
+	int				process_nbr;
 	int				type; //e.g. command, argument, operator, file
 	char			*token; //the token itself e.g. echo
 	struct s_token	*next;

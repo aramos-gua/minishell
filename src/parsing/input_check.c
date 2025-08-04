@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../inc/minishell.h"
 
 //after looking for syntax errors
 //this function breaks the raw input into a 2d array of processes
@@ -35,20 +35,50 @@ void	find_processes(t_data *all, char *input)
 
 static void	deal_redirect(char *input, int *i)
 {
-	if (input[*i] == '<' && input[*i + 1] == '\0')
+	char	syntax[3];
+	int		j;
+
+	j = 0;
+	if (input[*i] == '<')
 	{
-		if (input[*i] == '<' && input[*i - 1] == '>')
-			printf("bash: syntax error near unexpected token `<'\n");
-		else
-			printf("bash: syntax error near unexpected token `newline'\n");
+		(*i)++;
+		if (input[*i] == '<' || input[*i] == '>')
+			(*i)++;
+		if (input[*i] == '<')
+			(*i)++;
 	}
-	else if (input[*i] == '>' && input[*i + 1] == '\0')
+	else if (input[*i] == '>')
 	{
-		if (input[*i] == '>' && input[*i - 1] == ' ')
-			printf("bash: syntax error near unexpected token `>'\n");
-		else
-			printf("bash: syntax error near unexpected token `newline'\n");
+		(*i)++;
+		if (input[*i] == '>')
+			(*i)++;
 	}
+	if (input[*i] == '<' || input[*i] == '>')
+	{
+		while (input[(*i)] == '>' && j < 2)
+			syntax[j++] = input[(*i)++];
+		while (input[(*i)] == '<' && j < 2)
+			syntax[j++] = input[(*i)++];
+		syntax[j] = '\0';
+		if (j > 0)
+			printf("bash: syntax error near unexpected token `%s'\n", syntax), exit(1);
+	}
+	//else if (input[*i] == '>')
+	//	something;
+	// if (input[*i] == '<' && input[*i + 1] == '\0')
+	// {
+	// 	if (input[*i] == '<' && input[*i - 1] == '>')
+	// 		printf("bash: syntax error near unexpected token `<'\n");
+	// 	else
+	// 		printf("bash: syntax error near unexpected token `newline'\n");
+	// }
+	// else if (input[*i] == '>' && input[*i + 1] == '\0')
+	// {
+	// 	if (input[*i] == '>' && input[*i - 1] == ' ')
+	// 		printf("bash: syntax error near unexpected token `>'\n");
+	// 	else
+	// 		printf("bash: syntax error near unexpected token `newline'\n");
+	// }
 }
 
 //deals with expansions
@@ -84,6 +114,8 @@ static void	deal_multiple_pipes(char *input, int *i)
 		{
 			j -= 2;
 			syntax = malloc(sizeof(char) * (j + 1));
+			if (!syntax)
+				return ;
 			syntax[j] = '\0';
 			while (j-- > 0)
 				syntax[j] = '|';

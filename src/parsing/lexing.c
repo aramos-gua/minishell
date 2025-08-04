@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../inc/minishell.h"
 
 //assigns to each t_token its type, as defined in the enum t_type
 //must handle specific cases
@@ -69,14 +69,6 @@ static void	token_pretty(t_token *tokens)
 			del_last(temp->prev);
 			old_token = temp->token;
 			temp->token = ft_strjoin("<", old_token);
-			free(old_token);
-		}
-		else if (!ft_strncmp(temp->token, ">>\0", 3))
-		{
-			temp = temp->next;
-			del_last(temp->prev);
-			old_token = temp->token;
-			temp->token = ft_strjoin(">>", old_token);
 			free(old_token);
 		}
 		else if (temp->token[0] == '>' && temp->token[1] == '\0')
