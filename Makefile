@@ -9,6 +9,7 @@ SRC :=	$(SRC_DIR)/main.c \
 		$(SRC_DIR)/parsing/input_check.c \
 		$(SRC_DIR)/parsing/lexing.c \
 		$(SRC_DIR)/parsing/redirects.c \
+		$(SRC_DIR)/utils/utils.c \
 		$(SRC_DIR)/utils/parsing_utils.c \
 		$(SRC_DIR)/utils/free_utils.c \
 		$(SRC_DIR)/execution/execution.c
