@@ -38,6 +38,9 @@ SRC := $(SRC_DIR)/ft_atoi.c \
 	   $(SRC_DIR)/ft_substr.c \
 	   $(SRC_DIR)/ft_tolower.c \
 	   $(SRC_DIR)/ft_toupper.c \
+	   $(SRC_DIR)/ft_isspace.c \
+	   $(SRC_DIR)/del_char.c \
+	   $(SRC_DIR)/sub_char.c \
 
 OBJ := $(patsubst $(SRC_DIR)/%, $(OBJ_DIR)/%, $(SRC:.c=.o))
 

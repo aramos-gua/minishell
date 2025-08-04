@@ -6,7 +6,7 @@
 /*   By: mtice <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 13:50:14 by mtice             #+#    #+#             */
-/*   Updated: 2024/12/05 17:16:26 by mtice            ###   ########.fr       */
+/*   Updated: 2025/08/03 15:15:37 by mtice            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,5 +53,10 @@ void	ft_putchar_fd(char c, int fd);
 void	ft_putstr_fd(char *s, int fd);
 void	ft_putendl_fd(char *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
+
+//Functions added after submission
+int		ft_isspace(char c);
+void	del_char(char *s, char d);
+void	sub_char(char *s, char sub, char r);
 
 #endif
