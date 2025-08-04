@@ -6,7 +6,7 @@
 /*   By: mtice <mtice@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 20:56:54 by mtice             #+#    #+#             */
-/*   Updated: 2025/07/27 23:25:18 by mtice            ###   ########.fr       */
+/*   Updated: 2025/08/03 20:10:59 by mtice            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,9 @@ int	parsing(t_data *all, char *input)
 	lexing(all);
 	printf("----------TOKEN LIST----------------\n");
 	print_t_token(all->tokens);
-	//redirects(all, all->tokens);
 	printf("---------- REDIRECTS LIST-----------\n");
-	//print_t_redir(all->redirects); 
+	redirects(all, all->tokens);
+	print_t_redir(all->redirects);
+	
 	return (1);
 }

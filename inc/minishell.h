@@ -61,13 +61,14 @@ t_token	*add_at_end(t_token *tail, char *token, int nbr);
 t_token	*del_last(t_token *tail);
 t_token	*del_inter(t_token *tail, int position);
 void	print_t_token(t_token *tokens);
-int		ft_isspace(char c);
+char	*ft_del_char(char *s, char d);
 char	*join_strings(char *s1, char *s2);
+
+//utils
+int		is_builtin(char *s);
 
 //free_utils
 void	free_double_char(char **arr);
 void	handle_error(char *message, char exit_status);
 
-//execution.c
-int	execution(t_data *all);
 #endif

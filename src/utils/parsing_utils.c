@@ -6,7 +6,7 @@
 /*   By: mtice <mtice@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:16:04 by mtice             #+#    #+#             */
-/*   Updated: 2025/07/22 16:26:22 by mtice            ###   ########.fr       */
+/*   Updated: 2025/08/03 20:11:00 by mtice            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,15 +107,6 @@ void	print_t_token(t_token *tokens)
 		printf("process:%-2d", temp->process_nbr);
 		printf("\n");
 	}
-}
-
-int	ft_isspace(char c)
-{
-	if (c == ' ' || c == '\f' || c == '\n'
-		|| c == '\r' || c == '\t' || c == '\v')
-		return (1);
-	else
-		return (0);
 }
 
 // char	*join_strings(char *s1, char *s2)

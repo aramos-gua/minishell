@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
-//TODO: change * substitution in deal_quotes() to SUB (ascii 26)
 
 //after looking for syntax errors
 //this function breaks the raw input into a 2d array of processes
@@ -53,7 +52,6 @@ static void	deal_redirect(char *input, int *i)
 }
 
 //deals with expansions
-//TODO: should this be here or later in the code? I think later in the code
 static void	deal_expansion(char *input, int *i, int *len)
 {
 	(void)len;

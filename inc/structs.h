@@ -26,13 +26,14 @@ typedef	struct	s_proc
 
 //-----------------------------------------------------------------------------
 //stores the redirects for each process (DOUBLY-CIRCULAR-LIST)
+//name: if (RE_IN || RE_OUT || APPEND) name of the file, else if (HERE_DOC), delimiter
 //fd : the fd belonging to the OUTFILE or INFILE
 //type : (enum) INFILE or OUTFILE
 //process_no : the number of the process to which it belongs (will always start at 0)
 typedef struct s_redir
 {
 	struct	s_redir *next;
-	char			*filename;
+	char			*name;
 	int				type;
 	int				fd;
 	int				process_nbr;
@@ -48,7 +49,7 @@ typedef struct s_redir
 typedef struct s_token
 {
 	struct s_token	*prev;
-	char			*process;
+	char			*proces;
 	int				pid;
 	int		process_nbr;
 	int				type; //e.g. command, argument, operator, file
@@ -63,6 +64,7 @@ typedef struct s_token
 //c_envp: a copy of envp obtained in the main TODO: use to search paths && alter env vars
 typedef	struct s_data
 {
+	int		err;
 	char	**c_envp;
 	t_proc	info;
 	t_token	*tokens;
@@ -78,12 +80,11 @@ typedef	enum e_type
 	UNDEFINED,
 	COMMAND,
 	ARGUMENT,
-	PIPE,
-	OPERATOR,
+	BUILTIN,
 	RE_IN,
-	INFILE,
 	RE_OUT,
-	OUTFILE,
+	HERE_DOC,
+	APPEND
 }			t_type;
 
 #endif
