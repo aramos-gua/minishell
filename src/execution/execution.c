@@ -31,7 +31,7 @@ void	child_process(int i, t_data *all, int **pipes)
 		close(pipes[j][0]);
 		close(pipes[j][1]);
 	}
-	close(all->redirects->);
+	close(all->redirects->fd);
 	close(all->redirects->);
 	execute_command(all, pipes);
 }
