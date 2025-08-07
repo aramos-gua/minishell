@@ -6,7 +6,7 @@
 /*   By: Alejandro Ramos <alejandro.ramos.gua@gmai  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 16:12:22 by Alejandro Ram     #+#    #+#             */
-/*   Updated: 2025/08/03 16:39:06 by Alejandro Ram    ###   ########.fr       */
+/*   Updated: 2025/08/07 19:50:41 by Alejandro Ram    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	child_process(int i, t_data *all, int **pipes)
 		close(pipes[j][1]);
 	}
 	close(all->redirects->fd);
-	close(all->redirects->);
+	close(all->redirects->fd + 1);
 	execute_command(all, pipes);
 }
 
@@ -42,7 +42,7 @@ int	pipes_init(int **pipes, t_data *all)
 
 	i = 0;
 	ft_printf("starting pipes_init\n");
-	pipes = malloc(all->info.total_proc);
+	pipes = malloc(all->info.total_proc - 1) * sizeof (int *);
 	if (!pipes)
 		return (ft_printf("Error: Malloc Failure\n"), 1);
 	while (i < all->info.total_proc - 1)
@@ -95,7 +95,7 @@ void	open_pipes(int **pipes, t_data *all)
 
 	i = 0;
 	ft_printf("opening pipes\n");
-	while (i < all->info.total_proc)
+	while (i < all->info.total_proc - 1)
 	{
 		if (pipe(pipes[i]) == -1)
 		{
@@ -117,14 +117,14 @@ void	open_pipes(int **pipes, t_data *all)
 
 int	execution(t_data *all)
 {
-	int	*pipes;
+	int	**pipes;
 
 	//if its builtin, dont exit
 	//builtin(all);
 	//if needs fork
 	ft_printf("\nStarting exec\n");
 	ft_printf("\n----------EXECUTION---------\n");
-	pipes_init(&pipes, all);
-	open_pipes(&pipes, all);
+	pipes_init(pipes, all);
+	open_pipes(pipes, all);
 	return (0);
 }
