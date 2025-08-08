@@ -104,7 +104,6 @@ static char *find_token(char *process, int i, int len)
     return (p);
 }
 
-
 void	lexing(t_data *all)
 {
 	int		i;
@@ -122,33 +121,37 @@ void	lexing(t_data *all)
 			while(ft_isspace(all->info.procs[j][i]) && all->info.procs[j][i] != '\0')
 				i++;
 			len = 0;
-			while(!ft_isspace(all->info.procs[j][i]) && all->info.procs[j][i] != '\0')
+			if (all->info.procs[j][i] == '"')
 			{
-				if (all->info.procs[j][i + 1] == '<' || all->info.procs[j][i + 1] == '>')
-				{
-					i++, len++;
-					break;
-				}
-				else if (all->info.procs[j][i] == '"')
-				{
-					i++, len++;
-					while (all->info.procs[j][i] != '"' && all->info.procs[j][i] != '\0')
-						i++, len++;
-					i++, len++;
-					break;
-				}
-				else if (all->info.procs[j][i] == '\'')
-				{
-					i++, len++;
-					while (all->info.procs[j][i] != '\'' && all->info.procs[j][i] != '\0')
-						i++, len++;
-					i++, len++;
-					break;
-				}
 				i++, len++;
+				while (all->info.procs[j][i] != '"' && all->info.procs[j][i] != '\0')
+					i++, len++;
 			}
-			token = find_token(all->info.procs[j], i, len);
+			if (all->info.procs[j][i] == '\'')
+			{
+				i++, len++;
+				while (all->info.procs[j][i] != '\'' && all->info.procs[j][i] != '\0')
+					i++, len++;
+			}
+			while (!ft_isspace(all->info.procs[j][i]) && all->info.procs[j][i] != '\0')
+				i++, len++;
+			if (all->info.procs[j][i] == '>')
+			{
+				i++, len++;
+				if (all->info.procs[j][i] == '>')
+					i++, len++;
+				break;
+			}
+			else if (all->info.procs[j][i] == '<')
+			{
+				i++, len++;
+				if (all->info.procs[j][i] == '<')
+					i++, len++;
+				break;
+			}
+			token = find_token(all->info.procs[j], i--, len);
 			tokens = add_at_end(tokens, token, j);
+			i++;
 		}
 		j++;
 	}
@@ -156,3 +159,55 @@ void	lexing(t_data *all)
 	assign_types(tokens);
 	all->tokens = tokens;
 }
+
+// void	lexing(t_data *all)
+// {
+// 	int		i;
+// 	int		j;
+// 	int		len;
+// 	char	*token;
+// 	t_token	*tokens = NULL;
+//
+// 	j = 0;
+// 	while (all->info.procs[j] != NULL)
+// 	{
+// 		i = 0;
+// 		while (all->info.procs[j][i] != '\0')
+// 		{
+// 			while(ft_isspace(all->info.procs[j][i]) && all->info.procs[j][i] != '\0')
+// 				i++;
+// 			len = 0;
+// 			while(!ft_isspace(all->info.procs[j][i]) && all->info.procs[j][i] != '\0')
+// 			{
+// 				if (all->info.procs[j][i + 1] == '<' || all->info.procs[j][i + 1] == '>')
+// 				{
+// 					i++, len++;
+// 					break;
+// 				}
+// 				else if (all->info.procs[j][i] == '"')
+// 				{
+// 					i++, len++;
+// 					while (all->info.procs[j][i] != '"' && all->info.procs[j][i] != '\0')
+// 						i++, len++;
+// 					i++, len++;
+// 					break;
+// 				}
+// 				else if (all->info.procs[j][i] == '\'')
+// 				{
+// 					i++, len++;
+// 					while (all->info.procs[j][i] != '\'' && all->info.procs[j][i] != '\0')
+// 						i++, len++;
+// 					i++, len++;
+// 					break;
+// 				}
+// 				i++, len++;
+// 			}
+// 			token = find_token(all->info.procs[j], i, len);
+// 			tokens = add_at_end(tokens, token, j);
+// 		}
+// 		j++;
+// 	}
+// 	token_pretty(tokens);
+// 	assign_types(tokens);
+// 	all->tokens = tokens;
+// }

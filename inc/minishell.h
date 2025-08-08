@@ -64,6 +64,7 @@ void	print_t_token(t_token *tokens);
 
 //utils
 int		is_builtin(char *s);
+int		is_shell_var(char *s);
 
 //free_utils
 void	free_double_char(char **arr);

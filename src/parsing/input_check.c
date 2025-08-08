@@ -33,53 +33,53 @@ void	find_processes(t_data *all, char *input)
 	all->info = info;
 }
 
-static void	deal_redirect(char *input, int *i)
-{
-	char	syntax[3];
-	int		j;
-
-	j = 0;
-	if (input[*i] == '<')
-	{
-		(*i)++;
-		if (input[*i] == '<' || input[*i] == '>')
-			(*i)++;
-		if (input[*i] == '<')
-			(*i)++;
-	}
-	else if (input[*i] == '>')
-	{
-		(*i)++;
-		if (input[*i] == '>')
-			(*i)++;
-	}
-	if (input[*i] == '<' || input[*i] == '>')
-	{
-		while (input[(*i)] == '>' && j < 2)
-			syntax[j++] = input[(*i)++];
-		while (input[(*i)] == '<' && j < 2)
-			syntax[j++] = input[(*i)++];
-		syntax[j] = '\0';
-		if (j > 0)
-			printf("bash: syntax error near unexpected token `%s'\n", syntax), exit(1);
-	}
-	//else if (input[*i] == '>')
-	//	something;
-	// if (input[*i] == '<' && input[*i + 1] == '\0')
-	// {
-	// 	if (input[*i] == '<' && input[*i - 1] == '>')
-	// 		printf("bash: syntax error near unexpected token `<'\n");
-	// 	else
-	// 		printf("bash: syntax error near unexpected token `newline'\n");
-	// }
-	// else if (input[*i] == '>' && input[*i + 1] == '\0')
-	// {
-	// 	if (input[*i] == '>' && input[*i - 1] == ' ')
-	// 		printf("bash: syntax error near unexpected token `>'\n");
-	// 	else
-	// 		printf("bash: syntax error near unexpected token `newline'\n");
-	// }
-}
+// static void	deal_redirect(char *input, int *i)
+// {
+// 	char	syntax[3];
+// 	int		j;
+//
+// 	j = 0;
+// 	if (input[*i] == '<')
+// 	{
+// 		(*i)++;
+// 		if (input[*i] == '<' || input[*i] == '>')
+// 			(*i)++;
+// 		if (input[*i] == '<')
+// 			(*i)++;
+// 	}
+// 	else if (input[*i] == '>')
+// 	{
+// 		(*i)++;
+// 		if (input[*i] == '>')
+// 			(*i)++;
+// 	}
+// 	if (input[*i] == '<' || input[*i] == '>')
+// 	{
+// 		while (input[(*i)] == '>' && j < 2)
+// 			syntax[j++] = input[(*i)++];
+// 		while (input[(*i)] == '<' && j < 2)
+// 			syntax[j++] = input[(*i)++];
+// 		syntax[j] = '\0';
+// 		if (j > 0)
+// 			printf("bash: syntax error near unexpected token `%s'\n", syntax), exit(1);
+// 	}
+// 	//else if (input[*i] == '>')
+// 	//	something;
+// 	// if (input[*i] == '<' && input[*i + 1] == '\0')
+// 	// {
+// 	// 	if (input[*i] == '<' && input[*i - 1] == '>')
+// 	// 		printf("bash: syntax error near unexpected token `<'\n");
+// 	// 	else
+// 	// 		printf("bash: syntax error near unexpected token `newline'\n");
+// 	// }
+// 	// else if (input[*i] == '>' && input[*i + 1] == '\0')
+// 	// {
+// 	// 	if (input[*i] == '>' && input[*i - 1] == ' ')
+// 	// 		printf("bash: syntax error near unexpected token `>'\n");
+// 	// 	else
+// 	// 		printf("bash: syntax error near unexpected token `newline'\n");
+// 	// }
+// }
 
 //deals with expansions
 static void	deal_expansion(char *input, int *i, int *len)
@@ -179,8 +179,8 @@ void	process_input(char *input)
 			deal_multiple_pipes(input, &i);
 		else if (input[i] == '$')
 			deal_expansion(input, &i, &len);
-		else if (input[i] == '<' || input[i] == '>')
-		 	deal_redirect(input, &i);
+		// else if (input[i] == '<' || input[i] == '>')
+		//  	deal_redirect(input, &i);
 		i++;
 	}
 }

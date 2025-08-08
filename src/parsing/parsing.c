@@ -10,14 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
-//TODO: fix the segfault when trying to build the redirects struct
+#include "../../inc/minishell.h"
+//TODO:re-structure lexing to immediately break down into tokens
 int	parsing(t_data *all, char *input)
 {
 	if (!input)
 		return (1);
 	//printf("input: %s\n", input);
-	process_input(input);
+	//process_input(input);
 	//printf("input: %s\n", input);
 	find_processes(all, input);
 	//int j = 0;
