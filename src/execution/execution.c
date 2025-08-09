@@ -21,7 +21,7 @@ void	child_process(int i, t_data *all, int **pipes)
 	if (i == 0)
 		first_command(i, all, pipes);
 	else
-		dup(pipes[i - 1][0], STDIN_FILENO);
+		dup2(pipes[i - 1][0], STDIN_FILENO);
 	if (i == all->info.total_proc - 1)
 		last_command(all, pipes);
 	else
@@ -42,12 +42,12 @@ int	pipes_init(int **pipes, t_data *all)
 
 	i = 0;
 	ft_printf("starting pipes_init\n");
-	pipes = malloc(all->info.total_proc - 1) * sizeof (int *);
+	pipes = malloc((all->info.total_proc - 1) * sizeof (int *));
 	if (!pipes)
 		return (ft_printf("Error: Malloc Failure\n"), 1);
 	while (i < all->info.total_proc - 1)
 	{
-		pipes[i] = malloc(2 * sizeof(int *));
+		pipes[i] = malloc(2 * sizeof(int));
 		if (!pipes)
 		{
 			while (--i >= 0)
@@ -64,8 +64,9 @@ int	pipes_init(int **pipes, t_data *all)
 
 static void	fork_init(t_data *all, int **pipes)
 {
-	int		i;
-	pid_t	pid;
+	int	  	i;
+	pid_t 	pid;
+  t_token *token;
 
 	i = 0;
 	ft_printf("starting fork_init\n");
@@ -77,8 +78,10 @@ static void	fork_init(t_data *all, int **pipes)
 			ft_printf("Error: Fork Failure\n");
 			exit(1);
 		}
-		if (i == all->info.total_proc - 1)
-			all->tokens[i].pid = pid;
+    token = all->tokens;
+		while (token->next->process_nbr != 0)
+      token = token->next;
+		token->last_pid = pid;
 		if (pid == 0)
 		{
 			sleep(100);
@@ -117,14 +120,14 @@ void	open_pipes(int **pipes, t_data *all)
 
 int	execution(t_data *all)
 {
-	int	**pipes;
+	int	*pipes;
 
 	//if its builtin, dont exit
 	//builtin(all);
 	//if needs fork
 	ft_printf("\nStarting exec\n");
 	ft_printf("\n----------EXECUTION---------\n");
-	pipes_init(pipes, all);
-	open_pipes(pipes, all);
+	pipes_init(&pipes, all);
+	open_pipes(&pipes, all);
 	return (0);
 }
