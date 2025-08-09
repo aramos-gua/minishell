@@ -7,7 +7,9 @@ SRC :=	$(SRC_DIR)/main.c \
 		$(SRC_DIR)/parsing/envp.c \
 		$(SRC_DIR)/parsing/parsing.c \
 		$(SRC_DIR)/parsing/input_check.c \
+		$(SRC_DIR)/parsing/tokeniser.c \
 		$(SRC_DIR)/parsing/lexing.c \
+		$(SRC_DIR)/parsing/expansion.c\
 		$(SRC_DIR)/parsing/redirects.c \
 		$(SRC_DIR)/utils/utils.c \
 		$(SRC_DIR)/utils/parsing_utils.c \

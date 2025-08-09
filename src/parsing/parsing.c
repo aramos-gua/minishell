@@ -6,7 +6,7 @@
 /*   By: mtice <mtice@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 20:56:54 by mtice             #+#    #+#             */
-/*   Updated: 2025/08/03 20:10:59 by mtice            ###   ########.fr       */
+/*   Updated: 2025/08/10 00:14:15 by mtice            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,9 @@ int	parsing(t_data *all, char *input)
 {
 	if (!input)
 		return (1);
-	//printf("input: %s\n", input);
-	//process_input(input);
-	//printf("input: %s\n", input);
+	process_input(input);
 	find_processes(all, input);
-	//int j = 0;
-	// while (all->info.procs[j] != NULL)
-	// 	printf("%s\n", all->info.procs[j++]);
-	// printf("%d\n", all->info.total_proc);
+	tokeniser(all);
 	lexing(all);
 	printf("----------TOKEN LIST----------------\n");
 	print_t_token(all->tokens);

@@ -6,7 +6,7 @@
 /*   By: mtice <mtice@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/27 22:48:45 by mtice             #+#    #+#             */
-/*   Updated: 2025/08/03 20:06:46 by mtice            ###   ########.fr       */
+/*   Updated: 2025/08/10 00:14:11 by mtice            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,11 @@ static t_redir	*add(t_redir *tail, t_token *tokens) //same add_at_end function
 
 	new_node = create();
 	new_node->type = tokens->type;
-	if (new_node->type == RE_IN || new_node->type == RE_OUT)
-		new_node->name = (&tokens->token[1]);
-	else if (new_node->type == APPEND || new_node->type == HERE_DOC)
-		new_node->name = &(tokens->token[2]);
+	new_node->name = tokens->token;
+	// if (new_node->type == RE_IN || new_node->type == RE_OUT)
+	// 	new_node->name = (&tokens->token[1]);
+	// else if (new_node->type == APPEND || new_node->type == HERE_DOC)
+	// 	new_node->name = &(tokens->token[2]);
 	printf("name: %s\n", tokens->token);
 	new_node->process_nbr = tokens->process_nbr;
 	if (tail == NULL)
@@ -102,6 +103,7 @@ void	redirects(t_data *all, t_token *tokens)
 				redirects->fd = open(redirects->name, O_APPEND, 00777);
 			if (redirects->fd < 0)
 				perror(redirects->name); //TODO: return to main
+			close(redirects->fd);
 		}
 		temp = temp->next;
 	} while (temp != tokens->next);

@@ -6,7 +6,7 @@
 /*   By: mtice <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 15:29:12 by mtice             #+#    #+#             */
-/*   Updated: 2025/07/16 18:40:32 by mtice            ###   ########.fr       */
+/*   Updated: 2025/08/09 23:39:41 by mtice            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,15 @@ int		parsing(t_data *all, char *input);
 void	find_processes(t_data *all, char *input);
 void	process_input(char *input);
 
+//tokeniser.c
+char	*find_token(char *process, int i, int len);
+void	tokeniser(t_data *all);
+
 //lexing.c
 void	lexing(t_data *all);
-char	**find_subprocesses(char *process);
+
+//expansion.c
+char	*expansion(t_data *all, char *token);
 
 //redirects.c
 void	redirects(t_data *all, t_token *tokens);

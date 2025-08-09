@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../inc/minishell.h"
 
 //returns a non-zero value if the string is a builtin
 //returns zero if not
@@ -34,6 +34,7 @@ int	is_builtin(char *s)
 		return (0);
 }
 
+//TODO: change function so that it searches the path (exception for old pwd and pwd)
 int	is_shell_var(char *s)
 {
 	if (!ft_strncmp("ENV\0", s, 4))

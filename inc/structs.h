@@ -6,7 +6,7 @@
 /*   By: mtice <mtice@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/14 13:54:53 by mtice             #+#    #+#             */
-/*   Updated: 2025/07/16 18:52:59 by mtice            ###   ########.fr       */
+/*   Updated: 2025/08/09 23:12:00 by mtice            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,10 +81,24 @@ typedef	enum e_type
 	COMMAND,
 	ARGUMENT,
 	BUILTIN,
+	OPERATOR,
 	RE_IN,
 	RE_OUT,
 	HERE_DOC,
 	APPEND
 }			t_type;
+
+typedef	enum e_builtin
+{
+	NOT_BUILTIN,
+	ECHO,
+	CD,
+	PWD,
+	EXPORT,
+	UNSET,
+	ENV,
+	EXIT
+	
+}			t_builtin;
 
 #endif

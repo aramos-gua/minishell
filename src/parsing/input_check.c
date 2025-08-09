@@ -6,7 +6,7 @@
 /*   By: mtice <mtice@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 19:57:22 by mtice             #+#    #+#             */
-/*   Updated: 2025/07/25 19:57:27 by mtice            ###   ########.fr       */
+/*   Updated: 2025/08/09 20:50:13 by mtice            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,64 +31,6 @@ void	find_processes(t_data *all, char *input)
 	}
 	info.total_proc = j;
 	all->info = info;
-}
-
-// static void	deal_redirect(char *input, int *i)
-// {
-// 	char	syntax[3];
-// 	int		j;
-//
-// 	j = 0;
-// 	if (input[*i] == '<')
-// 	{
-// 		(*i)++;
-// 		if (input[*i] == '<' || input[*i] == '>')
-// 			(*i)++;
-// 		if (input[*i] == '<')
-// 			(*i)++;
-// 	}
-// 	else if (input[*i] == '>')
-// 	{
-// 		(*i)++;
-// 		if (input[*i] == '>')
-// 			(*i)++;
-// 	}
-// 	if (input[*i] == '<' || input[*i] == '>')
-// 	{
-// 		while (input[(*i)] == '>' && j < 2)
-// 			syntax[j++] = input[(*i)++];
-// 		while (input[(*i)] == '<' && j < 2)
-// 			syntax[j++] = input[(*i)++];
-// 		syntax[j] = '\0';
-// 		if (j > 0)
-// 			printf("bash: syntax error near unexpected token `%s'\n", syntax), exit(1);
-// 	}
-// 	//else if (input[*i] == '>')
-// 	//	something;
-// 	// if (input[*i] == '<' && input[*i + 1] == '\0')
-// 	// {
-// 	// 	if (input[*i] == '<' && input[*i - 1] == '>')
-// 	// 		printf("bash: syntax error near unexpected token `<'\n");
-// 	// 	else
-// 	// 		printf("bash: syntax error near unexpected token `newline'\n");
-// 	// }
-// 	// else if (input[*i] == '>' && input[*i + 1] == '\0')
-// 	// {
-// 	// 	if (input[*i] == '>' && input[*i - 1] == ' ')
-// 	// 		printf("bash: syntax error near unexpected token `>'\n");
-// 	// 	else
-// 	// 		printf("bash: syntax error near unexpected token `newline'\n");
-// 	// }
-// }
-
-//deals with expansions
-static void	deal_expansion(char *input, int *i, int *len)
-{
-	(void)len;
-	if (input[*i] == '$')
-		printf("UNIMPLEMENTED: expand variable based on envp copy here\n");
-	//must make copy of envp and take from there
-	//must alter input with realloc to add in the expansion
 }
 
 //deals with multiple pipes case (order of cases matters)
@@ -129,7 +71,7 @@ static void	deal_multiple_pipes(char *input, int *i)
 //case 1: echo hi "|" world! this is one process only
 //replaces a pipe within quotes by ascii 26
 //during the tokenisation the pipe will be put back in the string
-static void	deal_quotes(char *input, int *i, int *len)
+static void	deal_quotes(char *input, int *i)
 {
 	if (input[*i] == '\'')
 	{
@@ -150,8 +92,6 @@ static void	deal_quotes(char *input, int *i, int *len)
 		{
 			if (input[*i] == '|')
 				input[*i] = 26;
-			else if (input[*i] == '$')
-				deal_expansion(input, i, len);
 			(*i)++;
 		}
 		if (input[*i] == '\0')
@@ -167,20 +107,14 @@ static void	deal_quotes(char *input, int *i, int *len)
 void	process_input(char *input)
 {
 	int		i;
-	int		len;
 
 	i = 0;
-	len = ft_strlen(input);
 	while (input[i] != '\0' && errno == 0)
 	{
 		if (input[i] == '\'' || input[i] == '"')
-			deal_quotes(input, &i, &len);
+			deal_quotes(input, &i);
 		else if (input[i] == '|')
 			deal_multiple_pipes(input, &i);
-		else if (input[i] == '$')
-			deal_expansion(input, &i, &len);
-		// else if (input[i] == '<' || input[i] == '>')
-		//  	deal_redirect(input, &i);
 		i++;
 	}
 }
