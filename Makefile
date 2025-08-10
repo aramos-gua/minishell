@@ -12,7 +12,9 @@ SRC :=	$(SRC_DIR)/main.c \
 		$(SRC_DIR)/utils/utils.c \
 		$(SRC_DIR)/utils/parsing_utils.c \
 		$(SRC_DIR)/utils/free_utils.c \
-		$(SRC_DIR)/execution/execution.c
+		$(SRC_DIR)/execution/execution.c \
+		$(SRC_DIR)/execution/commands.c \
+		$(SRC_DIR)/execution/cleaner.c
 
 OBJ := $(patsubst $(SRC_DIR)/%,$(OBJ_DIR)/%,$(SRC:.c=.o))
 INCLUDE := inc

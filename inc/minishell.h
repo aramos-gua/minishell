@@ -6,7 +6,7 @@
 /*   By: mtice <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 15:29:12 by mtice             #+#    #+#             */
-/*   Updated: 2025/07/16 18:40:32 by mtice            ###   ########.fr       */
+/*   Updated: 2025/08/10 16:14:52 by Alejandro Ram    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,5 +75,8 @@ int	execution(t_data *all);
 //commands.c
 void	first_command(int i, t_data *all, int **pipes);
 void	last_command(t_data *all, int **pipes);
+void	execute_command(t_data *all);
 
+//cleaner.c
+void	free_split(char **arr);
 #endif
