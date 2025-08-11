@@ -6,7 +6,7 @@
 /*   By: mtice <mtice@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 19:57:22 by mtice             #+#    #+#             */
-/*   Updated: 2025/07/25 19:57:27 by mtice            ###   ########.fr       */
+/*   Updated: 2025/08/11 08:52:49 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	find_processes(t_data *all, char *input)
 	char	*temp;
 	j = 0;
 	info.procs = ft_split(input, '|'); //think about the case where the pipe is in quotes
+	ft_printf("The process found is: %s\n", info.procs[0]);
 	while (info.procs[j] != NULL)
 	{
 		temp = info.procs[j];

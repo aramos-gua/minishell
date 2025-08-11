@@ -6,7 +6,7 @@
 /*   By: Alejandro Ramos <alejandro.ramos.gua@gmai  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 16:12:22 by Alejandro Ram     #+#    #+#             */
-/*   Updated: 2025/08/10 16:14:54 by Alejandro Ram    ###   ########.fr       */
+/*   Updated: 2025/08/11 09:01:48 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,14 +129,16 @@ int	execution(t_data *all)
 	ft_printf("\nStarting exec\n");
 	ft_printf("\n----------EXECUTION---------\n");
 	i = 0;
+	ft_printf("%s\n", all->info.procs[0]);
 	while (all->info.procs[i])
 	{
 		if (ft_strncmp(all->info.procs[i], "\0", 1) == 0)
 			ft_printf("[\0]\n");
-		ft_printf("%s\n", all->info.procs[i++]);
+		ft_printf("process %d is: %s\n", i, all->info.procs[i]);
+		i++;
 	}
 	execute_command(all);
-	//pipes = pipes_init(pipes, all);
-	//open_pipes(pipes, all);
+//	pipes = pipes_init(pipes, all);
+//	open_pipes(pipes, all);
 	return (0);
 }
