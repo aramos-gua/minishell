@@ -18,8 +18,10 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	unsigned int	i;
 	unsigned int	j;
 
-	if (s1 == NULL || s2 == NULL)
-		return (NULL);
+	if (s2 == NULL)
+		return ((char *)s1);
+	else if (s1 == NULL)
+		return ((char *)s2);
 	cat = (char *)malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
 	if (cat == NULL)
 		return (NULL);
@@ -36,8 +38,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		i++;
 		j++;
 	}
-	cat[i] = '\0';
-	return (cat);
+	return (cat[i] = '\0', cat);
 }
 /*
 int	main(void)

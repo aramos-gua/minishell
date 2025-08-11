@@ -49,11 +49,11 @@ typedef struct s_redir
 typedef struct s_token
 {
 	struct s_token	*prev;
-	char			*proces;
+	//char			*proces;
 	int				pid;
 	int				process_nbr;
 	int				type; //e.g. command, argument, operator, file
-	char			*token; //the token itself e.g. echo
+	char			*token;
 	struct s_token	*next;
 }				t_token;
 

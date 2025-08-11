@@ -96,11 +96,11 @@ void	redirects(t_data *all, t_token *tokens)
 		{
 			redirects = add(redirects, temp);
 			if (redirects->type == RE_IN)
-				redirects->fd = open(redirects->name, O_RDONLY, 00777);
+				redirects->fd = open(redirects->name, O_RDONLY, 0777);
 			else if (redirects->type == RE_OUT)
-				redirects->fd = open(redirects->name, O_WRONLY | O_CREAT | O_TRUNC, 00777);
+				redirects->fd = open(redirects->name, O_WRONLY | O_CREAT | O_TRUNC, 0777);
 			else if (redirects->type == APPEND)
-				redirects->fd = open(redirects->name, O_APPEND, 00777);
+				redirects->fd = open(redirects->name, O_APPEND, 0777);
 			if (redirects->fd < 0)
 				perror(redirects->name); //TODO: return to main
 			close(redirects->fd);

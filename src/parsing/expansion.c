@@ -16,26 +16,28 @@
 //fix for case echo $HOME$PWD
 static	void	expand(char **c_envp, char **env_var)
 {
+	int	i;
 	int	j;
+	int	k;
 	char *temp;
 
-	int k = 0;
+	i = 0;
 	j = 0;
+	k = 0;
 	temp = *env_var;
 	while (c_envp[j] != NULL)
 	{
 		if (!ft_strncmp(c_envp[j], *env_var, ft_strlen(*env_var)))
 		{
 			k = 1;
-			while (*c_envp[j] != '=')
-				c_envp[j]++;
-			c_envp[j]++;
-			//printf("%s\n", c_envp[j]);
-			*env_var = c_envp[j];
+			while (c_envp[j][i] != '=')
+				i++;
+			i++;
+			*env_var = &(c_envp[j][i]);
 		}
 		j++;
 	}
-	if (k != 1)
+	if (k == 0)
 		*env_var = ft_strdup("");
 	free(temp);
 }
@@ -44,29 +46,44 @@ char *expansion(t_data *all, char *token)
 {
 	int		i;
 	int		len;
-	char	*env_var;
+	char	*env_var = NULL;
+	//char	*new_var = NULL;
+	char	*temp = NULL;
 
 	i = 0;
 	while (token[i] != '\0')
 	{
 		len = 0;
-		if (token[i] == '\'')
-		{
-			while (token[++i] != '\'')
-				i++;
-		}
-		else if (token[i] == '$')
+		// if (token[i] == '\'')
+		// {
+		// 	while (token[++i] != '\'')
+		// 		i++;
+		// }
+		if (token[i] == '$' && token[i + 1] != '\0')
 		{
 			i++;
 			while (token[i] != ' ' && token[i] != '$' && token[i] != '"' && token[i] != '\0')
-			{
-				i++;
-				len++;
-			}
-			env_var = find_token(token, i--, len);
+				i++, len++;
+			temp = env_var;
+			env_var = find_token(token, i--, len);	
 			expand(all->c_envp, &env_var);
-			//printf("env_var: %s\n", env_var);
+			env_var = ft_strjoin(temp, env_var);
+			// if (!env_var)
+			// {
+			// 	env_var = find_token(token, i--, len);
+			// 	expand(all->c_envp, &env_var);
+			// }
+			// else
+			// {
+			// 	new_var = find_token(token, i--, len);
+			// 	expand(all->c_envp, &new_var);
+			// 	env_var = ft_strjoin(env_var, new_var);
+			// }
+			// if (token[++i] == '$')
+			// 	env_var = ft_strjoin(env_var, "$");
 		}
+		if (token[i] == '$' && token[i + 1] == '\0')
+			env_var = ft_strjoin(env_var, "$");
 		i++;
 	}
 	return (env_var);
