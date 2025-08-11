@@ -121,22 +121,23 @@
 int	execution(t_data *all)
 {
 	//int	**pipes;
-	int	i;
+	//int	i;
 
 	//if its builtin, dont exit
 	//builtin(all);
 	//if needs fork
 	ft_printf("\nStarting exec\n");
 	ft_printf("\n----------EXECUTION---------\n");
-	i = 0;
-	ft_printf("%s\n", all->info.procs[0]);
-	while (all->info.procs[i])
-	{
-		if (ft_strncmp(all->info.procs[i], "\0", 1) == 0)
-			ft_printf("[\0]\n");
-		ft_printf("process %d is: %s\n", i, all->info.procs[i]);
-		i++;
-	}
+	//i = 0;
+	ft_printf("command: %s\n", all->tokens->next->token);
+	ft_printf("arg: %s\n", all->tokens->next->next->token);
+	//while (all->info.procs[i])
+	//{
+	//	if (ft_strncmp(all->info.procs[i], "\0", 1) == 0)
+	//		ft_printf("[\0]\n");
+	//	ft_printf("process %d is: %s\n", i, all->info.procs[i]);
+	//	i++;
+	//}
 	execute_command(all);
 //	pipes = pipes_init(pipes, all);
 //	open_pipes(pipes, all);

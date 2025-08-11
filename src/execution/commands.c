@@ -97,11 +97,24 @@ char	*get_cmd_path(char *cmd, char **env)
 	return (free_split(paths), NULL);
 }
 
+char  **array_builder(t_data *all)
+{
+  t_token *tmp;
+  char    **arr;
+  int     i;
+
+  i = 0;
+  tmp = all->tokens->next->next;
+  while (tmp && tmp->type != )
+    i++;
+}
+
 void	execute_command(t_data *all)
 {
 	char	*path;
+  char  **cmd_arr;
 
-	path = get_cmd_path(all->info.procs[0], all->c_envp);
+	path = get_cmd_path(all->tokens->next->token, all->c_envp);
 	if (!path)
 	{
 		perror("execve");
@@ -109,13 +122,14 @@ void	execute_command(t_data *all)
 	}
 	ft_printf("%s\n", path);
 	ft_printf("execute_command\n");
-	if (execve(path, all->info.procs, all->c_envp) == -1)
+  cmd_arr = array_builder(all);
+	if (execve(path, (char *const)all->tokens->next->token, all->c_envp) == -1)
 	{
 		perror("execve");
 		free(path);
-		free_split(all->info.procs);
+		//free_split(all->tokens->next->token);
 		exit (1);
 	}
 	free(path);
-	free_split(all->info.procs);
+	//free_split(&all->tokens->next->token);
 }
