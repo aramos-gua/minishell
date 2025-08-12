@@ -97,6 +97,40 @@ char	*get_cmd_path(char *cmd, char **env)
 	return (free_split(paths), NULL);
 }
 
+//int ft_lstsize(t_token *list)
+//{
+//  t_token *current;
+//  int     i;
+//
+//  i = 0;
+//  current = list;
+//  while (current != NULL)
+//  {
+//    i++;
+//    current = current->next;
+//    ft_printf("%d\n", i);
+//  }
+//  return (i);
+//}
+
+int ft_lstsize(t_token *list)
+{
+  t_token *current;
+  int     i;
+
+  i = 1;
+  if (!list)
+    return (0);
+  current = list;
+  while (current->next != list)
+  {
+    i++;
+    current = current->next;
+    ft_printf("%d\n", i);
+  }
+  return (i);
+}
+
 char  **array_builder(t_data *all)
 {
   t_token *tmp;
@@ -104,9 +138,22 @@ char  **array_builder(t_data *all)
   int     i;
 
   i = 0;
-  tmp = all->tokens->next->next;
-  while (tmp && tmp->type != )
-    i++;
+  arr = malloc (ft_lstsize(all->tokens) * sizeof(char *));
+  if (!arr)
+    return (NULL);
+  tmp = all->tokens->next;
+  while (tmp && tmp->type != 0)
+    tmp = tmp->next;
+  arr[i] = tmp->token;
+  while (tmp && tmp->type == 1)
+    arr[++i] = tmp->token;
+  arr[++i] = NULL;
+  i = 0;
+  while (arr[i++] != NULL)
+    ft_printf(" [%s] ", tmp->token);
+  if (arr[i] == NULL)
+    ft_printf(" [NULL] ");
+  return (arr);
 }
 
 void	execute_command(t_data *all)
@@ -123,7 +170,7 @@ void	execute_command(t_data *all)
 	ft_printf("%s\n", path);
 	ft_printf("execute_command\n");
   cmd_arr = array_builder(all);
-	if (execve(path, (char *const)all->tokens->next->token, all->c_envp) == -1)
+	if (execve(path, cmd_arr, all->c_envp) == -1)
 	{
 		perror("execve");
 		free(path);
