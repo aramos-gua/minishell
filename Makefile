@@ -24,7 +24,7 @@ FT_PRINTF := my_libft/ft_printf/ft_printf.a
 GNL := my_libft/gnl/gnl.a
 
 CC := cc
-CFLAGS := -Wall -Wextra -Werror -g3 -I$(INCLUDE)
+CFLAGS := -Wall -Wextra -Werror -g3 -gdwarf-3 -I$(INCLUDE)
 
 RM := rm -rf
 
