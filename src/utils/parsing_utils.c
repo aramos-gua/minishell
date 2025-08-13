@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../inc/minishell.h"
 
 t_token	*create_node(void)
 {
@@ -46,25 +46,27 @@ t_token	*add_at_end(t_token *tail, char *token, int nbr)
 	}
 }
 
-t_token	*del_last(t_token *tail)
-{
-	t_token	*temp;
-
-	if (tail == NULL)
-		return (tail);
-	temp = tail -> prev;
-	if (temp == tail)
-	{
-		free(tail);
-		tail = NULL;
-		return (tail);
-	}
-	temp->next = tail->next;
-	tail->next->prev = temp;
-	free(tail);
-	tail = temp;
-	return (tail);
-}
+// t_token *add_at_mid(t_token *tail, char *token, int nbr, int position)
+// {
+// 	t_token	*new_node;
+// 	t_token	*temp;
+//
+// 	if (tail == NULL)
+// 		return (new_node);
+// 	temp = tail->next;
+// 	while (position > 0)
+// 	{
+// 		temp = temp->next;
+// 		position--;
+// 	}
+// 	new_node->prev = temp;
+// 	new_node->next = temp->next;
+// 	temp->next->prev = new_node;
+// 	temp->next = new_node;
+// 	if (temp == tail)
+// 		tail = tail->next;
+// 	return (tail);
+// }
 
 t_token	*del_inter(t_token *tail, int position)
 {
@@ -83,6 +85,26 @@ t_token	*del_inter(t_token *tail, int position)
 	free(temp);
 	if (temp == tail)
 		tail = temp2;
+	return (tail);
+}
+
+t_token	*del_last(t_token *tail)
+{
+	t_token	*temp;
+
+	if (tail == NULL)
+		return (tail);
+	temp = tail -> prev;
+	if (temp == tail)
+	{
+		free(tail);
+		tail = NULL;
+		return (tail);
+	}
+	temp->next = tail->next;
+	tail->next->prev = temp;
+	free(tail);
+	tail = temp;
 	return (tail);
 }
 
@@ -109,24 +131,6 @@ void	print_t_token(t_token *tokens)
 	}
 }
 
-// char	*join_strings(char *s1, char *s2)
-// {
-// 	char	*joined;
-//
-// 	if (s1 == NULL)
-// 		return (s2);
-// 	else if (s2 == NULL)
-// 		return (s1);
-// 	joined = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
-// 	if (!joined)
-// 		return (ft_putstr_fd("Malloc Error!\n", 2), exit(1), NULL);
-// 	while (s1)
-// 		*joined++ = *s1++;
-// 	while (s2)
-// 		*joined++ = *s2++;
-// 	*joined = '\0';
-// 	return (joined);
-// }
 //
 // int main(int argc, char **argv)
 // {

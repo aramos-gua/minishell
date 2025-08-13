@@ -46,44 +46,34 @@ char *expansion(t_data *all, char *token)
 {
 	int		i;
 	int		len;
-	char	*env_var = NULL;
-	//char	*new_var = NULL;
-	char	*temp = NULL;
+	char	*env_var;
+	char	*temp;
 
 	i = 0;
+	env_var = NULL;
 	while (token[i] != '\0')
 	{
 		len = 0;
-		// if (token[i] == '\'')
-		// {
-		// 	while (token[++i] != '\'')
-		// 		i++;
-		// }
-		if (token[i] == '$' && token[i + 1] != '\0')
+		temp = env_var;
+		if (token[i] == '$' && token[i + 1] != '\0' && token[i + 1] != '$')
 		{
 			i++;
 			while (token[i] != ' ' && token[i] != '$' && token[i] != '"' && token[i] != '\0')
 				i++, len++;
-			temp = env_var;
 			env_var = find_token(token, i--, len);	
 			expand(all->c_envp, &env_var);
 			env_var = ft_strjoin(temp, env_var);
-			// if (!env_var)
-			// {
-			// 	env_var = find_token(token, i--, len);
-			// 	expand(all->c_envp, &env_var);
-			// }
-			// else
-			// {
-			// 	new_var = find_token(token, i--, len);
-			// 	expand(all->c_envp, &new_var);
-			// 	env_var = ft_strjoin(env_var, new_var);
-			// }
-			// if (token[++i] == '$')
-			// 	env_var = ft_strjoin(env_var, "$");
 		}
-		if (token[i] == '$' && token[i + 1] == '\0')
+		else if (token[i] == '$' && token[i + 1] == '\0')
 			env_var = ft_strjoin(env_var, "$");
+		else if (token[i] != '$' && token[i] != '\0')
+		{
+			while (token[i] != '$' && token[i] != '\0')
+				i++, len++;
+			env_var = find_token(token, i--, len);
+			env_var = ft_strjoin(temp, env_var);
+		}
+		free(temp);
 		i++;
 	}
 	return (env_var);

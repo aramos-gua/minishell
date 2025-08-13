@@ -33,13 +33,37 @@ void	find_processes(t_data *all, char *input)
 	all->info = info;
 }
 
+static void	deal_expansion(char *input, int *i)
+{
+	int		j;
+	char	*syntax;
+
+	j = 0;
+	if (input[*i] == '$')
+	{
+		while (input[++(*i)] == '$')
+			j++;
+		if (j > 0)
+		{
+			syntax = malloc(sizeof(char) * (j + 1));
+			if (!syntax)
+				return (perror("Malloc error"));
+			syntax[j] = '\0';
+			while (j-- > 0)
+				syntax[j] = '$';
+			printf("bash: syntax error near unexpected token `%s'\n", syntax);
+			free(syntax);
+		}
+	}
+}
+
 //deals with multiple pipes case (order of cases matters)
 //case1: pipes at the end of input, bash waits for you to finish your input
 //case2: two pipes together ("||") with tokens after cancels the effect of proceding commands
 //case3: more than two pipes togeth ("|||") is a syntax error
 static void	deal_multiple_pipes(char *input, int *i)
 {
-	int	j;
+	int		j;
 	char	*syntax;
 
 	j = 0;
@@ -115,6 +139,8 @@ void	process_input(char *input)
 			deal_quotes(input, &i);
 		else if (input[i] == '|')
 			deal_multiple_pipes(input, &i);
+		else if (input[i] == '$')
+			deal_expansion(input, &i);
 		i++;
 	}
 }

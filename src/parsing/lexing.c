@@ -74,7 +74,7 @@ static void	token_pretty(t_data *all, t_token *tokens)
 		// }
 		if (ft_strlen(ft_strchr(temp->token, '\'')) > ft_strlen(ft_strchr(temp->token, '"')))
 		{
-			del_char(temp->token, '\'');
+			//del_char(temp->token, '\'');
 			sub_char(temp->token, 26, '|');
 		}
 		else if (ft_strlen(ft_strchr(temp->token, '"')) > ft_strlen(ft_strchr(temp->token, '\'')))
@@ -84,14 +84,14 @@ static void	token_pretty(t_data *all, t_token *tokens)
 			if (ft_strchr(temp->token, '$'))
 			{
 				char *old_token = temp->token;
-				temp->token = expansion(all, old_token);
+				temp->token = expansion(all, temp->token);
 				free(old_token);
 			}
 		}
 		else if (ft_strchr(temp->token, '$'))
 		{
 			char	*old_token = temp->token;
-			temp->token = expansion(all, old_token);
+			temp->token = expansion(all, temp->token);
 			free(old_token);
 		}
 		// if (ft_strchr(temp->token, '"'))
