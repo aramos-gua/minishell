@@ -125,7 +125,11 @@ int ft_lstsize(t_token *list)
   while (current->next != list)
   {
     i++;
+	ft_printf("current: [%p]\n", current);
     current = current->next;
+	ft_printf("current: [%p]\n", current);
+	ft_printf("current next: [%p]\n", current->next);
+	ft_printf("list: [%p]\n", list);
     ft_printf("%d\n", i);
   }
   return (i);
