@@ -59,13 +59,13 @@ void	tokeniser(t_data *all)
 				while (all->info.procs[j][i] != '"' && all->info.procs[j][i] != '\0')
 					i++, len++;
 			}
-			if (all->info.procs[j][i] == '\'')
+			else if (all->info.procs[j][i] == '\'')
 			{
 				i++, len++;
 				while (all->info.procs[j][i] != '\'' && all->info.procs[j][i] != '\0')
 					i++, len++;
 			}
-			else if (all->info.procs[j][i] == '<')
+			if (all->info.procs[j][i] == '<')
 			{
 				i++, len++;
 				if (all->info.procs[j][i] == '<')
