@@ -129,8 +129,8 @@ int	execution(t_data *all)
 	ft_printf("\nStarting exec\n");
 	ft_printf("\n----------EXECUTION---------\n");
 	//i = 0;
-	ft_printf("command: %s\n", all->tokens->next->token);
-	ft_printf("arg: %s\n", all->tokens->next->next->token);
+	ft_printf("command: %s   ", all->tokens->next->token);
+	ft_printf("arg: %s\n\n", all->tokens->next->next->token);
 	//while (all->info.procs[i])
 	//{
 	//	if (ft_strncmp(all->info.procs[i], "\0", 1) == 0)

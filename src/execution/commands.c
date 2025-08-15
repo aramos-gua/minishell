@@ -74,7 +74,6 @@ char	*get_cmd_path(char *cmd, char **env)
 
 	i = -1;
 	path_env = NULL;
-  ft_printf("cmd sent to get_cmd_path: %s\n", cmd);
 	if (ft_strchr(cmd, '/'))
 	{
 		if (access(cmd, X_OK) == 0)
@@ -138,12 +137,7 @@ int ft_lstsize(t_token *list)
   while (current->next != list)
   {
     i++;
-	ft_printf("current: [%p]\n", current);
     current = current->next;
-	ft_printf("current: [%p]\n", current);
-	ft_printf("current next: [%p]\n", current->next);
-	ft_printf("list: [%p]\n", list);
-    ft_printf("%d\n", i);
   }
   return (i);
 }
@@ -155,26 +149,24 @@ char  **array_builder(t_data *all)
   int     i;
 
   i = 0;
-	ft_printf("array builder\n");
+	//ft_printf("array builder\n");
   arr = malloc (ft_lstsize(all->tokens) + 1 * sizeof(char *));
   if (!arr)
     return (NULL);
-  tmp = all->tokens->next;
-  while (tmp && tmp->type != COMMAND)
+  tmp = all->tokens;
+  while (tmp->type != COMMAND)
     tmp = tmp->next;
   arr[i++] = tmp->token;
-  ft_printf("saved [%s]\n", arr[i - 1]);
-  while (tmp && tmp->type == ARGUMENT)
+  tmp = tmp->next;
+  ft_printf("[%d][%s]  ", i - 1, arr[i - 1]);
+  while (tmp->type != COMMAND)
   {
     arr[i++] = tmp->token;
-    ft_printf("saved [%s]\n", arr[i - 1]);
+    tmp = tmp->next;
+    ft_printf("[%d][%s]  ", i - 1, arr[i - 1]);
   }
   arr[i] = NULL;
-  i = 0;
-  while (arr[i++] != NULL)
-    ft_printf(" [%s] ", tmp->token);
-  if (arr[i] == NULL)
-    ft_printf(" [NULL] ");
+  ft_printf("[%d][%s]\n\n\n", i, "NULL");
   return (arr);
 }
 
@@ -184,7 +176,7 @@ void	execute_command(t_data *all)
   char  **cmd_arr;
   //t_token *cmd;
 
-  ft_printf("execute_command\n");
+  //ft_printf("execute_command\n");
   ///cmd = get_cmd_node(all->tokens);
   ///ft_printf("%s\n", cmd->token);
 	path = get_cmd_path(all->tokens->next->token, all->c_envp);
@@ -193,8 +185,6 @@ void	execute_command(t_data *all)
 		perror("execve");
 		exit(1);
 	}
-	ft_printf("%s\n", path);
-	ft_printf("execute_command\n");
   cmd_arr = array_builder(all);
 	if (execve(path, cmd_arr, all->c_envp) == -1)
 	{

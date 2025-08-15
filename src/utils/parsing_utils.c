@@ -32,27 +32,16 @@ t_token	*add_at_end(t_token *tail, char *token, int nbr)
 	new_node = create_node();
 	new_node->process_nbr = nbr;
 	new_node->token = token;
-  ft_printf("new node created. Address: [%p]\n", new_node);
-  ft_printf("node prev: [%p]\n", new_node->prev);
-  ft_printf("node next: [%p]\n\n", new_node->next);
 	if (tail == NULL)
 		return (new_node);
 	else
 	{
-    ft_printf("Starting 2+ nodes\n");
-    ft_printf("tail [%p]\n", tail);
 		temp = tail->next;
-    ft_printf("temp\n [%p]\n", temp);
 		new_node->next = temp;
-    ft_printf("new node next [%p]\n", new_node->next);
 		new_node->prev = tail;
-    ft_printf("new node prev [%p]\n", new_node->prev);
 		temp->next = new_node;
-    ft_printf("tail next [%p]\n", tail->next);
 		temp->prev = new_node;
-    ft_printf("temp prev [%p]\n", temp->prev);
 		tail = new_node;//think this was corrupting the list
-    ft_printf("tail [%p]\n", tail);
 		return (tail);
 	}
 }
