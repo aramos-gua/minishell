@@ -12,31 +12,31 @@
 
 #include "../inc/minishell.h"
 
-//void	first_command(int i, t_data *all, int **pipes)
-//{
-////	int	devnull;
-////
-////	if (all->redirects->in_fd >= 0)
-////		dup2(all->redirects->in_fd, STDIN_FILENO);
-////	else
-////	{
-////		devnull = open("/dev/null", O_RDONLY);
-////		dup2(devnull, STDIN_FILENO);
-////		close(devnull);
-////	}
-//	dup2(pipes[i][1], STDOUT_FILENO);
-//}
-//
-//void	last_command(t_data *all, int **pipes)
-//{
-//	if (all->redirects->out_fd >= 0)
-//		dup2(all->redirects->out_fd, STDOUT_FILENO);
-//	else
-//	{
-//		write(2, "minishell: Outfile Error\n", 25);
-//		exit(1);
-//	}
-//}
+void	first_command(int i, t_data *all, int **pipes)
+{
+	int	devnull;
+
+	if (all->info.in_fd >= 0)
+		dup2(all->info.in_fd, STDIN_FILENO);
+	else
+	{
+		devnull = open("/dev/null", O_RDONLY);
+		dup2(devnull, STDIN_FILENO);
+		close(devnull);
+	}
+	dup2(pipes[i][1], STDOUT_FILENO);
+}
+
+void	last_command(t_data *all, int **pipes)
+{
+	if (all->info.out_fd >= 0)
+		dup2(all->info.out_fd, STDOUT_FILENO);
+	else
+	{
+		write(2, "minishell: Outfile Error\n", 25);
+		exit(1);
+	}
+}
 
 char	*build_path(char *cmd, char **paths)
 {
@@ -120,7 +120,7 @@ t_token *get_cmd_node(t_token *list)
   if (!list)
     return (NULL);
   current = list;
-  while (current->type != 0)
+  while (current->type != COMMAND)
     current = current->next;
   return(current);
 }
@@ -172,14 +172,14 @@ char  **array_builder(t_data *all)
 
 void	execute_command(t_data *all)
 {
-	char	*path;
-  char  **cmd_arr;
-  //t_token *cmd;
+  t_token *cmd;
+	char	  *path;
+  char    **cmd_arr;
 
   //ft_printf("execute_command\n");
-  ///cmd = get_cmd_node(all->tokens);
-  ///ft_printf("%s\n", cmd->token);
-	path = get_cmd_path(all->tokens->next->token, all->c_envp);
+  cmd = get_cmd_node(all->tokens);
+  //ft_printf("%s\n", cmd->token);
+	path = get_cmd_path(cmd->token, all->c_envp);
 	if (!path)
 	{
 		perror("execve");
