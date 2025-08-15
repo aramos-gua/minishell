@@ -51,7 +51,7 @@ t_token	*add_at_end(t_token *tail, char *token, int nbr)
     ft_printf("tail next [%p]\n", tail->next);
 		temp->prev = new_node;
     ft_printf("temp prev [%p]\n", temp->prev);
-		//tail = new_node;//think this was corrupting the list
+		tail = new_node;//think this was corrupting the list
     ft_printf("tail [%p]\n", tail);
 		return (tail);
 	}

@@ -74,6 +74,7 @@ char	*get_cmd_path(char *cmd, char **env)
 
 	i = -1;
 	path_env = NULL;
+  ft_printf("cmd sent to get_cmd_path: %s\n", cmd);
 	if (ft_strchr(cmd, '/'))
 	{
 		if (access(cmd, X_OK) == 0)
@@ -113,6 +114,18 @@ char	*get_cmd_path(char *cmd, char **env)
 //  return (i);
 //}
 
+t_token *get_cmd_node(t_token *list)
+{
+  t_token *current;
+
+  if (!list)
+    return (NULL);
+  current = list;
+  while (current->type != 0)
+    current = current->next;
+  return(current);
+}
+
 int ft_lstsize(t_token *list)
 {
   t_token *current;
@@ -142,14 +155,15 @@ char  **array_builder(t_data *all)
   int     i;
 
   i = 0;
+	ft_printf("array builder\n");
   arr = malloc (ft_lstsize(all->tokens) * sizeof(char *));
   if (!arr)
     return (NULL);
   tmp = all->tokens->next;
-  while (tmp && tmp->type != 0)
+  while (tmp && tmp->type != COMMAND)
     tmp = tmp->next;
   arr[i] = tmp->token;
-  while (tmp && tmp->type == 1)
+  while (tmp && tmp->type == ARGUMENT)
     arr[++i] = tmp->token;
   arr[++i] = NULL;
   i = 0;
@@ -164,7 +178,10 @@ void	execute_command(t_data *all)
 {
 	char	*path;
   char  **cmd_arr;
+  //t_token *cmd;
 
+  ft_printf("execute_command\n");
+  //cmd = get_cmd_node(all->tokens);
 	path = get_cmd_path(all->tokens->next->token, all->c_envp);
 	if (!path)
 	{
