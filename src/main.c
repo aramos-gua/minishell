@@ -18,7 +18,7 @@
 int	main(int argc, char *argv[], char *envp[])
 {
 	t_data	all;
-	char 	*input;
+	char 	*input = NULL;
 
 	(void)argc;
 	(void)argv;
@@ -28,17 +28,17 @@ int	main(int argc, char *argv[], char *envp[])
 	while (42)
 	{
 		input = readline("minishell> ");
-		if (!input)
-			continue;
-		else if (!ft_strncmp("exit\0", input, 5))
+		// if (!input || input[0] == '\0')
+		//  	printf("Goodbye!\n"), exit(1);
+		if (!ft_strncmp("exit\0", input, 5))
 			break;
 		else if (!ft_strncmp("$?\0", input, 3))
 			printf("%d: command not found\n", errno);
 		else if (!ft_strncmp("env\0", input, 4))
 			print_env(&all);
-		else
-			parsing(&all, input);
-		execution(&all);
+		else if (parsing(&all, input))
+			continue;
+		//execution(&all);
 	}	
 	//rl_clear_history();
 	//free_all();

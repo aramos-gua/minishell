@@ -12,7 +12,7 @@
 
 #include "../../inc/minishell.h"
 
-t_token	*create_node(void)
+t_token	*create_t_token(void)
 {
 	t_token	*new;
 	new = malloc(sizeof(t_token));
@@ -24,12 +24,12 @@ t_token	*create_node(void)
 	return (new);
  }
 
-t_token	*add_at_end(t_token *tail, char *token, int nbr)
+t_token	*add_t_token(t_token *tail, char *token, int nbr)
 {
 	t_token	*new_node;
 	t_token	*temp;
 
-	new_node = create_node();
+	new_node = create_t_token();
 	new_node->process_nbr = nbr;
 	new_node->token = token;
 	if (tail == NULL)
@@ -110,24 +110,25 @@ t_token	*del_last(t_token *tail)
 
 void	print_t_token(t_token *tokens)
 {
+	t_token	*temp;
+	int		i;
+
 	if (tokens->next == NULL)
 		printf("no element in the list");
 	else
 	{
-		t_token	*temp;
-		temp = tokens->next;
-		while (temp != tokens)
+		temp = NULL;
+		i = -1;
+		while (temp != tokens->next)
 		{
+			if (i++ == -1)
+				temp = tokens->next;
 			printf("%-20s", temp->token);
 			printf("type:%-2d", temp->type);
 			printf("process:%-2d", temp->process_nbr);
 			printf("\n");
 			temp = temp->next;
 		}
-		printf("%-20s", temp->token);
-		printf("type:%-2d", temp->type);
-		printf("process:%-2d", temp->process_nbr);
-		printf("\n");
 	}
 }
 

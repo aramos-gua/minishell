@@ -18,6 +18,8 @@ char	*ft_strchr(const char *s, int c)
 	char	*p;
 
 	i = 0;
+	if (!s)
+		return (NULL);
 	p = (char *)s;
 	c = (char)c;
 	while (p[i] != '\0')

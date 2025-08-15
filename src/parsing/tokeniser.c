@@ -12,6 +12,10 @@
 
 #include "../../inc/minishell.h"
 
+//-------------------------------------------------------------------------------------
+//supporting function to tokeniser() function and other functions within my code
+//based on a string, and index and a length, it returns a char *
+//helps to find a token within the process string
 char *find_token(char *process, int i, int len)
 {
 	char *p;
@@ -35,60 +39,69 @@ char *find_token(char *process, int i, int len)
     return (p);
 }
 
-
-void	tokeniser(t_data *all)
+//-------------------------------------------------------------------------------------
+//based on t_proc struct (which holds the raw input broken down by pipes)
+//splits the process strings into tokens
+//builds the t_token *tokens linked list
+//SUUPPER IMPORTAAANNNTT
+int	tokeniser(t_data *all)
 {
 	int		i;
-	int		j;
 	int		len;
 	char	*token;
 	t_token	*tokens = NULL;
 
-	j = 0;
-	while (all->info.procs[j] != NULL)
+	t_proc	*temp = NULL;
+	i = -1;
+	while (temp != all->info->next)
 	{
+		if (i == -1)
+			temp = all->info->next;
 		i = 0;
-		while (all->info.procs[j][i] != '\0')
+		while (temp->proc[i] != '\0')
 		{
-			while(ft_isspace(all->info.procs[j][i]) && all->info.procs[j][i] != '\0')
+			while(ft_isspace(temp->proc[i]) && temp->proc[i] != '\0')
 				i++;
 			len = 0;
-			if (all->info.procs[j][i] == '"')
+			if (temp->proc[i] == '"')
 			{
 				i++, len++;
-				while (all->info.procs[j][i] != '"' && all->info.procs[j][i] != '\0')
+				while (temp->proc[i] != '"' && temp->proc[i] != '\0')
 					i++, len++;
 			}
-			else if (all->info.procs[j][i] == '\'')
+			else if (temp->proc[i] == '\'')
 			{
 				i++, len++;
-				while (all->info.procs[j][i] != '\'' && all->info.procs[j][i] != '\0')
+				while (temp->proc[i] != '\'' && temp->proc[i] != '\0')
 					i++, len++;
 			}
-			if (all->info.procs[j][i] == '<')
+			if (temp->proc[i] == '<')
 			{
 				i++, len++;
-				if (all->info.procs[j][i] == '<')
+				if (temp->proc[i] == '<')
 					i++, len++;
 			}
-			else if (all->info.procs[j][i] == '>')
+			else if (temp->proc[i] == '>')
 			{
 				i++, len++;
-				if (all->info.procs[j][i] == '>')
+				if (temp->proc[i] == '>')
 					i++, len++;
 			}
-			else if (!ft_isspace(all->info.procs[j][i]))
+			else if (!ft_isspace(temp->proc[i]))
 			{
-				while (!ft_isspace(all->info.procs[j][i]) && all->info.procs[j][i] != '>'
-						&& all->info.procs[j][i] != '<' && all->info.procs[j][i] != '\0')
+				while (!ft_isspace(temp->proc[i]) && temp->proc[i] != '>'
+						&& temp->proc[i] != '<' && temp->proc[i] != '\0')
 					i++, len++;
 			}
-			token = find_token(all->info.procs[j], i--, len);
-			tokens = add_at_end(tokens, token, j);
+			token = find_token(temp->proc, i--, len);
+			tokens = add_t_token(tokens, token, temp->process_nbr);
 			i++;
 		}
-		j++;
+		temp = temp->next;
 	}
 	all->tokens = tokens;
+	if (tokens)
+		return (0);
+	return(1);
 }
 

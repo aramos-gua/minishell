@@ -12,9 +12,7 @@
 
 #include "../../inc/minishell.h"
 
-//TODO: check for more cases
-//fix for case echo $HOME$PWD
-static	void	expand(char **c_envp, char **env_var)
+static	void	expand_var(char **c_envp, char **env_var)
 {
 	int	i;
 	int	j;
@@ -42,6 +40,9 @@ static	void	expand(char **c_envp, char **env_var)
 	free(temp);
 }
 
+//TODO: handle this case: export a="cho hello"
+//e$a (should give echo: builtin, hello: argument)
+//handle heredoc expansions
 char *expansion(t_data *all, char *token)
 {
 	int		i;
@@ -63,7 +64,7 @@ char *expansion(t_data *all, char *token)
 				i++, len++;
 			env_var = find_token(token, i--, len);
 			env_var = ft_strjoin(env_var, "=");
-			expand(all->c_envp, &env_var);
+			expand_var(all->c_envp, &env_var);
 			env_var = ft_strjoin(temp, env_var);
 		}
 		else if (token[i] == '$' && token[i + 1] == '\0')

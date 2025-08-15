@@ -19,9 +19,16 @@
 //process_nbr: the number of the process we are in (will always start at 0)
 typedef	struct	s_proc
 {
-	char	**procs;
-	int		process_nbr;
-	int		total_proc;
+	struct s_proc	*next;
+	char			*proc;
+	int				process_nbr;
+	int				pid;
+	int				last_pid;
+	int				in_fd;
+	int				out_fd;
+	int				append_fd;
+	int				total_proc;
+	struct	s_proc	*prev;
 }				t_proc;
 
 //-----------------------------------------------------------------------------
@@ -66,7 +73,8 @@ typedef	struct s_data
 {
 	int		err;
 	char	**c_envp;
-	t_proc	info;
+	char	**procs;
+	t_proc	*info;
 	t_token	*tokens;
 	t_redir	*redirects;
 	int		total_proc;

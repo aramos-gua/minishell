@@ -44,26 +44,31 @@ int		find_envp(t_data *all, char *envp[]);
 int		parsing(t_data *all, char *input);
 
 //input_check.c
-void	find_processes(t_data *all, char *input);
-void	process_input(char *input);
+int		input_check(char *input);
+
+//process_info.c
+void	print_t_proc(t_proc *info);
+int		find_processes(t_data *all, char *input);
+
 
 //tokeniser.c
+//int		find_processes(t_data *all, char *input);
 char	*find_token(char *process, int i, int len);
-void	tokeniser(t_data *all);
+int		tokeniser(t_data *all);
 
 //lexing.c
-void	lexing(t_data *all);
+int		lexing(t_data *all);
 
 //expansion.c
 char	*expansion(t_data *all, char *token);
 
 //redirects.c
-void	redirects(t_data *all, t_token *tokens);
+int		redirects(t_data *all);
 void	print_t_redir(t_redir *redirects);
 
 //parsing_utils.c
-t_token	*create_node(void);
-t_token	*add_at_end(t_token *tail, char *token, int nbr);
+t_token	*create_t_token(void);
+t_token	*add_t_token(t_token *tail, char *token, int nbr);
 t_token	*del_last(t_token *tail);
 t_token	*del_inter(t_token *tail, int position);
 void	print_t_token(t_token *tokens);
@@ -77,6 +82,6 @@ void	free_double_char(char **arr);
 void	handle_error(char *message, char exit_status);
 
 //execution.c
-int	execution(t_data *all);
+int		execution(t_data *all);
 
 #endif

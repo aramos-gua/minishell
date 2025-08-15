@@ -7,6 +7,7 @@ SRC :=	$(SRC_DIR)/main.c \
 		$(SRC_DIR)/parsing/envp.c \
 		$(SRC_DIR)/parsing/parsing.c \
 		$(SRC_DIR)/parsing/input_check.c \
+		$(SRC_DIR)/parsing/process_info.c \
 		$(SRC_DIR)/parsing/tokeniser.c \
 		$(SRC_DIR)/parsing/lexing.c \
 		$(SRC_DIR)/parsing/expansion.c\
@@ -14,7 +15,7 @@ SRC :=	$(SRC_DIR)/main.c \
 		$(SRC_DIR)/utils/utils.c \
 		$(SRC_DIR)/utils/parsing_utils.c \
 		$(SRC_DIR)/utils/free_utils.c \
-		$(SRC_DIR)/execution/execution.c
+#		$(SRC_DIR)/execution/execution.c
 
 OBJ := $(patsubst $(SRC_DIR)/%,$(OBJ_DIR)/%,$(SRC:.c=.o))
 INCLUDE := inc

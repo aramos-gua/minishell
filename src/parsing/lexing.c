@@ -36,11 +36,11 @@ static void	assign_types(t_token *tokens)
 			if (!ft_strncmp(temp->prev->token, "<\0", 2))
 				temp->type = RE_IN;
 			else if (!ft_strncmp(temp->prev->token, "<<\0", 3))
-				temp->type = APPEND;
+				temp->type = HERE_DOC;
 			else if (!ft_strncmp(temp->prev->token, ">\0", 2))
 				temp->type = RE_OUT;
 			else if (!ft_strncmp(temp->prev->token, ">>\0", 3))
-				temp->type = HERE_DOC;
+				temp->type = APPEND;
 		}
 		else if (temp->process_nbr > i)
 			temp->type = COMMAND;
@@ -52,9 +52,7 @@ static void	assign_types(t_token *tokens)
 	}
 }
 
-//TODO: variable expansion
-//substitutes pipes back into a string "SUB" becomes "|"
-//trims " and '
+//reformats tokens
 static void	token_pretty(t_data *all, t_token *tokens)
 {
 	t_token	*temp;
@@ -93,8 +91,14 @@ static void	token_pretty(t_data *all, t_token *tokens)
 	}
 }
 
-void	lexing(t_data *all)
+//----------------------------------------------------------------------------------------------------
+//iterates through the t_token *tokens linked list to redefine tokens
+//token_pretty: performs expansions, resubs pipes into literal strings, removes quotes
+//assign_types: assigns a type to each token
+//TODO: handle variable expansion in the HERE_DOC case
+int	lexing(t_data *all)
 {
 	token_pretty(all, all->tokens);
 	assign_types(all->tokens);
+	return (0);
 }
