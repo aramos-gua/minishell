@@ -156,16 +156,20 @@ char  **array_builder(t_data *all)
 
   i = 0;
 	ft_printf("array builder\n");
-  arr = malloc (ft_lstsize(all->tokens) * sizeof(char *));
+  arr = malloc (ft_lstsize(all->tokens) + 1 * sizeof(char *));
   if (!arr)
     return (NULL);
   tmp = all->tokens->next;
   while (tmp && tmp->type != COMMAND)
     tmp = tmp->next;
-  arr[i] = tmp->token;
+  arr[i++] = tmp->token;
+  ft_printf("saved [%s]\n", arr[i - 1]);
   while (tmp && tmp->type == ARGUMENT)
-    arr[++i] = tmp->token;
-  arr[++i] = NULL;
+  {
+    arr[i++] = tmp->token;
+    ft_printf("saved [%s]\n", arr[i - 1]);
+  }
+  arr[i] = NULL;
   i = 0;
   while (arr[i++] != NULL)
     ft_printf(" [%s] ", tmp->token);
@@ -181,7 +185,8 @@ void	execute_command(t_data *all)
   //t_token *cmd;
 
   ft_printf("execute_command\n");
-  //cmd = get_cmd_node(all->tokens);
+  ///cmd = get_cmd_node(all->tokens);
+  ///ft_printf("%s\n", cmd->token);
 	path = get_cmd_path(all->tokens->next->token, all->c_envp);
 	if (!path)
 	{
