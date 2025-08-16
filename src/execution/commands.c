@@ -12,31 +12,31 @@
 
 #include "../inc/minishell.h"
 
-void	first_command(int i, t_data *all, int **pipes)
-{
-	int	devnull;
-
-	if (all->info.in_fd >= 0)
-		dup2(all->info.in_fd, STDIN_FILENO);
-	else
-	{
-		devnull = open("/dev/null", O_RDONLY);
-		dup2(devnull, STDIN_FILENO);
-		close(devnull);
-	}
-	dup2(pipes[i][1], STDOUT_FILENO);
-}
-
-void	last_command(t_data *all, int **pipes)
-{
-	if (all->info.out_fd >= 0)
-		dup2(all->info.out_fd, STDOUT_FILENO);
-	else
-	{
-		write(2, "minishell: Outfile Error\n", 25);
-		exit(1);
-	}
-}
+//void	first_command(int i, t_data *all, int **pipes)
+//{
+//	int	devnull;
+//
+//	if (all->info.in_fd >= 0)
+//		dup2(all->info.in_fd, STDIN_FILENO);
+//	else
+//	{
+//		devnull = open("/dev/null", O_RDONLY);
+//		dup2(devnull, STDIN_FILENO);
+//		close(devnull);
+//	}
+//	dup2(pipes[i][1], STDOUT_FILENO);
+//}
+//
+//void	last_command(t_data *all, int **pipes)
+//{
+//	if (all->info.out_fd >= 0)
+//		dup2(all->info.out_fd, STDOUT_FILENO);
+//	else
+//	{
+//		write(2, "minishell: Outfile Error\n", 25);
+//		exit(1);
+//	}
+//}
 
 char	*build_path(char *cmd, char **paths)
 {
@@ -170,7 +170,7 @@ char  **array_builder(t_data *all)
   return (arr);
 }
 
-void	execute_command(t_data *all)
+int	execute_command(t_data *all)
 {
   t_token *cmd;
 	char	  *path;
@@ -178,12 +178,14 @@ void	execute_command(t_data *all)
 
   //ft_printf("execute_command\n");
   cmd = get_cmd_node(all->tokens);
+  if (!cmd)
+    return (1);
   //ft_printf("%s\n", cmd->token);
 	path = get_cmd_path(cmd->token, all->c_envp);
 	if (!path)
 	{
 		perror("execve");
-		exit(1);
+		return (1);
 	}
   cmd_arr = array_builder(all);
 	if (execve(path, cmd_arr, all->c_envp) == -1)
@@ -191,8 +193,9 @@ void	execute_command(t_data *all)
 		perror("execve");
 		free(path);
 		//free_split(all->tokens->next->token);
-		exit (1);
+	 return (1);
 	}
 	free(path);
 	//free_split(&all->tokens->next->token);
+  return (0);
 }
