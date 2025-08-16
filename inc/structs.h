@@ -24,9 +24,9 @@ typedef	struct	s_proc
 	int				process_nbr;
 	int				pid;
 	int				last_pid;
-	int				in_fd;
-	int				out_fd;
-	int				append_fd;
+	char			*infile;
+	char			*outfile;
+	char			*append;
 	int				total_proc;
 	struct	s_proc	*prev;
 }				t_proc;

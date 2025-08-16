@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
-#include <term.h>
 
 //creates a t_proc node
 static t_proc	*create_t_proc(void) //same create_node function
@@ -66,9 +65,9 @@ void	print_t_proc(t_proc *info)
 			printf("%-20s ", temp->proc);
 			printf("proc_no:%-2d ", temp->process_nbr);
 			printf("total:%-2d ", temp->total_proc);
-			printf("in_fd:%-2d ", temp->in_fd);
-			printf("out_fd:%-2d ", temp->out_fd);
-			printf("append_fd:%-2d ", temp->append_fd);
+			printf("infile:%-2s ", temp->infile);
+			printf("outfile:%-2s ", temp->outfile);
+			printf("append:%-2s ", temp->append);
 			printf("\n");
 			temp = temp->next;
 		}
@@ -100,11 +99,11 @@ int	find_processes(t_data *all, char *input)
 		procs[j] = ft_strtrim(procs[j], " ");
 		info = add_t_proc(info, procs[j]);
 		info->process_nbr = j;
-		info->in_fd = 1;
-		info->out_fd = 0;
-		info->append_fd = 0;
 		info->pid = -1;
 		info->last_pid = -1;
+		info->infile = NULL;
+		info->outfile = NULL;
+		info->append = NULL;
 		info->total_proc = len;
 		free(temp);
 		j++;

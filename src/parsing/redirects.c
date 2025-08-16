@@ -114,34 +114,38 @@ int	redirects(t_data *all)
 {
 	t_token *token_temp;
 	t_proc	*info_temp;
+	int		fd;
 	int		i;
 
 	token_temp = NULL;
 	info_temp = all->info->next;
 	i = -1;
+	fd = 0;
 	while (token_temp != all->tokens->next)
 	{
 		if (i++ == -1)
 			token_temp = all->tokens->next;
 		if (token_temp->process_nbr != info_temp->process_nbr)
-			info_temp = info_temp->next;
+		 	info_temp = info_temp->next;
 		if (token_temp->type == RE_IN)
-			info_temp->in_fd = open(token_temp->token, O_RDONLY);
-		else if (token_temp->type == RE_OUT)
-			info_temp->out_fd = open(token_temp->token, O_CREAT | O_TRUNC | O_WRONLY, 0644);
-		else if (token_temp->type == APPEND)
-			info_temp->append_fd = open(token_temp->token, O_CREAT | O_WRONLY | O_APPEND, 0644);
-		if (info_temp->in_fd < 0 || info_temp->out_fd < 0 || info_temp->append_fd < 0)
-			return (printf("bash: %s: %s\n", token_temp->token, strerror(errno)));
-		else if (token_temp->process_nbr == token_temp->next->process_nbr)
 		{
-			if (info_temp->in_fd > 2)
-				close(info_temp->in_fd);
-			else if (info_temp->out_fd > 2)
-				close(info_temp->out_fd);
-			else if (info_temp->append_fd > 2)
-				close (info_temp->append_fd);
+			fd = open(token_temp->token, O_RDONLY);
+			info_temp->infile = token_temp->token;
 		}
+		else if (token_temp->type == RE_OUT)
+		{	
+			fd = open(token_temp->token, O_CREAT | O_TRUNC | O_WRONLY, 0644);
+			info_temp->outfile = token_temp->token;
+		}
+		else if (token_temp->type == APPEND)
+		{
+			fd = open(token_temp->token, O_CREAT | O_WRONLY | O_APPEND, 0644);
+			info_temp->append = token_temp->token;
+		}
+		if (fd < 0)
+			return (printf("bash: %s: %s\n", token_temp->token, strerror(errno)));
+		else if (fd > 2)
+			close(fd);
 		token_temp = token_temp->next;
 	}
 	return (0);

@@ -88,13 +88,10 @@ static int	deal_multiple_pipes(char *input, int *i)
 	j = 0;
 	if (input[*i] == '|')
 	{
-		while (input[(*i)++] == '|')
+		while (input[++(*i)] == '|')
 			j++;
-		if (input[*i + 1] == '\0' && j <= 2)
-			return (printf("UNIMPLEMENTED: wait for the rest of input\n"));
-		else if (j == 2)
-			return (printf("bash: syntax error near unexpected token `|'\n")); //TODO:bonus (||)
-		//ft_bzero((input + *i - (j + 1)), ft_strlen(input + *i));
+		if (input[*i] == '\0' || j == 2)
+			return (printf("bash: syntax error near unexpected token `|'\n"));
 		else if (j > 2)
 		{
 			j -= 2;
