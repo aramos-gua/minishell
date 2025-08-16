@@ -56,9 +56,7 @@ typedef struct s_redir
 typedef struct s_token
 {
 	struct s_token	*prev;
-	//char			*proces;
-	int				pid;
-	int				process_nbr;
+	int		process_nbr;
 	int				type; //e.g. command, argument, operator, file
 	char			*token;
 	struct s_token	*next;
