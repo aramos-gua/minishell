@@ -16,6 +16,7 @@ int	first_command(int i, t_data *all, int **pipes)
 {
 	int	devnull;
 
+	ft_printf("first command\n");
 	if (all->info->in_fd >= 0)
 		dup2(all->info->in_fd, STDIN_FILENO);
 	else
@@ -31,12 +32,15 @@ int	first_command(int i, t_data *all, int **pipes)
 
 int	last_command(t_data *all, int **pipes)
 {
+	ft_printf("last command\n");
 	if (all->info->out_fd >= 0)
 		dup2(all->info->out_fd, STDOUT_FILENO);
 	else
 	{
 		write(2, "minishell: Outfile Error\n", 25);
 		close_pipes(all, pipes);
+		close(all->info->out_fd);
+		close(all->info->in_fd);
 		return (1);
 	}
 	return (0);

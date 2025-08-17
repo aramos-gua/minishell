@@ -168,7 +168,7 @@ int	execution(t_data *all)
 			curr_proc = current->next->process_nbr;
 		if (current->type == COMMAND)
 		{
-			ft_printf(" [%d], command: %s   ", curr_proc, current->token);
+			ft_printf("[%d], command: %s   ", curr_proc, current->token);
 		}
 		else if (current->type == ARGUMENT)
 		{
@@ -178,7 +178,7 @@ int	execution(t_data *all)
 			break ;
 		current = current->next;
 	}
-	ft_printf("\n");
+	ft_printf("\n\n");
 //////////////////////////////////////////////////////////////////////////////////
 	get_files(all);
 	if (all->info->total_proc == 1)
