@@ -12,25 +12,25 @@
 
 #include "../inc/minishell.h"
 
-//void	first_command(int i, t_data *all, int **pipes)
-//{
-//	int	devnull;
-//
-//	if (all->info.in_fd >= 0)
-//		dup2(all->info.in_fd, STDIN_FILENO);
-//	else
-//	{
-//		devnull = open("/dev/null", O_RDONLY);
-//		dup2(devnull, STDIN_FILENO);
-//		close(devnull);
-//	}
-//	dup2(pipes[i][1], STDOUT_FILENO);
-//}
-//
+void	first_command(int i, t_data *all, int **pipes)
+{
+	int	devnull;
+
+	if (all->info->in_fd >= 0)
+		dup2(all->info->in_fd, STDIN_FILENO);
+	else
+	{
+		devnull = open("/dev/null", O_RDONLY);
+		dup2(devnull, STDIN_FILENO);
+		close(devnull);
+	}
+	dup2(pipes[i][1], STDOUT_FILENO);
+}
+
 //void	last_command(t_data *all, int **pipes)
 //{
-//	if (all->info.out_fd >= 0)
-//		dup2(all->info.out_fd, STDOUT_FILENO);
+//	if (all->info->out_fd >= 0)
+//		dup2(all->info->out_fd, STDOUT_FILENO);
 //	else
 //	{
 //		write(2, "minishell: Outfile Error\n", 25);
