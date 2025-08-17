@@ -78,7 +78,7 @@ typedef	struct s_data
 	t_proc	*info;
 	t_token	*tokens;
 	t_redir	*redirects;
-	int		total_proc;
+	int		total_proc;//think this doesnt work well
 }				t_data;
 
 //-----------------------------------------------------------------------------

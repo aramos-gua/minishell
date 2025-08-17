@@ -17,22 +17,21 @@ void	child_process(int i, t_data *all, int **pipes)
 	int	j;
 
 	j = -1;
-	ft_printf("starting child\n");
 	if (i == 0)
 		first_command(i, all, pipes);
 	else
 		dup2(pipes[i - 1][0], STDIN_FILENO);
-	//if (i == all->total_proc - 1)
-	//	last_command(all, pipes);
-	//else
-	//	dup2(pipes[i][1], STDOUT_FILENO);
+	if (i == all->total_proc - 1)
+		last_command(all, pipes);
+	else
+		dup2(pipes[i][1], STDOUT_FILENO);
 	while (++j < all->total_proc - 1)
 	{
 		close(pipes[j][0]);
 		close(pipes[j][1]);
 	}
-	//close(all->redirects->fd);
-	//close(all->redirects->fd + 1);
+	close(all->info->in_fd);
+	close(all->info->out_fd);
 	execute_command(all);
 }
 
@@ -66,7 +65,7 @@ static void	fork_init(t_data *all, int **pipes)
 {
 	int	  	i;
 	pid_t 	pid;
-  t_token *token;
+	t_token *token;
 
 	i = 0;
 	ft_printf("starting fork_init\n");
@@ -78,15 +77,14 @@ static void	fork_init(t_data *all, int **pipes)
 			ft_printf("Error: Fork Failure\n");
 			exit(1);
 		}
-	if (pid == 0)
-	{
-		ft_printf("insert child here\n");
-		child_process(i, all, pipes);
-	}
-    token = all->tokens;
-	while (token->next->process_nbr != 0)
-		token = token->next;
-    all->info->last_pid = pid;
+		if (pid == 0)
+		{
+			child_process(i, all, pipes);
+		}
+		token = all->tokens;
+		while (token->next->process_nbr != 0)
+			token = token->next;
+		all->info->last_pid = pid;
 		i++;
 	}
 }
@@ -120,13 +118,16 @@ void	open_pipes(int **pipes, t_data *all)
 
 int	get_files(t_data *all)
 {
-	all->info->in_fd = open(all->info->infile, O_RDONLY);
+	if (all->info->infile)
+		all->info->in_fd = open(all->info->infile, O_RDONLY);
 	if (all->info->in_fd < 0)
 		ft_printf("Error: %s not found\n", all->info->infile);
-	all->info->out_fd = open(all->info->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+	if (all->info->outfile)
+		all->info->out_fd = open(all->info->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0666);
 	if (all->info->out_fd < 0)
 		ft_printf("Error: %s incorrect permissions\n", all->info->infile);
-	all->info->app_fd = open(all->info->append, O_WRONLY | O_CREAT | O_APPEND, 0666);
+	if (all->info->append)
+		all->info->app_fd = open(all->info->append, O_WRONLY | O_CREAT | O_APPEND, 0666);
 	if (all->info->app_fd < 0)
 		ft_printf("Error: %s incorrect permissions\n", all->info->infile);
 	return (0);
@@ -148,23 +149,38 @@ int	one_command(t_data *all)
 int	execution(t_data *all)
 {
 	int	**pipes;
-	//int	i;
 
 	//if its builtin, dont exit
 	//builtin(all);
 	//if needs fork
 	ft_printf("\nStarting exec\n");
 	ft_printf("\n----------EXECUTION---------\n");
-	//i = 0;
-	ft_printf("command: %s   ", all->tokens->next->token);
-	ft_printf("arg: %s\n\n", all->tokens->next->next->token);
-	//while (all->info.procs[i])
-	//{
-	//	if (ft_strncmp(all->info.procs[i], "\0", 1) == 0)
-	//		ft_printf("[\0]\n");
-	//	ft_printf("process %d is: %s\n", i, all->info.procs[i]);
-	//	i++;
-	//}
+///////////////////////////////////////////////////////////////////////////////
+	int		curr_proc;
+	t_token	*tail;
+	t_token	*current;
+	tail = all->tokens;
+	current = tail->next;
+	curr_proc = current->process_nbr;
+	while (1)
+	{
+		if (current->process_nbr != curr_proc)
+			curr_proc = current->next->process_nbr;
+		if (current->type == COMMAND)
+		{
+			ft_printf(" [%d], command: %s   ", curr_proc, current->token);
+		}
+		else if (current->type == ARGUMENT)
+		{
+			ft_printf(" arg: %s ", current->token);
+		}
+		if (current == tail)
+			break ;
+		current = current->next;
+	}
+	ft_printf("\n");
+//////////////////////////////////////////////////////////////////////////////////
+	get_files(all);
 	if (all->info->total_proc == 1)
 		one_command(all);
 	if (all->info->total_proc > 1)

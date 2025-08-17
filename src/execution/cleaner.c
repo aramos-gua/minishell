@@ -24,3 +24,17 @@ int	free_split(char **arr)
 	free(arr);
 	return (0);
 }
+
+int	close_pipes(t_data *all, int **pipes)
+{
+	int	i;
+
+	i = 0;
+	while (i < all->info->total_proc - 1)
+	{
+		close(pipes[i][0]);
+		close(pipes[i][1]);
+		i++;
+	}
+	return (0);
+}

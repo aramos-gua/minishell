@@ -85,10 +85,11 @@ void	handle_error(char *message, char exit_status);
 int		execution(t_data *all);
 
 //commands.c
-void	first_command(int i, t_data *all, int **pipes);
-void	last_command(t_data *all, int **pipes);
+int		first_command(int i, t_data *all, int **pipes);
+int		last_command(t_data *all, int **pipes);
 int		execute_command(t_data *all);
 
 //cleaner.c
 int		free_split(char **arr);
+int		close_pipes(t_data *all, int **pipes);
 #endif
