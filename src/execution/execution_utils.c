@@ -12,6 +12,21 @@
 
 #include "../inc/minishell.h"
 
+t_token *get_process(t_token *list, int i)
+{
+  t_token *current;
+  t_token *cmd;
+
+  ft_printf("get_process start\n");
+  if (!list)
+    return (NULL);
+  current = list->next;
+  while (current->process_nbr != i)
+    current = current->next;
+  cmd = get_cmd_node(current);
+  return (cmd);
+}
+
 t_token *get_cmd_node(t_token *list)
 {
   t_token *current;

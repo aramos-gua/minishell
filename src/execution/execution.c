@@ -17,6 +17,7 @@ int	child_process(int i, t_data *all, int **pipes)
 	int	j;
 
 	j = -1;
+  ft_printf("starting child, [%d]\n", i);
 	if (i == 0)
 		first_command(i, all, pipes);
   else
@@ -27,16 +28,18 @@ int	child_process(int i, t_data *all, int **pipes)
   {
 		last_command(all, pipes);
   }
-	else if (i < all->total_proc - 1)
+	else if (i < all->info->total_proc - 1)
 		dup2(pipes[i][1], STDOUT_FILENO);
-	while (++j < all->total_proc - 1)
+	while (++j < all->info->total_proc - 1)
 	{
 		close(pipes[j][0]);
 		close(pipes[j][1]);
 	}
 	close(all->info->in_fd);
 	close(all->info->out_fd);
-	execute_command(all);
+  ft_printf("about to execute_command\n");
+	execute_command(all, i);
+  ft_printf("execute failed\n");
   return (1);
 }
 
@@ -114,13 +117,24 @@ int	fork_init(t_data *all, int **pipes)
 		if (pid == 0)
 		{
 			child_process(i, all, pipes);
+      exit (1);
 		}
-		token = all->tokens;
-		while (token->next->process_nbr != 0)
-			token = token->next;
-		all->info->last_pid = pid;
+    else
+    {
+      token = all->tokens;
+      while (token->next->process_nbr != 0)
+        token = token->next;
+      all->info->last_pid = pid;
+    }
 		i++;
 	}
+  i = 0;
+  while (i < all->info->total_proc)
+  {
+    waitpid(-1, NULL, 0);
+    i++;
+  }
+  ft_printf("finished forking\n");
   return (0);
 }
 
@@ -173,8 +187,8 @@ int	one_command(t_data *all)
 	all->info->pid = fork();
 	if (all->info->pid == 0)//child
 	{
-		if (execute_command(all))
-			return (1);
+		(execute_command(all, 0));
+		
 	}
 	//parent
 	waitpid(all->info->pid, NULL, 0);
@@ -222,8 +236,8 @@ int	execution(t_data *all)
 	{
 		pipes = pipes_init(&pipes, all);
 		open_pipes(pipes, all);
-		if (execute_command(all))
-			return (1);
+	//	if (execute_command(all))
+	//		return (1);
 	}
 	return (0);
 }

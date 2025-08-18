@@ -96,13 +96,14 @@ char	*build_path(char *cmd, char **paths);
 char	*get_cmd_path(char *cmd, char **env);
 
 //execution_utils.
+t_token *get_process(t_token *list, int i);
 t_token *get_cmd_node(t_token *list);
 int 	ft_lstsize(t_token *list);
 
 //commands.c
 int		first_command(int i, t_data *all, int **pipes);
 int		last_command(t_data *all, int **pipes);
-int		execute_command(t_data *all);
+void	execute_command(t_data *all, int i);
 
 //cleaner.c
 int		free_split(char **arr);
