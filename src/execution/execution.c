@@ -6,24 +6,28 @@
 /*   By: Alejandro Ramos <alejandro.ramos.gua@gmai  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 16:12:22 by Alejandro Ram     #+#    #+#             */
-/*   Updated: 2025/08/11 09:01:48 by alex             ###   ########.fr       */
+/*   Updated: 2025/08/18 16:12:55 by Alejandro Ram    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-void	child_process(int i, t_data *all, int **pipes)
+int	child_process(int i, t_data *all, int **pipes)
 {
 	int	j;
 
 	j = -1;
 	if (i == 0)
 		first_command(i, all, pipes);
-	else
+  else
+  {
 		dup2(pipes[i - 1][0], STDIN_FILENO);
-	if (i == all->total_proc - 1)
+  }
+  if (i == all->info->total_proc - 1)
+  {
 		last_command(all, pipes);
-	else
+  }
+	else if (i < all->total_proc - 1)
 		dup2(pipes[i][1], STDOUT_FILENO);
 	while (++j < all->total_proc - 1)
 	{
@@ -33,7 +37,37 @@ void	child_process(int i, t_data *all, int **pipes)
 	close(all->info->in_fd);
 	close(all->info->out_fd);
 	execute_command(all);
+  return (1);
 }
+
+//int	child_process(int i, t_data *all, int **pipes)
+//{
+//	int	j;
+//
+//	j = -1;
+//	if (i == 0 && all->info->in_fd >= 0)
+//  {
+//		dup2(all->info->in_fd, STDIN_FILENO);
+//    ft_printf("first command\n");
+//  }
+//	else if (i > 0)
+//		dup2(pipes[i - 1][0], STDIN_FILENO);
+//	if (i == all->total_proc - 1 && all->info->out_fd >= 0)
+//		dup2(all->info->out_fd, STDOUT_FILENO);
+//	else if (i < all->total_proc - 1)
+//		dup2(pipes[i][1], STDOUT_FILENO);
+//	while (++j < all->total_proc - 1)
+//	{
+//		close(pipes[j][0]);
+//		close(pipes[j][1]);
+//	}
+//  if (all->info->in_fd >= 0)
+//    close(all->info->in_fd);
+//  if (all->info->out_fd >= 0)
+//    close(all->info->out_fd);
+//	execute_command(all);
+//  return (1);
+//}
 
 int	**pipes_init(int ***pipes, t_data *all)
 {
@@ -48,7 +82,7 @@ int	**pipes_init(int ***pipes, t_data *all)
 	while (i < all->info->total_proc - 1)
 	{
 		(*pipes)[i] = malloc(2 * sizeof(int));
-		if (!pipes)
+		if (!*pipes)
 		{
 			while (--i >= 0)
 				free (*pipes[i]);
@@ -61,7 +95,7 @@ int	**pipes_init(int ***pipes, t_data *all)
 	return (*pipes);
 }
 
-static void	fork_init(t_data *all, int **pipes)
+int	fork_init(t_data *all, int **pipes)
 {
 	int	  	i;
 	pid_t 	pid;
@@ -87,6 +121,7 @@ static void	fork_init(t_data *all, int **pipes)
 		all->info->last_pid = pid;
 		i++;
 	}
+  return (0);
 }
 
 void	open_pipes(int **pipes, t_data *all)

@@ -6,7 +6,7 @@
 /*   By: mtice <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 15:29:12 by mtice             #+#    #+#             */
-/*   Updated: 2025/08/09 23:39:41 by mtice            ###   ########.fr       */
+/*   Updated: 2025/08/18 15:36:31 by Alejandro Ram    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,22 @@ void	free_double_char(char **arr);
 void	handle_error(char *message, char exit_status);
 
 //execution.c
+int		child_process(int i, t_data *all, int **pipes);
+int		**pipes_init(int ***pipes, t_data *all);
+int		fork_init(t_data *all, int **pipes);
+void	open_pipes(int **pipes, t_data *all);
+int		get_files(t_data *all);
+int		one_command(t_data *all);
 int		execution(t_data *all);
+
+//get_binaries.c
+char  	**array_builder(t_data *all);
+char	*build_path(char *cmd, char **paths);
+char	*get_cmd_path(char *cmd, char **env);
+
+//execution_utils.
+t_token *get_cmd_node(t_token *list);
+int 	ft_lstsize(t_token *list);
 
 //commands.c
 int		first_command(int i, t_data *all, int **pipes);
