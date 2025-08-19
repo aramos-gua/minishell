@@ -58,13 +58,18 @@ static void	token_pretty(t_data *all, t_token *tokens)
 	t_token	*temp;
 	int	i;
 
-	(void)all;
 	temp = NULL;
 	i = -1;
 	while (temp != tokens->next)
 	{
 		if (i++ == -1)
 			temp = tokens->next;
+		if (ft_strchr(temp->token, '$'))
+		{
+			char	*old_token = temp->token;
+			temp->token = expansion(all, temp->token, temp);
+			free(old_token);
+		}
 		if (ft_strlen(ft_strchr(temp->token, '\'')) > ft_strlen(ft_strchr(temp->token, '"')))
 		{
 			del_char(temp->token, '\'');
@@ -74,18 +79,6 @@ static void	token_pretty(t_data *all, t_token *tokens)
 		{
 			del_char(temp->token, '"');
 			sub_char(temp->token, 26, '|');
-			if (ft_strchr(temp->token, '$'))
-			{
-				char *old_token = temp->token;
-				temp->token = expansion(all, temp->token);
-				free(old_token);
-			}
-		}
-		else if (ft_strchr(temp->token, '$'))
-		{
-			char	*old_token = temp->token;
-			temp->token = expansion(all, temp->token);
-			free(old_token);
 		}
 		temp = temp->next;
 	}
