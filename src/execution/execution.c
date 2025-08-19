@@ -17,10 +17,12 @@ int	child_process(int i, t_data *all, int **pipes)
 	int	j;
 
 	j = -1;
-  ft_printf("starting child, [%d]\n", i);
-  ft_printf("i = [%d]\n", i);
-  if (all->info->in_fd != 0 || all->info->out_fd != 1)
-  {
+  if (i == 0)
+    write(2, "starting child, [0]\n", 20);
+  else if (i == 1)
+    write(2, "starting child, [1]\n", 20);
+  //if (all->info->in_fd != 0 || all->info->out_fd != 1)
+  //{
     if (i == 0)
       first_command(i, all, pipes);
     else
@@ -33,7 +35,7 @@ int	child_process(int i, t_data *all, int **pipes)
     }
     else if (i < all->info->total_proc - 1)
       dup2(pipes[i][1], STDOUT_FILENO);
-  }
+  //}
 	while (++j < all->info->total_proc - 1)
 	{
 		close(pipes[j][0]);
@@ -105,36 +107,39 @@ int	**pipes_init(int ***pipes, t_data *all)
 int	fork_init(t_data *all, int **pipes)
 {
 	int	  	i;
-	pid_t 	pid;
+	//pid_t 	pid;
 	t_token *token;
 
 	i = 0;
 	ft_printf("starting fork_init\n");
 	while (i < all->info->total_proc)
 	{
-		pid = fork();
-		if (pid < 0)
+		all->info->pid = fork();
+		if (all->info->pid < 0)
 		{
 			ft_printf("Error: Fork Failure\n");
 			exit(1);
 		}
-		if (pid == 0)
+		if (all->info->pid == 0)
 		{
+      close(pipes[i][0]);
 			child_process(i, all, pipes);
       exit (1);
 		}
     else
     {
+      close(pipes[i][1]);
       token = all->tokens;
       while (token->next->process_nbr != 0)
         token = token->next;
-      all->info->last_pid = pid;
+      all->info->last_pid = all->info->pid;
     }
 		i++;
 	}
   i = 0;
   while (i < all->info->total_proc)
   {
+    write(2, "waiting\n", 8);
     waitpid(-1, NULL, 0);
     i++;
   }
@@ -156,7 +161,7 @@ void	open_pipes(int **pipes, t_data *all)
 			exit(1);
 		}
 		i++;
-		ft_printf("%d pipe opened\n", i);
+		ft_printf("%d pipe opened\n\n", i);
 	}
 	fork_init(all, pipes);
 	i = 0;
@@ -169,6 +174,7 @@ void	open_pipes(int **pipes, t_data *all)
 	//return (pipes);
 }
 
+//TODO: Delete this after, mtice will do this in parsing
 int	get_files(t_data *all)
 {
 	if (all->info->infile)
@@ -212,6 +218,8 @@ int	execution(t_data *all)
 	//if its builtin, dont exit
 	//builtin(all);
 	//if needs fork
+  all->info->in_fd = 0;
+  all->info->out_fd = 1;
 	ft_printf("\nStarting exec\n");
 	ft_printf("\n----------EXECUTION---------\n");
 ///////////////////////////////////////////////////////////////////////////////

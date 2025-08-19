@@ -91,13 +91,13 @@ int		one_command(t_data *all);
 int		execution(t_data *all);
 
 //get_binaries.c
-char  	**array_builder(t_data *all);
+char  	**array_builder(t_data *all, int proc);
 char	*build_path(char *cmd, char **paths);
 char	*get_cmd_path(char *cmd, char **env);
 
 //execution_utils.
 t_token *get_process(t_token *list, int i);
-t_token *get_cmd_node(t_token *list);
+t_token *get_cmd_node(t_token *list, int i);
 int 	ft_lstsize(t_token *list);
 
 //commands.c

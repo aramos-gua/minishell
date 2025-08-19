@@ -16,10 +16,11 @@ int	first_command(int i, t_data *all, int **pipes)
 {
 	int	devnull;
 
-	ft_printf("first command\n");
+	write(2, "first command\n", 14);
 	if (all->info->in_fd >= 0)
   {
 		dup2(all->info->in_fd, STDIN_FILENO);
+    close(all->info->in_fd);
     ft_printf("dup2 in_fd\n");
   }
 	else
@@ -37,9 +38,13 @@ int	first_command(int i, t_data *all, int **pipes)
 
 int	last_command(t_data *all, int **pipes)
 {
-	ft_printf("last command\n");
+	write(2, "last command\n", 13);
 	if (all->info->out_fd >= 0)
+  {
 		dup2(all->info->out_fd, STDOUT_FILENO);
+    close(all->info->out_fd);
+    ft_printf("dup2 out_fd\n");
+  }
 	else
 	{
 		write(2, "minishell: Outfile Error\n", 25);
@@ -60,8 +65,7 @@ void	execute_command(t_data *all, int i)
 
 	write(2, "execute_command\n", 16);
 	cmd = get_process(all->tokens, i);
-  write(2, "the cmd found after get_process is\n", 35); 
-  write(2, cmd->token, 2);
+  dprintf(2, "the cmd found after get_process is [%s]\n", cmd->token);
   write(2, "\n", 1);
 	if (!cmd)
   {
@@ -69,6 +73,7 @@ void	execute_command(t_data *all, int i)
 	  exit (1);
   }
 	path = get_cmd_path(cmd->token, all->c_envp);
+  dprintf(2, "path: [%s] process id: [%d]\n", path, all->info->pid);
 	if (!path)
 	{
     ft_printf("exited after get_cmd_path\n");
@@ -76,8 +81,8 @@ void	execute_command(t_data *all, int i)
 		exit (1);
 	}
   write(2, "starting array_builder\n", 23);
-	cmd_arr = array_builder(all);
-  write(2, "starting execve\n", 16);
+	cmd_arr = array_builder(all, i);
+  write(2, "starting execve\n\n", 17);
 	if (execve(path, cmd_arr, all->c_envp) == -1)
 	{
     ft_printf("exited after execve\n");

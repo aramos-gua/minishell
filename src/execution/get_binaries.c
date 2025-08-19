@@ -12,7 +12,7 @@
 
 #include "../inc/minishell.h"
 
-char  **array_builder(t_data *all)
+char  **array_builder(t_data *all, int proc)
 {
   t_token *tmp;
   char    **arr;
@@ -24,19 +24,19 @@ char  **array_builder(t_data *all)
   if (!arr)
     return (NULL);
   tmp = all->tokens;
-  while (tmp->type != COMMAND)
+  while (tmp->type != COMMAND || tmp->process_nbr != proc)
     tmp = tmp->next;
   arr[i++] = tmp->token;
   tmp = tmp->next;
-  ft_printf("[%d][%s]  ", i - 1, arr[i - 1]);
+  //ft_printf("[%d][%s]  ", i - 1, arr[i - 1]);
   while (tmp->type != COMMAND)
   {
     arr[i++] = tmp->token;
     tmp = tmp->next;
-    ft_printf("[%d][%s]  ", i - 1, arr[i - 1]);
+    //ft_printf("[%d][%s]  ", i - 1, arr[i - 1]);
   }
   arr[i] = NULL;
-  ft_printf("[%d][%s]\n\n\n", i, "NULL");
+  //ft_printf("[%d][%s]\n\n\n", i, "NULL");
   return (arr);
 }
 

@@ -16,25 +16,29 @@ t_token *get_process(t_token *list, int i)
 {
   t_token *current;
   t_token *cmd;
+  char    *i_str;
 
+  i_str = ft_itoa(i);
   write(2, "get_process start\n", 18);
+  write(2, i_str, 1);
+  write(2, "\n", 1);
   if (!list)
     return (NULL);
   current = list;
   while (current->process_nbr != i)
     current = current->next;
-  cmd = get_cmd_node(current);
+  cmd = get_cmd_node(current, i);
   return (cmd);
 }
 
-t_token *get_cmd_node(t_token *list)
+t_token *get_cmd_node(t_token *list, int i)
 {
   t_token *current;
 
   if (!list)
     return (NULL);
   current = list;
-  while (current->type != COMMAND)
+  while (current->type != COMMAND || current->process_nbr != i)
     current = current->next;
   return(current);
 }
