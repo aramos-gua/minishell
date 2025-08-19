@@ -17,10 +17,10 @@ t_token *get_process(t_token *list, int i)
   t_token *current;
   t_token *cmd;
 
-  ft_printf("get_process start\n");
+  write(2, "get_process start\n", 18);
   if (!list)
     return (NULL);
-  current = list->next;
+  current = list;
   while (current->process_nbr != i)
     current = current->next;
   cmd = get_cmd_node(current);

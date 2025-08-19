@@ -18,16 +18,20 @@ int	first_command(int i, t_data *all, int **pipes)
 
 	ft_printf("first command\n");
 	if (all->info->in_fd >= 0)
+  {
 		dup2(all->info->in_fd, STDIN_FILENO);
+    ft_printf("dup2 in_fd\n");
+  }
 	else
 	{
 		devnull = open("/dev/null", O_RDONLY);
 		dup2(devnull, STDIN_FILENO);
 		close(devnull);
-		//return (1);
+		return (1);
 	}
+  write(2, "about to dup2 out\n", 18);
 	dup2(pipes[i][1], STDOUT_FILENO);
-  ft_printf("all good at first_command\n");
+  write(2, "all good at first_command\n", 26);
 	return (0);
 }
 
@@ -54,15 +58,16 @@ void	execute_command(t_data *all, int i)
 	char	  *path;
 	char    **cmd_arr;
 
-	ft_printf("execute_command\n");
+	write(2, "execute_command\n", 16);
 	cmd = get_process(all->tokens, i);
-  ft_printf("the cmd found after get_process is [%s]\n", cmd->token);
+  write(2, "the cmd found after get_process is\n", 35); 
+  write(2, cmd->token, 2);
+  write(2, "\n", 1);
 	if (!cmd)
   {
-    ft_printf("exited after cmd\n");
+    write(2, "exited after cmd\n", 17);
 	  exit (1);
   }
-	ft_printf("after get_process, token is [%s]\n", cmd->token);
 	path = get_cmd_path(cmd->token, all->c_envp);
 	if (!path)
 	{
@@ -70,7 +75,9 @@ void	execute_command(t_data *all, int i)
 		perror("execve");
 		exit (1);
 	}
+  write(2, "starting array_builder\n", 23);
 	cmd_arr = array_builder(all);
+  write(2, "starting execve\n", 16);
 	if (execve(path, cmd_arr, all->c_envp) == -1)
 	{
     ft_printf("exited after execve\n");

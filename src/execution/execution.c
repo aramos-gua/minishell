@@ -18,26 +18,30 @@ int	child_process(int i, t_data *all, int **pipes)
 
 	j = -1;
   ft_printf("starting child, [%d]\n", i);
-	if (i == 0)
-		first_command(i, all, pipes);
-  else
+  ft_printf("i = [%d]\n", i);
+  if (all->info->in_fd != 0 || all->info->out_fd != 1)
   {
-		dup2(pipes[i - 1][0], STDIN_FILENO);
+    if (i == 0)
+      first_command(i, all, pipes);
+    else
+    {
+      dup2(pipes[i - 1][0], STDIN_FILENO);
+    }
+    if (i == all->info->total_proc - 1)
+    {
+      last_command(all, pipes);
+    }
+    else if (i < all->info->total_proc - 1)
+      dup2(pipes[i][1], STDOUT_FILENO);
   }
-  if (i == all->info->total_proc - 1)
-  {
-		last_command(all, pipes);
-  }
-	else if (i < all->info->total_proc - 1)
-		dup2(pipes[i][1], STDOUT_FILENO);
 	while (++j < all->info->total_proc - 1)
 	{
 		close(pipes[j][0]);
 		close(pipes[j][1]);
 	}
-	close(all->info->in_fd);
-	close(all->info->out_fd);
-  ft_printf("about to execute_command\n");
+	//close(all->info->in_fd);
+	//close(all->info->out_fd);
+  write(2, "about to execute_command\n", 25);
 	execute_command(all, i);
   ft_printf("execute failed\n");
   return (1);
@@ -169,16 +173,22 @@ int	get_files(t_data *all)
 {
 	if (all->info->infile)
 		all->info->in_fd = open(all->info->infile, O_RDONLY);
+  else if (!all->info->infile)
+    all->info->in_fd = 0;
 	if (all->info->in_fd < 0)
 		ft_printf("Error: %s not found\n", all->info->infile);
 	if (all->info->outfile)
 		all->info->out_fd = open(all->info->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+  else if (!all->info->outfile)
+    all->info->out_fd = 1;
 	if (all->info->out_fd < 0)
 		ft_printf("Error: %s incorrect permissions\n", all->info->infile);
 	if (all->info->append)
 		all->info->app_fd = open(all->info->append, O_WRONLY | O_CREAT | O_APPEND, 0666);
 	if (all->info->app_fd < 0)
 		ft_printf("Error: %s incorrect permissions\n", all->info->infile);
+  ft_printf("in fd: [%d]\n", all->info->in_fd);
+  ft_printf("out fd: [%d]\n", all->info->out_fd);
 	return (0);
 }
 
