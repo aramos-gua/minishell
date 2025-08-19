@@ -12,16 +12,39 @@
 
 #include "../../inc/minishell.h"
 
+// static	void	check_var(t_tokens *tkn_ptr, char **env_var)
+// {
+// 	int		i;
+// 	char	*new_var;
+//
+// 	i = 0;
+// 	while (!ft_isspace(*env_var[i]) && *env_var[i] != '\0')
+// 		i++;
+// 	if (*env_var[i] == '\0')
+// 		return ;
+// 	else
+// 	{
+// 		i++;
+// 		while (!ft_isspace(*env_var[i]) && *env_var[i] != '\0')
+// 			i++;
+//
+// 	}
+//
+// }
+
 static	void	expand_var(char **c_envp, char **env_var)
 {
 	int	i;
 	int	j;
 	int	k;
-	char *temp;
+	char *temp = NULL;
 
 	i = 0;
 	j = 0;
 	k = 0;
+	temp = *env_var;
+	*env_var = ft_strjoin(*env_var, "=");
+	free(temp);
 	temp = *env_var;
 	while (c_envp[j] != NULL)
 	{
@@ -40,44 +63,67 @@ static	void	expand_var(char **c_envp, char **env_var)
 	free(temp);
 }
 
+//----------------------------------------------------------------------------------
+//expansion inside quotes, i.e. there is a $ inside ""
+//e.g. "$'HOME"
 //TODO: handle this case: export a="cho hello"
 //e$a (should give echo: builtin, hello: argument)
 //handle heredoc expansions
-char *expansion(t_data *all, char *token)
+
+char	*expansion(t_data *all, char *token, t_token *tkn_ptr)
 {
 	int		i;
 	int		len;
+	char	*prev_env_var;
 	char	*env_var;
-	char	*temp;
 
 	i = 0;
 	env_var = NULL;
 	while (token[i] != '\0')
 	{
 		len = 0;
-		temp = env_var;
-		if (token[i] == '$' && token[i + 1] != '\0' && token[i + 1] != '$')
+		prev_env_var = env_var;
+		if (token[i] == '$' && token[i + 1] == '?')
 		{
-			i++;
-			while (token[i] != ' ' && token[i] != '$'
-					&& token[i] != '"' && token[i] != '\'' && token[i] != '\0')
+			printf("UNIMPLEMENTED: return exit code (expansion)\n");
+			return (NULL);
+		}
+		else if (token[i] == '$' && token[i + 1] == '\'')
+		{
+			i += 2, len++;
+			while (token[i] != '\'' && token[i] != '\0')
 				i++, len++;
 			env_var = find_token(token, i--, len);
-			env_var = ft_strjoin(env_var, "=");
+			env_var = ft_strjoin(prev_env_var, env_var);
+		}
+		else if (token[i] == '$' && token[i + 1] == '"')
+		{
+			i += 2, len++;
+			while (token[i] != '"' && token[i] != '$' && token[i] != '\0')
+				i++, len++;
+			env_var = find_token(token, i--, len);
+			env_var = ft_strjoin(prev_env_var, env_var);
+
+		}
+		else if (token[i] == '$' && (ft_isalpha(token[i + 1]) || token[i + 1] == '_'))
+		{
+			i++;
+			while (ft_isalpha(token[i]) || token[i] == '_')
+				i++, len++;
+			env_var = find_token(token, i--, len);
 			expand_var(all->c_envp, &env_var);
-			env_var = ft_strjoin(temp, env_var);
+			env_var = ft_strjoin(prev_env_var, env_var);
 		}
 		else if (token[i] == '$' && token[i + 1] == '\0')
-			env_var = ft_strjoin(env_var, "$");
-		else if (token[i] != '$' && token[i] != '\0')
+			env_var = ft_strjoin(prev_env_var, "$");
+		else if (token[i] != '$')
 		{
 			while (token[i] != '$' && token[i] != '\0')
 				i++, len++;
 			env_var = find_token(token, i--, len);
-			env_var = ft_strjoin(temp, env_var);
+			env_var = ft_strjoin(prev_env_var, env_var);
 		}
-		//free(temp);
 		i++;
 	}
-	return (env_var);
+	return (check_var(tkn_ptr, &env_var));
 }

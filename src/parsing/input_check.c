@@ -53,24 +53,15 @@ static int	deal_redirects(char *input, int *i)
 static int	deal_expansion(char *input, int *i)
 {
 	int		j;
-	char	*syntax;
 
 	j = 0;
 	if (input[*i] == '$')
 	{
 		while (input[++(*i)] == '$')
 			j++;
+		(*i) -= (j + 1);
 		if (j > 0)
-		{
-			syntax = malloc(sizeof(char) * (j + 1));
-			if (!syntax)
-				return (perror("Malloc error"), 1);
-			syntax[j] = '\0';
-			while (j-- > 0)
-				syntax[j] = '$';
-			printf("bash: syntax error near unexpected token `%s'\n", syntax);
-			return (free(syntax), 1);
-		}
+			return (printf("bash: syntax error near unexpected token `$'\n"));
 	}
 	return (0);
 }
@@ -83,7 +74,6 @@ static int	deal_expansion(char *input, int *i)
 static int	deal_multiple_pipes(char *input, int *i)
 {
 	int		j;
-	char	*syntax;
 
 	j = 0;
 	if (input[*i] == '|')
@@ -93,17 +83,7 @@ static int	deal_multiple_pipes(char *input, int *i)
 		if (input[*i] == '\0' || j == 2)
 			return (printf("bash: syntax error near unexpected token `|'\n"));
 		else if (j > 2)
-		{
-			j -= 2;
-			syntax = malloc(sizeof(char) * (j + 1));
-			if (!syntax)
-				return (perror("Malloc error"), 1);
-			syntax[j] = '\0';
-			while (j-- > 0)
-				syntax[j] = '|';
-			printf("bash: syntax error near unexpected token `%s'\n", syntax);
-			return (free(syntax), 1);
-		}
+			return (printf("bash: syntax error near unexpected token `||'\n"));
 	}
 	return (0);
 }
@@ -163,6 +143,26 @@ int	input_check(char *input)
 			return (1);
 		else if ((input[i] == '<' || input[i] == '>') && deal_redirects(input, &i))
 			return (1);
+		// if ((input[i] == '\'' || input[i] == '"'))
+		// {
+		// 	if (deal_quotes(input, &i))
+		// 		return (1);
+		// }
+		// else if (input[i] == '|')
+		// {
+		// 	if (deal_multiple_pipes(input, &i))
+		// 		return (1);
+		// }
+		// else if (input[i] == '$')
+		// {
+		// 	if (deal_expansion(input, &i))
+		// 		return (1);
+		// }
+		// else if (input[i] == '<' || input[i] == '>')
+		// {
+		// 	if (deal_redirects(input, &i))
+		// 		return (1);
+		// }
 		i++;
 	}
 	return (0);

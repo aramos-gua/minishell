@@ -109,6 +109,7 @@ int	find_processes(t_data *all, char *input)
 		j++;
 	}
 	all->info = info;
+	all->total_proc = len;
 	return (0);
 }
 

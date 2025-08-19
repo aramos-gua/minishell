@@ -46,27 +46,27 @@ t_token	*add_t_token(t_token *tail, char *token, int nbr)
 	}
 }
 
-// t_token *add_at_mid(t_token *tail, char *token, int nbr, int position)
-// {
-// 	t_token	*new_node;
-// 	t_token	*temp;
-//
-// 	if (tail == NULL)
-// 		return (new_node);
-// 	temp = tail->next;
-// 	while (position > 0)
-// 	{
-// 		temp = temp->next;
-// 		position--;
-// 	}
-// 	new_node->prev = temp;
-// 	new_node->next = temp->next;
-// 	temp->next->prev = new_node;
-// 	temp->next = new_node;
-// 	if (temp == tail)
-// 		tail = tail->next;
-// 	return (tail);
-// }
+t_token *add_at_mid(t_token *tail, char *token, int nbr, int position)
+{
+	t_token	*new_node;
+	t_token	*temp;
+
+	if (tail == NULL)
+		return (new_node);
+	temp = tail->next;
+	while (position > 0)
+	{
+		temp = temp->next;
+		position--;
+	}
+	new_node->prev = temp;
+	new_node->next = temp->next;
+	temp->next->prev = new_node;
+	temp->next = new_node;
+	if (temp == tail)
+		tail = tail->next;
+	return (tail);
+}
 
 t_token	*del_inter(t_token *tail, int position)
 {
