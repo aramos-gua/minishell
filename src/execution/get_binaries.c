@@ -20,7 +20,7 @@ char  **array_builder(t_data *all, int proc)
 
   i = 0;
 	//ft_printf("array builder\n");
-  arr = malloc (ft_lstsize(all->tokens) + 1 * sizeof(char *));
+  arr = malloc ((ft_lstsize(all->tokens) + 1) * sizeof(char *));
   if (!arr)
     return (NULL);
   tmp = all->tokens;

@@ -16,7 +16,7 @@ int	child_process(int i, t_data *all, int **pipes)
 {
 	int	j;
 
-	j = -1;
+	j = 0;
   if (i == 0)
     write(2, "starting child, [0]\n", 20);
   else if (i == 1)
@@ -24,7 +24,7 @@ int	child_process(int i, t_data *all, int **pipes)
   //if (all->info->in_fd != 0 || all->info->out_fd != 1)
   //{
     if (i == 0)
-      first_command(i, all, pipes);
+      first_command(all, pipes);
     else
     {
       dup2(pipes[i - 1][0], STDIN_FILENO);
@@ -36,10 +36,11 @@ int	child_process(int i, t_data *all, int **pipes)
     else if (i < all->info->total_proc - 1)
       dup2(pipes[i][1], STDOUT_FILENO);
   //}
-	while (++j < all->info->total_proc - 1)
+	while (j < all->info->total_proc - 1)
 	{
 		close(pipes[j][0]);
 		close(pipes[j][1]);
+    j++;
 	}
 	//close(all->info->in_fd);
 	//close(all->info->out_fd);
@@ -78,7 +79,7 @@ int	child_process(int i, t_data *all, int **pipes)
 //  return (1);
 //}
 
-int	**pipes_init(int ***pipes, t_data *all)
+int	pipes_init(int ***pipes, t_data *all)
 {
 	int	i;
 
@@ -86,8 +87,10 @@ int	**pipes_init(int ***pipes, t_data *all)
 	ft_printf("starting pipes_init\n");
 	ft_printf("total_proc = [%d]\n", all->info->total_proc);
 	*pipes = malloc((all->info->total_proc - 1) * sizeof (int *));
-	if (!pipes)
-		return (ft_printf("Error: Malloc Failure\n"), NULL);
+	if (!*pipes)
+		return (ft_printf("Error: Malloc Failure\n"), 1);
+  else
+    ft_printf("pipes pointer created\n");
 	while (i < all->info->total_proc - 1)
 	{
 		(*pipes)[i] = malloc(2 * sizeof(int));
@@ -96,12 +99,12 @@ int	**pipes_init(int ***pipes, t_data *all)
 			while (--i >= 0)
 				free (*pipes[i]);
 			free(*pipes);
-			return (ft_printf("Error: Malloc Failure\n"), NULL);
+			return (ft_printf("Error: Malloc Failure\n"), 1);
 		}
 		i++;
 		ft_printf("%d pipe created\n", i);
 	}
-	return (*pipes);
+	return (0);
 }
 
 int	fork_init(t_data *all, int **pipes)
@@ -122,27 +125,30 @@ int	fork_init(t_data *all, int **pipes)
 		}
 		if (all->info->pid == 0)
 		{
-      close(pipes[i][0]);
+      //close(pipes[i][0]);
 			child_process(i, all, pipes);
       exit (1);
 		}
     else
     {
-      close(pipes[i][1]);
+      //close(pipes[i][1]);
       token = all->tokens;
       while (token->next->process_nbr != 0)
         token = token->next;
       all->info->last_pid = all->info->pid;
+ //     waitpid(all->info->pid, NULL, 0);
     }
 		i++;
 	}
-  i = 0;
-  while (i < all->info->total_proc)
-  {
-    write(2, "waiting\n", 8);
-    waitpid(-1, NULL, 0);
-    i++;
-  }
+  //waitpid(all->info->last_pid, NULL, 0);
+  //while (wait(0) > 0);
+ // i = 0;
+ // while (i < all->info->total_proc)
+ // {
+ //   write(2, "waiting\n", 8);
+ //   waitpid(-1, NULL, 0);
+ //   i++;
+ // }
   ft_printf("finished forking\n");
   return (0);
 }
@@ -171,6 +177,13 @@ void	open_pipes(int **pipes, t_data *all)
 		close(pipes[i][1]);
 		i++;
 	}
+  i = 0;
+  while (i < all->info->total_proc)
+  {
+    write(2, "waiting\n", 8);
+    waitpid(-1, NULL, 0);
+    i++;
+  }
 	//return (pipes);
 }
 
@@ -252,8 +265,17 @@ int	execution(t_data *all)
 		one_command(all);
 	if (all->info->total_proc > 1)
 	{
-		pipes = pipes_init(&pipes, all);
+    //int j = 0;
+		pipes_init(&pipes, all);
 		open_pipes(pipes, all);
+    //close(all->info->in_fd);
+    //close(all->info->out_fd);
+    //while (j < all->info->total_proc - 1)
+    //{
+    //  close(pipes[j][0]);
+    //  close(pipes[j][1]);
+    //  j++;
+    //}
 	//	if (execute_command(all))
 	//		return (1);
 	}

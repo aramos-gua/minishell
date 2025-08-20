@@ -12,7 +12,7 @@
 
 #include "../inc/minishell.h"
 
-int	first_command(int i, t_data *all, int **pipes)
+int	first_command(t_data *all, int **pipes)
 {
 	int	devnull;
 
@@ -20,7 +20,7 @@ int	first_command(int i, t_data *all, int **pipes)
 	if (all->info->in_fd >= 0)
   {
 		dup2(all->info->in_fd, STDIN_FILENO);
-    close(all->info->in_fd);
+    //close(all->info->in_fd);
     ft_printf("dup2 in_fd\n");
   }
 	else
@@ -31,7 +31,7 @@ int	first_command(int i, t_data *all, int **pipes)
 		return (1);
 	}
   write(2, "about to dup2 out\n", 18);
-	dup2(pipes[i][1], STDOUT_FILENO);
+	dup2(pipes[0][1], STDOUT_FILENO);
   write(2, "all good at first_command\n", 26);
 	return (0);
 }
@@ -42,15 +42,15 @@ int	last_command(t_data *all, int **pipes)
 	if (all->info->out_fd >= 0)
   {
 		dup2(all->info->out_fd, STDOUT_FILENO);
-    close(all->info->out_fd);
+    //close(all->info->out_fd);
     ft_printf("dup2 out_fd\n");
   }
 	else
 	{
 		write(2, "minishell: Outfile Error\n", 25);
 		close_pipes(all, pipes);
-		close(all->info->out_fd);
-		close(all->info->in_fd);
+		//close(all->info->out_fd);
+		//close(all->info->in_fd);
 		//return (1);
 	}
   ft_printf("all good at last_command\n");

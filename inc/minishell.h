@@ -83,7 +83,7 @@ void	handle_error(char *message, char exit_status);
 
 //execution.c
 int		child_process(int i, t_data *all, int **pipes);
-int		**pipes_init(int ***pipes, t_data *all);
+int		pipes_init(int ***pipes, t_data *all);
 int		fork_init(t_data *all, int **pipes);
 void	open_pipes(int **pipes, t_data *all);
 int		get_files(t_data *all);
@@ -101,7 +101,7 @@ t_token *get_cmd_node(t_token *list, int i);
 int 	ft_lstsize(t_token *list);
 
 //commands.c
-int		first_command(int i, t_data *all, int **pipes);
+int		first_command(t_data *all, int **pipes);
 int		last_command(t_data *all, int **pipes);
 void	execute_command(t_data *all, int i);
 
