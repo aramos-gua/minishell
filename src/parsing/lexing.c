@@ -6,7 +6,7 @@
 /*   By: mtice <mtice@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 17:37:41 by mtice             #+#    #+#             */
-/*   Updated: 2025/08/10 00:14:14 by mtice            ###   ########.fr       */
+/*   Updated: 2025/08/21 21:40:16 by mtice            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,8 @@ static void	assign_types(t_token *tokens)
 	{
 		if (i == -1)
 			temp = tokens->next;
-		if (is_builtin(temp->token))
-			temp->type = BUILTIN;
-		else if (!ft_strncmp(temp->token, "<\0", 2)
-				|| !ft_strncmp(temp->token, "<<\0", 3)
-				|| !ft_strncmp(temp->token, ">\0", 2)
-				|| !ft_strncmp(temp->token, ">>\0", 3))
+		if (!ft_strncmp(temp->token, "<\0", 2) || !ft_strncmp(temp->token, "<<\0", 3)
+				|| !ft_strncmp(temp->token, ">\0", 2) || !ft_strncmp(temp->token, ">>\0", 3))
 			temp->type = OPERATOR;
 		else if (temp->prev->type == OPERATOR) 
 		{
@@ -42,12 +38,14 @@ static void	assign_types(t_token *tokens)
 			else if (!ft_strncmp(temp->prev->token, ">>\0", 3))
 				temp->type = APPEND;
 		}
-		else if (temp->process_nbr > i)
+		else if (temp->process_nbr > i++)
+		{
 			temp->type = COMMAND;
+			if (is_builtin(temp->token))
+				temp->builtin = 1;
+		}
 		else
 		 	temp->type = ARGUMENT;
-		if (temp->process_nbr > i)
-			i++;
 		temp = temp->next;
 	}
 }
@@ -67,7 +65,7 @@ static void	token_pretty(t_data *all)
 		if (ft_strlen(ft_strchr(temp->token, '$')))
 		{
 			char	*old_token = temp->token;
-			temp->token = expansion(all, temp->token, temp->process_nbr, i);
+			temp->token = expansion(all, temp->token, temp->process_nbr, &i);
 			free(old_token);
 		}
 		if (ft_strlen(ft_strchr(temp->token, '\'')) > ft_strlen(ft_strchr(temp->token, '"')))

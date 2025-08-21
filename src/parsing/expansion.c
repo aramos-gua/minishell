@@ -6,40 +6,47 @@
 /*   By: mtice <mtice@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 20:59:44 by mtice             #+#    #+#             */
-/*   Updated: 2025/08/10 00:14:09 by mtice            ###   ########.fr       */
+/*   Updated: 2025/08/21 21:40:18 by mtice            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-static	void	check_var(t_token *tokens, int position, int process_nbr, char *env_var)
-{
-	int		i;
-	int		len;
-	char	*new_var;
-
-	i = 0;
-	printf("ENV_VAR: %s\n", env_var);
-	while (env_var[i] != ' ' && env_var[i] != '\0')
-		i++;
-	if (env_var[i] == '\0')
-		return ;
-	while (env_var[i] != '\0')
-	{
-		len = 0;
-		while (ft_isspace(env_var[i]) && env_var[i] != '\0')
-			i++;
-		while (!ft_isspace(env_var[i]) && env_var[i] != '\0')
-			i++, len++;
-		new_var = find_token(env_var, i--, len);
-		if (!new_var)
-			break ;
-		tokens = add_at_pos(tokens, new_var, process_nbr, ++position);
-		printf("POSITION: %d\n", position);
-		//free(new_var);
-		i++;
-	}
-}
+// static	void	check_var(t_token *tokens, char **env_var, int process_nbr, int *position)
+// {
+// 	int		i;
+// 	int		len;
+// 	char	*new_var;
+//
+// 	i = 0;
+// 	printf("ENV_VAR: %s\n", *env_var);
+// 	printf("TAIL: %s\n", tokens->token);
+// 	while ((*env_var)[i] != ' ' && (*env_var)[i] != '\0')
+// 		i++;
+// 	if ((*env_var)[i] == '\0')
+// 		return ;
+// 	while ((*env_var)[i] != '\0')
+// 	{
+// 		len = 0;
+// 		while (ft_isspace((*env_var)[i]) && (*env_var)[i] != '\0')
+// 			i++;
+// 		while (!ft_isspace((*env_var)[i]) && (*env_var)[i] != '\0')
+// 			i++, len++;
+// 		new_var = find_token(*env_var, i--, len);
+// 		if (!new_var)
+// 			break ;
+// 		tokens = add_at_pos(tokens, new_var, process_nbr, ++(*position));
+// 		//tokens = add_at_pos(tokens, new_var, process_nbr, ++(*position));
+// 		printf("POSITION: %d\n", *position);
+// 		//free(new_var);
+// 		i++;
+// 	}
+// 	i = 0;
+// 	len = 0;
+// 	while (!ft_isspace((*env_var)[i]))
+// 		i++, len++;
+// 	*env_var = find_token(*env_var, i--, len);
+// }
 
 static	void	expand_var(char **c_envp, char **env_var, int to_expand)
 {
@@ -81,8 +88,10 @@ static	void	expand_var(char **c_envp, char **env_var, int to_expand)
 //e$a (should give echo: builtin, hello: argument)
 //handle heredoc expansions
 
-char	*expansion(t_data *all, char *token, int position, int process_nbr)
+char	*expansion(t_data *all, char *token, int process_nbr, int *position)
 {
+	(void)process_nbr;
+	(void)position;
 	int		i;
 	int		len;
 	int		to_expand;
@@ -138,6 +147,6 @@ char	*expansion(t_data *all, char *token, int position, int process_nbr)
 		env_var = ft_strjoin(prev_env_var, env_var);
 		i++;
 	}
-	check_var(all->tokens, position, process_nbr, env_var);
+	//check_var(all->tokens, &env_var, process_nbr, position);
 	return (env_var);
 }

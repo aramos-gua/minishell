@@ -6,7 +6,7 @@
 /*   By: mtice <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 15:29:12 by mtice             #+#    #+#             */
-/*   Updated: 2025/08/09 23:39:41 by mtice            ###   ########.fr       */
+/*   Updated: 2025/08/21 20:57:28 by mtice            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int		tokeniser(t_data *all);
 int		lexing(t_data *all);
 
 //expansion.c
-char	*expansion(t_data *all, char *token, int position, int process_nbr);
+char	*expansion(t_data *all, char *token, int process_nbr, int *position);
 
 //redirects.c
 int		redirects(t_data *all);

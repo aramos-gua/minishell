@@ -6,7 +6,7 @@
 /*   By: mtice <mtice@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:16:04 by mtice             #+#    #+#             */
-/*   Updated: 2025/08/03 20:11:00 by mtice            ###   ########.fr       */
+/*   Updated: 2025/08/21 20:57:25 by mtice            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ t_token	*add_t_token(t_token *tail, char *token, int nbr)
 	new_node = create_t_token();
 	new_node->process_nbr = nbr;
 	new_node->token = token;
+	new_node->builtin = 0;
 	if (tail == NULL)
 		return (new_node);
 	else
@@ -54,6 +55,7 @@ t_token *add_at_pos(t_token *tail, char *token, int nbr, int position)
 	new_node = create_t_token();
 	new_node->process_nbr = nbr;
 	new_node->token = token;
+	new_node->builtin = 0;
 	if (tail == NULL)
 		return (new_node);
 	temp = tail->next;
@@ -68,45 +70,45 @@ t_token *add_at_pos(t_token *tail, char *token, int nbr, int position)
 	return (tail);
 }
 
-t_token	*del_inter(t_token *tail, int position)
-{
-	t_token	*temp;
-	t_token	*temp2;
-
-	temp = tail->next;
-	while (position > 0)
-	{
-		temp = temp->next;
-		position--;
-	}
-	temp2 = temp->prev;
-	temp2->next = temp->next;
-	temp->next->prev = temp2;
-	free(temp);
-	if (temp == tail)
-		tail = temp2;
-	return (tail);
-}
-
-t_token	*del_last(t_token *tail)
-{
-	t_token	*temp;
-
-	if (tail == NULL)
-		return (tail);
-	temp = tail -> prev;
-	if (temp == tail)
-	{
-		free(tail);
-		tail = NULL;
-		return (tail);
-	}
-	temp->next = tail->next;
-	tail->next->prev = temp;
-	free(tail);
-	tail = temp;
-	return (tail);
-}
+// t_token	*del_inter(t_token *tail, int position)
+// {
+// 	t_token	*temp;
+// 	t_token	*temp2;
+//
+// 	temp = tail->next;
+// 	while (position > 0)
+// 	{
+// 		temp = temp->next;
+// 		position--;
+// 	}
+// 	temp2 = temp->prev;
+// 	temp2->next = temp->next;
+// 	temp->next->prev = temp2;
+// 	free(temp);
+// 	if (temp == tail)
+// 		tail = temp2;
+// 	return (tail);
+// }
+//
+// t_token	*del_last(t_token *tail)
+// {
+// 	t_token	*temp;
+//
+// 	if (tail == NULL)
+// 		return (tail);
+// 	temp = tail -> prev;
+// 	if (temp == tail)
+// 	{
+// 		free(tail);
+// 		tail = NULL;
+// 		return (tail);
+// 	}
+// 	temp->next = tail->next;
+// 	tail->next->prev = temp;
+// 	free(tail);
+// 	tail = temp;
+// 	return (tail);
+// }
 
 void	print_t_token(t_token *tokens)
 {
@@ -132,33 +134,35 @@ void	print_t_token(t_token *tokens)
 	}
 }
 
- // int main(int argc, char **argv)
- // {
- // 	t_token *tail = NULL;
- // 	int i = 1;
- //
- // 	if (argc != 5)
- // 	{
- // 		printf("Argc is not 5\n");
- // 		return (1);
- // 	}
- // 	else
- // 	{
- // 		while (argv[i] != NULL)
- // 		{
- // 			//printf("%s\n", argv[i]);
- // 			tail = add_t_token(tail, argv[i], i);
- // 			i++;
- // 		}
- // 		add_at_pos(tail, "middle", i, 2);
- // 		t_token *head;
- // 		head = tail->next;
- // 		while (head != tail)
- // 		{
- // 		 	printf("%s\n", head->token);
- // 		 	head = head->next;
- // 		}
- // 		printf("%s\n", head->token);
- // 	}
- // 	return (0);
- // }
+  //int main(int argc, char **argv)
+  //{
+  //	t_token *tail = NULL;
+  //	int i = 1;
+ 
+  //	if (argc != 5)
+  //	{
+  //		printf("Argc is not 5\n");
+  //		return (1);
+  //	}
+  //	else
+  //	{
+  //		while (argv[i] != NULL)
+  //		{
+  //			//printf("%s\n", argv[i]);
+  //			tail = add_t_token(tail, argv[i], i);
+  //			i++;
+  //		}
+  //		add_at_pos(tail, "insert", i, 2);
+  //		add_at_pos(tail, "insert", i, 3);
+  //		add_at_pos(tail, "insert", i, 5);
+  //		t_token *head;
+  //		head = tail->next;
+  //		while (head != tail)
+  //		{
+  //		 	printf("%s\n", head->token);
+  //		 	head = head->next;
+  //		}
+  //		printf("%s\n", head->token);
+  //	}
+  //	return (0);
+  //}
