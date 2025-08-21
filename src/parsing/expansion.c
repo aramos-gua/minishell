@@ -12,33 +12,44 @@
 
 #include "../../inc/minishell.h"
 
-// static	void	check_var(t_tokens *tkn_ptr, char **env_var)
-// {
-// 	int		i;
-// 	char	*new_var;
-//
-// 	i = 0;
-// 	while (!ft_isspace(*env_var[i]) && *env_var[i] != '\0')
-// 		i++;
-// 	if (*env_var[i] == '\0')
-// 		return ;
-// 	else
-// 	{
-// 		i++;
-// 		while (!ft_isspace(*env_var[i]) && *env_var[i] != '\0')
-// 			i++;
-//
-// 	}
-//
-// }
+static	void	check_var(t_token *tokens, int position, int process_nbr, char *env_var)
+{
+	int		i;
+	int		len;
+	char	*new_var;
 
-static	void	expand_var(char **c_envp, char **env_var)
+	i = 0;
+	printf("ENV_VAR: %s\n", env_var);
+	while (env_var[i] != ' ' && env_var[i] != '\0')
+		i++;
+	if (env_var[i] == '\0')
+		return ;
+	while (env_var[i] != '\0')
+	{
+		len = 0;
+		while (ft_isspace(env_var[i]) && env_var[i] != '\0')
+			i++;
+		while (!ft_isspace(env_var[i]) && env_var[i] != '\0')
+			i++, len++;
+		new_var = find_token(env_var, i--, len);
+		if (!new_var)
+			break ;
+		tokens = add_at_pos(tokens, new_var, process_nbr, ++position);
+		printf("POSITION: %d\n", position);
+		//free(new_var);
+		i++;
+	}
+}
+
+static	void	expand_var(char **c_envp, char **env_var, int to_expand)
 {
 	int	i;
 	int	j;
 	int	k;
 	char *temp = NULL;
 
+	if (!to_expand)
+		return ;
 	i = 0;
 	j = 0;
 	k = 0;
@@ -70,10 +81,11 @@ static	void	expand_var(char **c_envp, char **env_var)
 //e$a (should give echo: builtin, hello: argument)
 //handle heredoc expansions
 
-char	*expansion(t_data *all, char *token, t_token *tkn_ptr)
+char	*expansion(t_data *all, char *token, int position, int process_nbr)
 {
 	int		i;
 	int		len;
+	int		to_expand;
 	char	*prev_env_var;
 	char	*env_var;
 
@@ -82,6 +94,7 @@ char	*expansion(t_data *all, char *token, t_token *tkn_ptr)
 	while (token[i] != '\0')
 	{
 		len = 0;
+		to_expand = 0;
 		prev_env_var = env_var;
 		if (token[i] == '$' && token[i + 1] == '?')
 		{
@@ -93,37 +106,38 @@ char	*expansion(t_data *all, char *token, t_token *tkn_ptr)
 			i += 2, len++;
 			while (token[i] != '\'' && token[i] != '\0')
 				i++, len++;
-			env_var = find_token(token, i--, len);
-			env_var = ft_strjoin(prev_env_var, env_var);
 		}
 		else if (token[i] == '$' && token[i + 1] == '"')
 		{
 			i += 2, len++;
 			while (token[i] != '"' && token[i] != '$' && token[i] != '\0')
 				i++, len++;
-			env_var = find_token(token, i--, len);
-			env_var = ft_strjoin(prev_env_var, env_var);
-
 		}
 		else if (token[i] == '$' && (ft_isalpha(token[i + 1]) || token[i + 1] == '_'))
 		{
 			i++;
 			while (ft_isalpha(token[i]) || token[i] == '_')
 				i++, len++;
-			env_var = find_token(token, i--, len);
-			expand_var(all->c_envp, &env_var);
-			env_var = ft_strjoin(prev_env_var, env_var);
+			to_expand = 1;
 		}
 		else if (token[i] == '$' && token[i + 1] == '\0')
-			env_var = ft_strjoin(prev_env_var, "$");
+			return (ft_strjoin(prev_env_var, "$"));
+		else if (token[i] == '\'')
+		{
+			i++;
+			while(token[i] != '\'' && token[i] != '\0')
+				i++, len++;
+		}
 		else if (token[i] != '$')
 		{
 			while (token[i] != '$' && token[i] != '\0')
 				i++, len++;
-			env_var = find_token(token, i--, len);
-			env_var = ft_strjoin(prev_env_var, env_var);
 		}
+		env_var = find_token(token, i--, len);
+		expand_var(all->c_envp, &env_var, to_expand);
+		env_var = ft_strjoin(prev_env_var, env_var);
 		i++;
 	}
-	return (check_var(tkn_ptr, &env_var));
+	check_var(all->tokens, position, process_nbr, env_var);
+	return (env_var);
 }

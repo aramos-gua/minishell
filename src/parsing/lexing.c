@@ -53,21 +53,21 @@ static void	assign_types(t_token *tokens)
 }
 
 //reformats tokens
-static void	token_pretty(t_data *all, t_token *tokens)
+static void	token_pretty(t_data *all)
 {
 	t_token	*temp;
 	int	i;
 
 	temp = NULL;
 	i = -1;
-	while (temp != tokens->next)
+	while (temp != all->tokens->next)
 	{
 		if (i++ == -1)
-			temp = tokens->next;
-		if (ft_strchr(temp->token, '$'))
+			temp = all->tokens->next;
+		if (ft_strlen(ft_strchr(temp->token, '$')))
 		{
 			char	*old_token = temp->token;
-			temp->token = expansion(all, temp->token, temp);
+			temp->token = expansion(all, temp->token, temp->process_nbr, i);
 			free(old_token);
 		}
 		if (ft_strlen(ft_strchr(temp->token, '\'')) > ft_strlen(ft_strchr(temp->token, '"')))
@@ -91,7 +91,7 @@ static void	token_pretty(t_data *all, t_token *tokens)
 //TODO: handle variable expansion in the HERE_DOC case
 int	lexing(t_data *all)
 {
-	token_pretty(all, all->tokens);
+	token_pretty(all);
 	assign_types(all->tokens);
 	return (0);
 }

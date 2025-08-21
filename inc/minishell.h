@@ -60,7 +60,7 @@ int		tokeniser(t_data *all);
 int		lexing(t_data *all);
 
 //expansion.c
-char	*expansion(t_data *all, char *token, t_token *tkn_ptr);
+char	*expansion(t_data *all, char *token, int position, int process_nbr);
 
 //redirects.c
 int		redirects(t_data *all);
@@ -69,7 +69,7 @@ void	print_t_redir(t_redir *redirects);
 //parsing_utils.c
 t_token	*create_t_token(void);
 t_token	*add_t_token(t_token *tail, char *token, int nbr);
-t_token	*add_at_mid(t_token *tail, char *token, int nbr);
+t_token	*add_at_pos(t_token *tail, char *token, int nbr, int position);
 t_token	*del_last(t_token *tail);
 t_token	*del_inter(t_token *tail, int position);
 void	print_t_token(t_token *tokens);
