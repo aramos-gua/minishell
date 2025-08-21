@@ -6,7 +6,7 @@
 /*   By: mtice <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 15:29:12 by mtice             #+#    #+#             */
-/*   Updated: 2025/08/18 15:36:31 by Alejandro Ram    ###   ########.fr       */
+/*   Updated: 2025/08/21 12:16:45 by Alejandro Ram    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,4 +108,7 @@ void	execute_command(t_data *all, int i);
 //cleaner.c
 int		free_split(char **arr);
 int		close_pipes(t_data *all, int **pipes);
+
+//builtin.c
+int	which_builtin(char *cmd);
 #endif

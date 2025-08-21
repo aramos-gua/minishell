@@ -6,7 +6,7 @@
 /*   By: Alejandro Ramos <alejandro.ramos.gua@gmai  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 16:12:22 by Alejandro Ram     #+#    #+#             */
-/*   Updated: 2025/08/18 16:12:55 by Alejandro Ram    ###   ########.fr       */
+/*   Updated: 2025/08/21 12:02:04 by Alejandro Ram    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,7 +149,7 @@ int	fork_init(t_data *all, int **pipes)
  //   waitpid(-1, NULL, 0);
  //   i++;
  // }
-  ft_printf("finished forking\n");
+  dprintf(2, "finished forking\n");
   return (0);
 }
 

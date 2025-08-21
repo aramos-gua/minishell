@@ -6,7 +6,7 @@
 /*   By: Alejandro Ramos <alejandro.ramos.gua@gmai  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 19:05:11 by Alejandro Ram     #+#    #+#             */
-/*   Updated: 2025/08/18 15:54:44 by Alejandro Ram    ###   ########.fr       */
+/*   Updated: 2025/08/21 12:22:34 by Alejandro Ram    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,11 @@ void	execute_command(t_data *all, int i)
   {
     write(2, "exited after cmd\n", 17);
 	  exit (1);
+  }
+  if (which_builtin(cmd->token) == 1)
+  {
+    //handle_builtin(all, i);
+    return ;
   }
 	path = get_cmd_path(cmd->token, all->c_envp);
   dprintf(2, "path: [%s] process id: [%d]\n", path, all->info->pid);
