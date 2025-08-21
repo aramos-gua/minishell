@@ -6,7 +6,7 @@
 /*   By: mtice <mtice@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 14:40:36 by mtice             #+#    #+#             */
-/*   Updated: 2025/07/25 21:26:29 by mtice            ###   ########.fr       */
+/*   Updated: 2025/08/21 21:00:59 by mtice            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ int	main(int argc, char *argv[], char *envp[])
 
 	(void)argc;
 	(void)argv;
-	//init_all
 	if (find_envp(&all, envp))
 		return (1); //TODO:free_all();
 	while (42)

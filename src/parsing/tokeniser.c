@@ -6,7 +6,7 @@
 /*   By: mtice <mtice@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 18:28:32 by mtice             #+#    #+#             */
-/*   Updated: 2025/08/09 22:50:44 by mtice            ###   ########.fr       */
+/*   Updated: 2025/08/21 21:40:15 by mtice            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ int	tokeniser(t_data *all)
 		}
 		temp = temp->next;
 	}
+	printf("tail: %s\n", tokens->token);
 	all->tokens = tokens;
 	if (tokens)
 		return (0);
