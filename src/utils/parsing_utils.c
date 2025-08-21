@@ -46,19 +46,19 @@ t_token	*add_t_token(t_token *tail, char *token, int nbr)
 	}
 }
 
-t_token *add_at_mid(t_token *tail, char *token, int nbr, int position)
+t_token *add_at_pos(t_token *tail, char *token, int nbr, int position)
 {
 	t_token	*new_node;
 	t_token	*temp;
 
+	new_node = create_t_token();
+	new_node->process_nbr = nbr;
+	new_node->token = token;
 	if (tail == NULL)
 		return (new_node);
 	temp = tail->next;
-	while (position > 0)
-	{
+	while (position-- > 1)
 		temp = temp->next;
-		position--;
-	}
 	new_node->prev = temp;
 	new_node->next = temp->next;
 	temp->next->prev = new_node;
@@ -132,33 +132,33 @@ void	print_t_token(t_token *tokens)
 	}
 }
 
-//
-// int main(int argc, char **argv)
-// {
-// 	t_token *tail = NULL;
-// 	int i = 1;
-//
-// 	if (argc != 5)
-// 	{
-// 		printf("Argc is not 5\n");
-// 		return (1);
-// 	}
-// 	else
-// 	{
-// 		while (argv[i] != NULL)
-// 		{
-// 			//printf("%s\n", argv[i]);
-// 			tail = add_at_end(tail, argv[i]);
-// 			i++;
-// 		}
-// 		t_token *head;
-// 		head = tail->next;
-// 		while (head != tail)
-// 		{
-// 		 	printf("%s\n", head->token);
-// 		 	head = head->next;
-// 		}
-// 		printf("%s\n", head->token);
-// 	}
-// 	return (0);
-// }
+ // int main(int argc, char **argv)
+ // {
+ // 	t_token *tail = NULL;
+ // 	int i = 1;
+ //
+ // 	if (argc != 5)
+ // 	{
+ // 		printf("Argc is not 5\n");
+ // 		return (1);
+ // 	}
+ // 	else
+ // 	{
+ // 		while (argv[i] != NULL)
+ // 		{
+ // 			//printf("%s\n", argv[i]);
+ // 			tail = add_t_token(tail, argv[i], i);
+ // 			i++;
+ // 		}
+ // 		add_at_pos(tail, "middle", i, 2);
+ // 		t_token *head;
+ // 		head = tail->next;
+ // 		while (head != tail)
+ // 		{
+ // 		 	printf("%s\n", head->token);
+ // 		 	head = head->next;
+ // 		}
+ // 		printf("%s\n", head->token);
+ // 	}
+ // 	return (0);
+ // }
