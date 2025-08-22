@@ -50,35 +50,6 @@ int	child_process(int i, t_data *all, int **pipes)
   return (1);
 }
 
-//int	child_process(int i, t_data *all, int **pipes)
-//{
-//	int	j;
-//
-//	j = -1;
-//	if (i == 0 && all->info->in_fd >= 0)
-//  {
-//		dup2(all->info->in_fd, STDIN_FILENO);
-//    ft_printf("first command\n");
-//  }
-//	else if (i > 0)
-//		dup2(pipes[i - 1][0], STDIN_FILENO);
-//	if (i == all->total_proc - 1 && all->info->out_fd >= 0)
-//		dup2(all->info->out_fd, STDOUT_FILENO);
-//	else if (i < all->total_proc - 1)
-//		dup2(pipes[i][1], STDOUT_FILENO);
-//	while (++j < all->total_proc - 1)
-//	{
-//		close(pipes[j][0]);
-//		close(pipes[j][1]);
-//	}
-//  if (all->info->in_fd >= 0)
-//    close(all->info->in_fd);
-//  if (all->info->out_fd >= 0)
-//    close(all->info->out_fd);
-//	execute_command(all);
-//  return (1);
-//}
-
 int	pipes_init(int ***pipes, t_data *all)
 {
 	int	i;
@@ -110,6 +81,7 @@ int	pipes_init(int ***pipes, t_data *all)
 int	fork_init(t_data *all, int **pipes)
 {
 	int	  	i;
+  t_token  *cmd;
 	//pid_t 	pid;
 	t_token *token;
 
@@ -117,6 +89,12 @@ int	fork_init(t_data *all, int **pipes)
 	ft_printf("starting fork_init\n");
 	while (i < all->info->total_proc)
 	{
+    cmd = get_process(all->tokens, i);
+    if (which_builtin(cmd->token) == 1)
+    {
+      //handle_builtin(all, i);
+      return (0);
+    }
 		all->info->pid = fork();
 		if (all->info->pid < 0)
 		{
@@ -213,14 +191,25 @@ int	get_files(t_data *all)
 
 int	one_command(t_data *all)
 {
-	all->info->pid = fork();
-	if (all->info->pid == 0)//child
-	{
-		(execute_command(all, 0));
-		
-	}
-	//parent
-	waitpid(all->info->pid, NULL, 0);
+  t_token *cmd;
+
+  cmd = get_process(all->tokens, 0);
+  if (which_builtin(cmd->token) == 1)
+  {
+    //handle_builtin(all, i);
+    return (0);
+  }
+  else
+  {
+    all->info->pid = fork();
+    if (all->info->pid == 0)//child
+    {
+      (execute_command(all, 0));
+      
+    }
+    //parent
+    waitpid(all->info->pid, NULL, 0);
+  }
 	return (0);
 }
 
@@ -246,7 +235,7 @@ int	execution(t_data *all)
 	{
 		if (current->process_nbr != curr_proc)
 			curr_proc = current->next->process_nbr;
-		if (current->type == COMMAND)
+		if (current->type == COMMAND || current->type == BUILTIN)
 		{
 			ft_printf("[%d], command: %s   ", curr_proc, current->token);
 		}
@@ -260,7 +249,7 @@ int	execution(t_data *all)
 	}
 	ft_printf("\n\n");
 //////////////////////////////////////////////////////////////////////////////////
-	get_files(all);
+	//get_files(all);
 	if (all->info->total_proc == 1)
 		one_command(all);
 	if (all->info->total_proc > 1)

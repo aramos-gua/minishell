@@ -12,12 +12,14 @@
 
 #include "../inc/minishell.h"
 
-void	ft_pwd(void)
+void	ft_pwd(char *cmd)
 {
 	char	*pwd;
 
-	ft_printf("starting ft_pwd\n");
+	dprintf(2, "builtin [%s]\n", cmd);
 	pwd = getcwd(NULL, 0);
+	if (!pwd)
+		dprintf(2, "Error with pwd\n");
 	dprintf(2, "%s\n", pwd);
 	free(pwd);
 	//return (0);
@@ -28,44 +30,44 @@ int	which_builtin(char *cmd)
 	int	len;
 
 	len = ft_strlen(cmd);
-	if (ft_strncmp(cmd, "echo", len))
+	if (!ft_strncmp(cmd, "echo", len))
 	{
 		dprintf(2, "builtin [%s]\n", cmd);
 		return (1);
 	}
-	if (ft_strncmp(cmd, "cd", len))
+	else if (!ft_strncmp(cmd, "cd", len))
 	{
 		dprintf(2, "builtin [%s]\n", cmd);
 		
 		return (1);
 
 	}
-	if (ft_strncmp(cmd, "pwd", len))
+	else if (!ft_strncmp(cmd, "pwd", len))
 	{
-		ft_pwd();
-		dprintf(2, "builtin [%s]\n", cmd);
-		//return (1);
+		//dprintf(2, "starting ft_pwd\n");
+		ft_pwd(cmd);
+		return (1);
 
 	}
-	if (ft_strncmp(cmd, "export", len))
+	else if (ft_strncmp(cmd, "export", len))
 	{
 		dprintf(2, "builtin [%s]\n", cmd);
 		return (1);
 
 	}
-	if (ft_strncmp(cmd, "unset", len))
+	else if (ft_strncmp(cmd, "unset", len))
 	{
 		dprintf(2, "builtin [%s]\n", cmd);
 		return (1);
 
 	}
-	if (ft_strncmp(cmd, "env", len))
+	else if (ft_strncmp(cmd, "env", len))
 	{
 		dprintf(2, "builtin [%s]\n", cmd);
 		return (1);
 
 	}
-	if (ft_strncmp(cmd, "exit", len))
+	else if (ft_strncmp(cmd, "exit", len))
 	{
 		dprintf(2, "builtin [%s]\n", cmd);
 		return (1);
