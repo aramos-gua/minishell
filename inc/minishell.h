@@ -110,5 +110,5 @@ int		free_split(char **arr);
 int		close_pipes(t_data *all, int **pipes);
 
 //builtin.c
-int	which_builtin(char *cmd);
+int	which_builtin(char *cmd, t_data *all);
 #endif

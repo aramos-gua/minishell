@@ -16,7 +16,7 @@ int	ft_pwd(char *cmd)
 {
 	char	*pwd;
 
-	dprintf(2, "builtin [%s]\n", cmd);
+	dprintf(2, "running [%s]\n", cmd);
 	pwd = getcwd(NULL, 0);
 	if (!pwd)
 		dprintf(2, "Error with pwd\n");
@@ -25,7 +25,20 @@ int	ft_pwd(char *cmd)
 	return (0);
 }
 
-int	which_builtin(char *cmd)
+int	ft_cd(char *cmd, t_data *all)
+{
+	t_token	*cd_node;
+
+	dprintf(2, "running [%s]\n", cmd);
+	cd_node = all->tokens->next;
+	dprintf(2, "token in node is [%s]\n", cd_node->token);
+	while (ft_strncmp(cd_node->token, "cd", 2))
+		cd_node = cd_node->next;
+	chdir((const char *)cd_node->next->token);
+	return (0);
+}
+
+int	which_builtin(char *cmd, t_data *all)
 {
 	int	len;
 
@@ -37,16 +50,15 @@ int	which_builtin(char *cmd)
 	}
 	else if (!ft_strncmp(cmd, "cd", len))
 	{
-		dprintf(2, "builtin [%s] not implemented\n", cmd);
-		
-		return (0);
+		//dprintf(2, "builtin [%s] not implemented\n", cmd);
+		ft_cd(cmd, all);
+		return (1);
 
 	}
 	else if (!ft_strncmp(cmd, "pwd", len))
 	{
 		//dprintf(2, "starting ft_pwd\n");
 		ft_pwd(cmd);
-
 		return (1);
 
 	}
