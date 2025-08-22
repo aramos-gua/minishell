@@ -39,6 +39,7 @@ int	main(int argc, char *argv[], char *envp[])
 			continue;
 		// else if (execution(&all))
 		// 	continue ;
+		//rl_add_history()
 	}	
 	//rl_clear_history();
 	//free_all();

@@ -86,7 +86,6 @@ typedef	enum e_type
 	UNDEFINED,
 	COMMAND,
 	ARGUMENT,
-	BUILTIN,
 	OPERATOR,
 	RE_IN,
 	RE_OUT,

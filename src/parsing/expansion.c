@@ -12,41 +12,34 @@
 
 #include "../../inc/minishell.h"
 
-// static	void	check_var(t_token *tokens, char **env_var, int process_nbr, int *position)
-// {
-// 	int		i;
-// 	int		len;
-// 	char	*new_var;
-//
-// 	i = 0;
-// 	printf("ENV_VAR: %s\n", *env_var);
-// 	printf("TAIL: %s\n", tokens->token);
-// 	while ((*env_var)[i] != ' ' && (*env_var)[i] != '\0')
-// 		i++;
-// 	if ((*env_var)[i] == '\0')
-// 		return ;
-// 	while ((*env_var)[i] != '\0')
-// 	{
-// 		len = 0;
-// 		while (ft_isspace((*env_var)[i]) && (*env_var)[i] != '\0')
-// 			i++;
-// 		while (!ft_isspace((*env_var)[i]) && (*env_var)[i] != '\0')
-// 			i++, len++;
-// 		new_var = find_token(*env_var, i--, len);
-// 		if (!new_var)
-// 			break ;
-// 		tokens = add_at_pos(tokens, new_var, process_nbr, ++(*position));
-// 		//tokens = add_at_pos(tokens, new_var, process_nbr, ++(*position));
-// 		printf("POSITION: %d\n", *position);
-// 		//free(new_var);
-// 		i++;
-// 	}
-// 	i = 0;
-// 	len = 0;
-// 	while (!ft_isspace((*env_var)[i]))
-// 		i++, len++;
-// 	*env_var = find_token(*env_var, i--, len);
-// }
+static	void	check_var(t_data *all, t_token *tkn_ptr, char **env_var, int *position)
+{
+	int		i;
+	int		len;
+	int		del_pos;
+	char	*new_var;
+
+	i = 0;
+	while ((*env_var)[i] != ' ' && (*env_var)[i] != '\0')
+		i++;
+	if ((*env_var)[i] == '\0')
+		return ;
+	i = 0;
+	del_pos = 0;
+	while ((*env_var)[i] != '\0')
+	{
+		len = 0;
+		while (ft_isspace((*env_var)[i]) && (*env_var)[i] != '\0')
+			i++;
+		while (!ft_isspace((*env_var)[i]) && (*env_var)[i] != '\0')
+			i++, len++;
+		new_var = find_token(*env_var, i--, len);
+		all->tokens = add_at_pos(all->tokens, new_var, tkn_ptr->process_nbr, (*position)++);
+		i++;
+		del_pos++;
+	}
+	del_t_token(all->tokens, *position - del_pos);
+}
 
 static	void	expand_var(char **c_envp, char **env_var, int to_expand)
 {
@@ -88,10 +81,8 @@ static	void	expand_var(char **c_envp, char **env_var, int to_expand)
 //e$a (should give echo: builtin, hello: argument)
 //handle heredoc expansions
 
-char	*expansion(t_data *all, char *token, int process_nbr, int *position)
+static void	expansion(t_data *all, t_token *tkn_ptr)
 {
-	(void)process_nbr;
-	(void)position;
 	int		i;
 	int		len;
 	int		to_expand;
@@ -100,53 +91,74 @@ char	*expansion(t_data *all, char *token, int process_nbr, int *position)
 
 	i = 0;
 	env_var = NULL;
-	while (token[i] != '\0')
+	while (tkn_ptr->token[i] != '\0')
 	{
 		len = 0;
 		to_expand = 0;
 		prev_env_var = env_var;
-		if (token[i] == '$' && token[i + 1] == '?')
+		if (tkn_ptr->token[i] == '$' && tkn_ptr->token[i + 1] == '?')
 		{
 			printf("UNIMPLEMENTED: return exit code (expansion)\n");
-			return (NULL);
+			return ;
 		}
-		else if (token[i] == '$' && token[i + 1] == '\'')
+		else if (tkn_ptr->token[i] == '$' && tkn_ptr->token[i + 1] == '\'')
 		{
-			i += 2, len++;
-			while (token[i] != '\'' && token[i] != '\0')
+			if (tkn_ptr->token[i - 1] != '"')
+				i += 2, len++;
+			else
+			 	i++, len++;
+			while (tkn_ptr->token[i] != '\'' && tkn_ptr->token[i] != '\0')
 				i++, len++;
 		}
-		else if (token[i] == '$' && token[i + 1] == '"')
+		else if (tkn_ptr->token[i] == '$' && tkn_ptr->token[i + 1] == '"')
 		{
 			i += 2, len++;
-			while (token[i] != '"' && token[i] != '$' && token[i] != '\0')
+			while (tkn_ptr->token[i] != '"' && tkn_ptr->token[i] != '$' && tkn_ptr->token[i] != '\0')
 				i++, len++;
 		}
-		else if (token[i] == '$' && (ft_isalpha(token[i + 1]) || token[i + 1] == '_'))
+		else if (tkn_ptr->token[i] == '$' && (ft_isalpha(tkn_ptr->token[i + 1]) || tkn_ptr->token[i + 1] == '_'))
 		{
 			i++;
-			while (ft_isalpha(token[i]) || token[i] == '_')
+			while (ft_isalpha(tkn_ptr->token[i]) || tkn_ptr->token[i] == '_')
 				i++, len++;
 			to_expand = 1;
 		}
-		else if (token[i] == '$' && token[i + 1] == '\0')
-			return (ft_strjoin(prev_env_var, "$"));
-		else if (token[i] == '\'')
+		else if (tkn_ptr->token[i] == '$' && tkn_ptr->token[i + 1] == '\0')
+			i++, len++;
+		else if (tkn_ptr->token[i] == '\'')
 		{
-			i++;
-			while(token[i] != '\'' && token[i] != '\0')
+			i++, len++;
+			while(tkn_ptr->token[i] != '\'' && tkn_ptr->token[i] != '\0')
 				i++, len++;
 		}
-		else if (token[i] != '$')
+		else if (tkn_ptr->token[i] == '"')
 		{
-			while (token[i] != '$' && token[i] != '\0')
+			i++, len++;
+			while (tkn_ptr->token[i] != '$' && tkn_ptr->token[i] != '"' && tkn_ptr->token[i] != '\0')
 				i++, len++;
 		}
-		env_var = find_token(token, i--, len);
+		else if (tkn_ptr->token[i] != '$')
+		{
+			while (tkn_ptr->token[i] != '$' && tkn_ptr->token[i] != '\0')
+				i++, len++;
+		}
+		env_var = find_token(tkn_ptr->token, i--, len);
 		expand_var(all->c_envp, &env_var, to_expand);
 		env_var = ft_strjoin(prev_env_var, env_var);
 		i++;
 	}
-	//check_var(all->tokens, &env_var, process_nbr, position);
-	return (env_var);
+	tkn_ptr->token = env_var;
+}
+
+//---------------------------------------------------------------------------------------------------
+//expansion looks for the variable to expand, and constructs the env_var (the expanded environment variable)
+//expand_var() is called only when a valid expansion is detected
+//check_var() checks the expanded env_var to see if it is necessary to split it into more tokens
+//check_var() handles the export case, e.g. export b="cho hello whats up"
+//heredoc_expansion() handles the heredoc expansion case, it is dealt with separately from all other expansion cases
+//TODO: heredoc expansions
+void	do_expansion(t_data *all, t_token *tkn_ptr, int *position)
+{
+	expansion(all, tkn_ptr);
+	check_var(all, tkn_ptr, &(tkn_ptr->token), position);
 }
