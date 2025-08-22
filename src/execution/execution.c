@@ -81,7 +81,7 @@ int	pipes_init(int ***pipes, t_data *all)
 int	fork_init(t_data *all, int **pipes)
 {
 	int	  	i;
-  t_token  *cmd;
+  //t_token  *cmd;
 	//pid_t 	pid;
 	t_token *token;
 
@@ -89,12 +89,6 @@ int	fork_init(t_data *all, int **pipes)
 	ft_printf("starting fork_init\n");
 	while (i < all->info->total_proc)
 	{
-    cmd = get_process(all->tokens, i);
-    if (which_builtin(cmd->token) == 1)
-    {
-      //handle_builtin(all, i);
-      return (0);
-    }
 		all->info->pid = fork();
 		if (all->info->pid < 0)
 		{
@@ -104,7 +98,13 @@ int	fork_init(t_data *all, int **pipes)
 		if (all->info->pid == 0)
 		{
       //close(pipes[i][0]);
-			child_process(i, all, pipes);
+      //cmd = get_process(all->tokens, i);
+      //if (which_builtin(cmd->token) == 1)
+      //{
+      //  //handle_builtin(all, i);
+      //  return (0);
+      //}
+      child_process(i, all, pipes);
       exit (1);
 		}
     else
@@ -199,17 +199,17 @@ int	one_command(t_data *all)
     //handle_builtin(all, i);
     return (0);
   }
-  else
+  all->info->pid = fork();
+  if (all->info->pid == 0)//child
   {
-    all->info->pid = fork();
-    if (all->info->pid == 0)//child
-    {
-      (execute_command(all, 0));
-      
-    }
-    //parent
-    waitpid(all->info->pid, NULL, 0);
+    (execute_command(all, 0));
+    
   }
+  //parent
+  else if (all->info->pid > 0)
+    waitpid(all->info->pid, NULL, 0);
+  else
+    perror("minishell");
 	return (0);
 }
 
@@ -252,7 +252,7 @@ int	execution(t_data *all)
 	//get_files(all);
 	if (all->info->total_proc == 1)
 		one_command(all);
-	if (all->info->total_proc > 1)
+  else if (all->info->total_proc > 1)
 	{
     //int j = 0;
 		pipes_init(&pipes, all);

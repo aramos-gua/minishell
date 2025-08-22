@@ -24,12 +24,12 @@ char  **array_builder(t_data *all, int proc)
   if (!arr)
     return (NULL);
   tmp = all->tokens;
-  while (tmp->type != COMMAND || tmp->process_nbr != proc)
+  while ((tmp->type != COMMAND && tmp->type != BUILTIN ) || tmp->process_nbr != proc)
     tmp = tmp->next;
   arr[i++] = tmp->token;
   tmp = tmp->next;
   //ft_printf("[%d][%s]  ", i - 1, arr[i - 1]);
-  while (tmp->type != COMMAND)
+  while (tmp->type != COMMAND && tmp->type != BUILTIN)
   {
     arr[i++] = tmp->token;
     tmp = tmp->next;
