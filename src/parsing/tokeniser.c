@@ -99,7 +99,6 @@ int	tokeniser(t_data *all)
 		}
 		temp = temp->next;
 	}
-	printf("tail: %s\n", tokens->token);
 	all->tokens = tokens;
 	if (tokens)
 		return (0);

@@ -12,6 +12,7 @@ SRC :=	$(SRC_DIR)/main.c \
 		$(SRC_DIR)/parsing/lexing.c \
 		$(SRC_DIR)/parsing/expansion.c\
 		$(SRC_DIR)/parsing/redirects.c \
+		$(SRC_DIR)/parsing/heredoc.c \
 		$(SRC_DIR)/utils/utils.c \
 		$(SRC_DIR)/utils/parsing_utils.c \
 		$(SRC_DIR)/utils/free_utils.c \

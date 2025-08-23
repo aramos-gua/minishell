@@ -34,8 +34,6 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
-//char	*find_path(char *cmd, char *envp[]);
-
 //envp.c
 void	print_env(t_data *all);
 int		find_envp(t_data *all, char *envp[]);
@@ -52,7 +50,6 @@ int		find_processes(t_data *all, char *input);
 
 
 //tokeniser.c
-//int		find_processes(t_data *all, char *input);
 char	*find_token(char *process, int i, int len);
 int		tokeniser(t_data *all);
 
@@ -60,12 +57,14 @@ int		tokeniser(t_data *all);
 int		lexing(t_data *all);
 
 //expansion.c
-void	do_expansion(t_data *all, t_token *tkn_ptr, int *position);
-//char	*expansion(t_data *all, char *token, int process_nbr, int *position);
+void	expansion(t_data *all, t_token *tkn_ptr, int *position);
 
 //redirects.c
 int		redirects(t_data *all);
 void	print_t_redir(t_redir *redirects);
+
+//heredoc.c
+int		heredoc(t_data *all);
 
 //parsing_utils.c
 t_token	*create_t_token(void);
