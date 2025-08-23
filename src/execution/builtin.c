@@ -68,47 +68,56 @@ int	ft_cd(char *cmd, t_data *all)
 int	which_builtin(char *cmd, t_data *all)
 {
 	int	len;
+	//int	nodes;
 
 	len = ft_strlen(cmd);
-	if (!ft_strncmp(cmd, "echo", len))
+	//nodes = ft_lstsize(all->tokens);
+	if (!ft_strncmp(cmd, "echo\0", len))
 	{
 		dprintf(2, "builtin [%s] not implemented\n", cmd);
 		return (0);
 	}
-	else if (!ft_strncmp(cmd, "cd", len))
+	else if (!ft_strncmp(cmd, "cd\0", len))
 	{
+		dprintf(2, "My %s \n", cmd);
 		ft_cd(cmd, all);
 		return (1);
 
 	}
-	else if (!ft_strncmp(cmd, "pwd", len))
+	else if (!ft_strncmp(cmd, "pwd\0", len))
 	{
-		//dprintf(2, "starting ft_pwd\n");
+		dprintf(2, "My %s \n", cmd);
 		ft_pwd(cmd);
 		return (1);
 
 	}
-	else if (ft_strncmp(cmd, "export", len))
+	else if (ft_strncmp(cmd, "export\0", len))
 	{
 		dprintf(2, "builtin [%s]\n", cmd);
 		return (0);
 
 	}
-	else if (ft_strncmp(cmd, "unset", len))
+	else if (ft_strncmp(cmd, "unset\0", len))
 	{
 		dprintf(2, "builtin [%s]\n", cmd);
 		return (0);
 
 	}
-	else if (ft_strncmp(cmd, "env", len))
+	else if (ft_strncmp(cmd, "exit\0", len))
 	{
-		dprintf(2, "builtin [%s]\n", cmd);
-		return (0);
-
-	}
-	else if (ft_strncmp(cmd, "exit", len))
-	{
-		dprintf(2, "builtin [%s]\n", cmd);
+		if (all->info->total_proc == 1)
+		{
+			if (ft_lstsize(all->tokens) == 1)
+			{
+				all->return_val = 0;
+				exit ((int)all->return_val);
+			}
+			//else if (nodes == 2 && ft_isdigit(all->tokens->next)
+			//{
+			//	all->return_val = ft_atoi(all->tokens->next);
+			//	exit ((int)all->return_val);
+			//}
+		}
 		return (0);
 
 	}

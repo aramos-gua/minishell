@@ -81,7 +81,10 @@ char	*get_cmd_path(char *cmd, char **env)
 		if (access(cmd, X_OK) == 0)
 			return (ft_strdup(cmd));
 		else
+    {
+      perror(cmd);
 			return (NULL);
+    }
 	}
 	while (env[++i])
 		if (ft_strncmp(env[i], "PATH=", 5) == 0)
@@ -90,7 +93,10 @@ char	*get_cmd_path(char *cmd, char **env)
 		return (NULL);
 	paths = (ft_split(path_env, ':'));
 	if (!paths)
+  {
+    //perror(cmd);
 		return (NULL);
+  }
 	full_path = build_path(cmd, paths);
 	if (!full_path)
 		return (free_split(paths), NULL);

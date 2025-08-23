@@ -76,8 +76,8 @@ void	execute_command(t_data *all, int i)
   dprintf(2, "path: [%s] process id: [%d]\n", path, all->info->pid);
 	if (!path)
 	{
-    ft_printf("exited after get_cmd_path\n");
-		perror("execve");
+    all->return_val = 127;
+    ft_printf("%s:command not found\n", cmd->token);
 		exit (1);
 	}
   write(2, "starting array_builder\n", 23);
@@ -86,7 +86,7 @@ void	execute_command(t_data *all, int i)
 	if (execve(path, cmd_arr, all->c_envp) == -1)
 	{
     ft_printf("exited after execve\n");
-		perror("execve");
+		//perror(cmd_arr[0]);
 		free(path);
 		//free_split(all->tokens->next->token);
     exit (1);
