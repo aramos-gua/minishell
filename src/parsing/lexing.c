@@ -64,11 +64,8 @@ static void	token_pretty(t_data *all)
 			temp = all->tokens->next;
 		if (ft_strlen(ft_strchr(temp->token, '$')))
 		{
-			// char	*old_token = temp->token;
-			// temp->token = expansion(all, temp->token, temp->process_nbr, &i);
-			// free(old_token);
 			i++;
-			do_expansion(all, temp, &i);
+			expansion(all, temp, &i);
 		}
 		if (ft_strlen(ft_strchr(temp->token, '\'')) > ft_strlen(ft_strchr(temp->token, '"')))
 		{

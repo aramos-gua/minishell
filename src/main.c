@@ -27,21 +27,21 @@ int	main(int argc, char *argv[], char *envp[])
 	while (42)
 	{
 		input = readline("minishell> ");
-		// if (!input || input[0] == '\0')
-		//  	printf("Goodbye!\n"), exit(1);
+		if (!input || input[0] == '\0' || rl_on_new_line())
+			continue ;
+		add_history(input);
 		if (!ft_strncmp("exit\0", input, 5))
-			break;
+			break ;
 		else if (!ft_strncmp("$?\0", input, 3))
-			printf("%d: command not found\n", errno);
+			printf("%d: command not found\n", all.info->last_pid); //TODO: return the correct exit code
 		else if (!ft_strncmp("env\0", input, 4))
 			print_env(&all);
 		else if (parsing(&all, input))
-			continue;
+			continue ;
 		// else if (execution(&all))
 		// 	continue ;
-		//rl_add_history()
 	}	
-	//rl_clear_history();
+	rl_clear_history();
 	//free_all();
 	return (0);
 }

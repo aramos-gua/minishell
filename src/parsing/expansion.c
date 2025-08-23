@@ -81,7 +81,7 @@ static	void	expand_var(char **c_envp, char **env_var, int to_expand)
 //e$a (should give echo: builtin, hello: argument)
 //handle heredoc expansions
 
-static void	expansion(t_data *all, t_token *tkn_ptr)
+static void	do_expansion(t_data *all, t_token *tkn_ptr)
 {
 	int		i;
 	int		len;
@@ -157,8 +157,8 @@ static void	expansion(t_data *all, t_token *tkn_ptr)
 //check_var() handles the export case, e.g. export b="cho hello whats up"
 //heredoc_expansion() handles the heredoc expansion case, it is dealt with separately from all other expansion cases
 //TODO: heredoc expansions
-void	do_expansion(t_data *all, t_token *tkn_ptr, int *position)
+void	expansion(t_data *all, t_token *tkn_ptr, int *position)
 {
-	expansion(all, tkn_ptr);
+	do_expansion(all, tkn_ptr);
 	check_var(all, tkn_ptr, &(tkn_ptr->token), position);
 }
