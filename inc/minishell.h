@@ -83,13 +83,33 @@ void	free_double_char(char **arr);
 void	handle_error(char *message, char exit_status);
 
 //execution.c
+int		child_process(int i, t_data *all, int **pipes);
+int		pipes_init(int ***pipes, t_data *all);
+int		fork_init(t_data *all, int **pipes);
+void	open_pipes(int **pipes, t_data *all);
+int		get_files(t_data *all);
+int		one_command(t_data *all);
 int		execution(t_data *all);
 
+//get_binaries.c
+char  	**array_builder(t_data *all, int proc);
+char	*build_path(char *cmd, char **paths);
+char	*get_cmd_path(char *cmd, char **env);
+
+//execution_utils.
+t_token *get_process(t_token *list, int i);
+t_token *get_cmd_node(t_token *list, int i);
+int 	ft_lstsize(t_token *list);
+
 //commands.c
-void	first_command(int i, t_data *all, int **pipes);
-void	last_command(t_data *all, int **pipes);
-int		execute_command(t_data *all);
+int		first_command(t_data *all, int **pipes);
+int		last_command(t_data *all, int **pipes);
+int	execute_command(t_data *all, int i);
 
 //cleaner.c
 int		free_split(char **arr);
+int		close_pipes(t_data *all, int **pipes);
+
+//builtin.c
+int	which_builtin(char *cmd, t_data *all, int proc);
 #endif
