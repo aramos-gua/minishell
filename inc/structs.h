@@ -6,7 +6,7 @@
 /*   By: mtice <mtice@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/14 13:54:53 by mtice             #+#    #+#             */
-/*   Updated: 2025/08/09 23:12:00 by mtice            ###   ########.fr       */
+/*   Updated: 2025/08/21 21:39:50 by mtice            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,8 @@ typedef	struct	s_proc
 	int				process_nbr;
 	int				pid;
 	int				last_pid;
-	char			*infile;
 	int				in_fd;
-	char			*outfile;
 	int				out_fd;
-	char			*append;
-	int				app_fd;
 	int				total_proc;
 	struct	s_proc	*prev;
 }				t_proc;
@@ -59,8 +55,9 @@ typedef struct s_redir
 typedef struct s_token
 {
 	struct s_token	*prev;
-	int		process_nbr;
+	int				process_nbr;
 	int				type; //e.g. command, argument, operator, file
+	int				builtin;
 	char			*token;
 	struct s_token	*next;
 }				t_token;
@@ -90,7 +87,6 @@ typedef	enum e_type
 	UNDEFINED,
 	COMMAND,
 	ARGUMENT,
-	BUILTIN,
 	OPERATOR,
 	RE_IN,
 	RE_OUT,

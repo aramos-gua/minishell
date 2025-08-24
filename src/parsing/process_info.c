@@ -64,10 +64,9 @@ void	print_t_proc(t_proc *info)
 				temp = info->next;
 			printf("%-20s ", temp->proc);
 			printf("proc_no:%-2d ", temp->process_nbr);
-			printf("total:%-2d ", temp->total_proc);
-			printf("infile:%-2s ", temp->infile);
-			printf("outfile:%-2s ", temp->outfile);
-			printf("append:%-2s ", temp->append);
+			printf("total_proc:%-2d ", temp->total_proc);
+			printf("in_fd:%-2d ", temp->in_fd);
+			printf("out_fd:%-2d ", temp->out_fd);
 			printf("\n");
 			temp = temp->next;
 		}
@@ -101,14 +100,14 @@ int	find_processes(t_data *all, char *input)
 		info->process_nbr = j;
 		info->pid = -1;
 		info->last_pid = -1;
-		info->infile = NULL;
-		info->outfile = NULL;
-		info->append = NULL;
+		info->in_fd = 0;
+		info->out_fd = 1;
 		info->total_proc = len;
 		free(temp);
 		j++;
 	}
 	all->info = info;
+	all->total_proc = len;
 	return (0);
 }
 

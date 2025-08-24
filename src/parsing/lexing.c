@@ -6,7 +6,7 @@
 /*   By: mtice <mtice@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 17:37:41 by mtice             #+#    #+#             */
-/*   Updated: 2025/08/10 00:14:14 by mtice            ###   ########.fr       */
+/*   Updated: 2025/08/21 21:40:16 by mtice            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,8 @@ static void	assign_types(t_token *tokens)
 	{
 		if (i == -1)
 			temp = tokens->next;
-		if (is_builtin(temp->token))
-			temp->type = BUILTIN;
-		else if (!ft_strncmp(temp->token, "<\0", 2)
-				|| !ft_strncmp(temp->token, "<<\0", 3)
-				|| !ft_strncmp(temp->token, ">\0", 2)
-				|| !ft_strncmp(temp->token, ">>\0", 3))
+		if (!ft_strncmp(temp->token, "<\0", 2) || !ft_strncmp(temp->token, "<<\0", 3)
+				|| !ft_strncmp(temp->token, ">\0", 2) || !ft_strncmp(temp->token, ">>\0", 3))
 			temp->type = OPERATOR;
 		else if (temp->prev->type == OPERATOR) 
 		{
@@ -42,29 +38,35 @@ static void	assign_types(t_token *tokens)
 			else if (!ft_strncmp(temp->prev->token, ">>\0", 3))
 				temp->type = APPEND;
 		}
-		else if (temp->process_nbr > i)
+		else if (temp->process_nbr > i++)
+		{
 			temp->type = COMMAND;
+			if (is_builtin(temp->token))
+				temp->builtin = 1;
+		}
 		else
 		 	temp->type = ARGUMENT;
-		if (temp->process_nbr > i)
-			i++;
 		temp = temp->next;
 	}
 }
 
 //reformats tokens
-static void	token_pretty(t_data *all, t_token *tokens)
+static void	token_pretty(t_data *all)
 {
 	t_token	*temp;
 	int	i;
 
-	(void)all;
 	temp = NULL;
 	i = -1;
-	while (temp != tokens->next)
+	while (temp != all->tokens->next)
 	{
 		if (i++ == -1)
-			temp = tokens->next;
+			temp = all->tokens->next;
+		if (ft_strlen(ft_strchr(temp->token, '$')))
+		{
+			i++;
+			expansion(all, temp, &i);
+		}
 		if (ft_strlen(ft_strchr(temp->token, '\'')) > ft_strlen(ft_strchr(temp->token, '"')))
 		{
 			del_char(temp->token, '\'');
@@ -74,18 +76,6 @@ static void	token_pretty(t_data *all, t_token *tokens)
 		{
 			del_char(temp->token, '"');
 			sub_char(temp->token, 26, '|');
-			if (ft_strchr(temp->token, '$'))
-			{
-				char *old_token = temp->token;
-				temp->token = expansion(all, temp->token);
-				free(old_token);
-			}
-		}
-		else if (ft_strchr(temp->token, '$'))
-		{
-			char	*old_token = temp->token;
-			temp->token = expansion(all, temp->token);
-			free(old_token);
 		}
 		temp = temp->next;
 	}
@@ -98,7 +88,7 @@ static void	token_pretty(t_data *all, t_token *tokens)
 //TODO: handle variable expansion in the HERE_DOC case
 int	lexing(t_data *all)
 {
-	token_pretty(all, all->tokens);
+	token_pretty(all);
 	assign_types(all->tokens);
 	return (0);
 }
