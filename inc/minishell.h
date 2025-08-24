@@ -103,12 +103,12 @@ int 	ft_lstsize(t_token *list);
 //commands.c
 int		first_command(t_data *all, int **pipes);
 int		last_command(t_data *all, int **pipes);
-void	execute_command(t_data *all, int i);
+int	execute_command(t_data *all, int i);
 
 //cleaner.c
 int		free_split(char **arr);
 int		close_pipes(t_data *all, int **pipes);
 
 //builtin.c
-int	which_builtin(char *cmd, t_data *all);
+int	which_builtin(char *cmd, t_data *all, int proc);
 #endif

@@ -20,9 +20,8 @@ int	child_process(int i, t_data *all, int **pipes)
   if (i == 0)
     write(2, "starting child, [0]\n", 20);
   else if (i == 1)
+  {
     write(2, "starting child, [1]\n", 20);
-  //if (all->info->in_fd != 0 || all->info->out_fd != 1)
-  //{
     if (i == 0)
       first_command(all, pipes);
     else
@@ -35,17 +34,16 @@ int	child_process(int i, t_data *all, int **pipes)
     }
     else if (i < all->info->total_proc - 1)
       dup2(pipes[i][1], STDOUT_FILENO);
-  //}
+  }
 	while (j < all->info->total_proc - 1)
 	{
 		close(pipes[j][0]);
 		close(pipes[j][1]);
     j++;
 	}
-	//close(all->info->in_fd);
-	//close(all->info->out_fd);
   write(2, "about to execute_command\n", 25);
-	execute_command(all, i);
+	if (execute_command(all, i) == 0)
+    return (0);
   ft_printf("execute failed\n");
   return (1);
 }
@@ -81,8 +79,6 @@ int	pipes_init(int ***pipes, t_data *all)
 int	fork_init(t_data *all, int **pipes)
 {
 	int	  	i;
-  //t_token  *cmd;
-	//pid_t 	pid;
 	t_token *token;
 
 	i = 0;
@@ -97,36 +93,19 @@ int	fork_init(t_data *all, int **pipes)
 		}
 		if (all->info->pid == 0)
 		{
-      //close(pipes[i][0]);
-      //cmd = get_process(all->tokens, i);
-      //if (which_builtin(cmd->token) == 1)
-      //{
-      //  //handle_builtin(all, i);
-      //  return (0);
-      //}
-      child_process(i, all, pipes);
+      if (child_process(i, all, pipes))
+        return (0);
       exit (1);
 		}
     else
     {
-      //close(pipes[i][1]);
       token = all->tokens;
       while (token->next->process_nbr != 0)
         token = token->next;
       all->info->last_pid = all->info->pid;
- //     waitpid(all->info->pid, NULL, 0);
     }
 		i++;
 	}
-  //waitpid(all->info->last_pid, NULL, 0);
-  //while (wait(0) > 0);
- // i = 0;
- // while (i < all->info->total_proc)
- // {
- //   write(2, "waiting\n", 8);
- //   waitpid(-1, NULL, 0);
- //   i++;
- // }
   dprintf(2, "finished forking\n");
   return (0);
 }
@@ -165,29 +144,29 @@ void	open_pipes(int **pipes, t_data *all)
 	//return (pipes);
 }
 
-//TODO: Delete this after, mtice will do this in parsing
-int	get_files(t_data *all)
-{
-	if (all->info->infile)
-		all->info->in_fd = open(all->info->infile, O_RDONLY);
-  else if (!all->info->infile)
-    all->info->in_fd = 0;
-	if (all->info->in_fd < 0)
-		ft_printf("Error: %s not found\n", all->info->infile);
-	if (all->info->outfile)
-		all->info->out_fd = open(all->info->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0666);
-  else if (!all->info->outfile)
-    all->info->out_fd = 1;
-	if (all->info->out_fd < 0)
-		ft_printf("Error: %s incorrect permissions\n", all->info->infile);
-	if (all->info->append)
-		all->info->app_fd = open(all->info->append, O_WRONLY | O_CREAT | O_APPEND, 0666);
-	if (all->info->app_fd < 0)
-		ft_printf("Error: %s incorrect permissions\n", all->info->infile);
-  ft_printf("in fd: [%d]\n", all->info->in_fd);
-  ft_printf("out fd: [%d]\n", all->info->out_fd);
-	return (0);
-}
+////TODO: Delete this after, mtice will do this in parsing
+//int	get_files(t_data *all)
+//{
+//	if (all->info->infile)
+//		all->info->in_fd = open(all->info->infile, O_RDONLY);
+//  else if (!all->info->infile)
+//    all->info->in_fd = 0;
+//	if (all->info->in_fd < 0)
+//		ft_printf("Error: %s not found\n", all->info->infile);
+//	if (all->info->outfile)
+//		all->info->out_fd = open(all->info->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+//  else if (!all->info->outfile)
+//    all->info->out_fd = 1;
+//	if (all->info->out_fd < 0)
+//		ft_printf("Error: %s incorrect permissions\n", all->info->infile);
+//	if (all->info->append)
+//		all->info->app_fd = open(all->info->append, O_WRONLY | O_CREAT | O_APPEND, 0666);
+//	if (all->info->app_fd < 0)
+//		ft_printf("Error: %s incorrect permissions\n", all->info->infile);
+//  ft_printf("in fd: [%d]\n", all->info->in_fd);
+//  ft_printf("out fd: [%d]\n", all->info->out_fd);
+//	return (0);
+//}
 
 int	one_command(t_data *all)
 {
@@ -195,7 +174,7 @@ int	one_command(t_data *all)
 
   cmd = get_process(all->tokens, 0);
   dprintf(2, "one_command cmd is [%s]\n", cmd->token);
-  if (which_builtin(cmd->token, all) == 1)
+  if (which_builtin(cmd->token, all, 0) == 1)
   {
     //handle_builtin(all, i);
     return (0);
@@ -218,9 +197,6 @@ int	execution(t_data *all)
 {
 	int	**pipes;
 
-	//if its builtin, dont exit
-	//builtin(all);
-	//if needs fork
   all->info->in_fd = 0;
   all->info->out_fd = 1;
 	ft_printf("\nStarting exec\n");
@@ -250,24 +226,12 @@ int	execution(t_data *all)
 	}
 	ft_printf("\n\n");
 //////////////////////////////////////////////////////////////////////////////////
-	//get_files(all);
 	if (all->info->total_proc == 1)
 		one_command(all);
   else if (all->info->total_proc > 1)
 	{
-    //int j = 0;
 		pipes_init(&pipes, all);
 		open_pipes(pipes, all);
-    //close(all->info->in_fd);
-    //close(all->info->out_fd);
-    //while (j < all->info->total_proc - 1)
-    //{
-    //  close(pipes[j][0]);
-    //  close(pipes[j][1]);
-    //  j++;
-    //}
-	//	if (execute_command(all))
-	//		return (1);
-	}
+  }
 	return (0);
 }

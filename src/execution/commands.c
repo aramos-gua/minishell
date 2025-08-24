@@ -57,7 +57,7 @@ int	last_command(t_data *all, int **pipes)
 	return (0);
 }
 
-void	execute_command(t_data *all, int i)
+int	execute_command(t_data *all, int i)
 {
 	t_token *cmd;
 	char	  *path;
@@ -83,6 +83,11 @@ void	execute_command(t_data *all, int i)
   write(2, "starting array_builder\n", 23);
 	cmd_arr = array_builder(all, i);
   write(2, "starting execve\n\n", 17);
+  if (which_builtin(cmd->token, all, i) == 1)
+  {
+    //handle_builtin(all, i);
+    return (0);
+  }
 	if (execve(path, cmd_arr, all->c_envp) == -1)
 	{
     ft_printf("exited after execve\n");

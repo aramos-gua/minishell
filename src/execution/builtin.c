@@ -79,7 +79,31 @@ static int	isnt_number(char *str)
 	return (0);
 }
 
-int	which_builtin(char *cmd, t_data *all)
+int	ft_echo(char **array)
+{
+	int	i;
+	int	line_flag;
+
+	i = 0;
+	line_flag = 1;
+	while (array[i] && ft_strncmp(array[i], "-n\0", 3) == 0)
+	{
+		line_flag = 0;
+		i++;
+	}
+	while (array[i])
+	{
+		ft_printf("%s", array[i]);
+		if (array[i + 1])
+			ft_printf(" ");
+		i++;
+	}
+	if (line_flag)
+		ft_printf("\n");
+	return (0);
+}
+
+int	which_builtin(char *cmd, t_data *all, int proc)
 {
 	int	len;
 	int	nodes;
@@ -88,10 +112,15 @@ int	which_builtin(char *cmd, t_data *all)
 	len = ft_strlen(cmd);
 	nodes = ft_lstsize(all->tokens);
 	cmd_node = get_cmd_node(all->tokens->next, 0);
+	dprintf(2, "which builder\n");
 	if (!ft_strncmp(cmd, "echo\0", len))
 	{
-		dprintf(2, "builtin [%s] not implemented\n", cmd);
-		return (0);
+		char	**args;
+
+		args = array_builder(all, proc);
+		ft_echo(args + 1);
+		dprintf(2, "My %s \n", cmd);
+		return (1);
 	}
 	else if (!ft_strncmp(cmd, "cd\0", len))
 	{
@@ -149,6 +178,7 @@ int	which_builtin(char *cmd, t_data *all)
 				return (1);
 			}
 		}
+		return (1);
 
 	}
 	return (0);
