@@ -26,8 +26,8 @@ int	parsing(t_data *all, char *input)
 		return (1);
 	else if (redirects(all))
 	 	return (1);
-	else if (heredoc(all))
-		return (1);
+	// else if (heredoc(all))
+	// 	return (1);
 	printf("-----------INFO LIST----------------\n");
 	print_t_proc(all->info);	
 	printf("----------TOKEN LIST----------------\n");
