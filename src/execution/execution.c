@@ -194,6 +194,7 @@ int	one_command(t_data *all)
   t_token *cmd;
 
   cmd = get_process(all->tokens, 0);
+  dprintf(2, "one_command cmd is [%s]\n", cmd->token);
   if (which_builtin(cmd->token, all) == 1)
   {
     //handle_builtin(all, i);

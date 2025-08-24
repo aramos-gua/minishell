@@ -30,9 +30,9 @@ int	main(int argc, char *argv[], char *envp[])
 		input = readline("minishell> ");
 		// if (!input || input[0] == '\0')
 		//  	printf("Goodbye!\n"), exit(1);
-		if (!ft_strncmp("exit\0", input, 5))
-			break;
-		else if (!ft_strncmp("$?\0", input, 3))
+		//if (!ft_strncmp("exit\0", input, 5))
+		//	break;
+		if (!ft_strncmp("$?\0", input, 3))
 			printf("%d: command not found\n", errno);
 		else if (!ft_strncmp("env\0", input, 4))
 			print_env(&all);

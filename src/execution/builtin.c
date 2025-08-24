@@ -65,13 +65,29 @@ int	ft_cd(char *cmd, t_data *all)
 	return (0);
 }
 
+static int	isnt_number(char *str)
+{
+	if (!(*str == '-' || *str == '+' || ft_isdigit(*str)))
+		return (1);
+	if ((*str == '-' || *str == '+') && !ft_isdigit(str[1]))
+		return (1);
+	while (*(++str))
+	{
+		if (!(ft_isdigit(*str)))
+			return (1);
+	}
+	return (0);
+}
+
 int	which_builtin(char *cmd, t_data *all)
 {
 	int	len;
-	//int	nodes;
+	int	nodes;
+	t_token	*cmd_node;
 
 	len = ft_strlen(cmd);
-	//nodes = ft_lstsize(all->tokens);
+	nodes = ft_lstsize(all->tokens);
+	cmd_node = get_cmd_node(all->tokens->next, 0);
 	if (!ft_strncmp(cmd, "echo\0", len))
 	{
 		dprintf(2, "builtin [%s] not implemented\n", cmd);
@@ -91,34 +107,48 @@ int	which_builtin(char *cmd, t_data *all)
 		return (1);
 
 	}
-	else if (ft_strncmp(cmd, "export\0", len))
+	else if (!ft_strncmp(cmd, "export\0", len))
 	{
 		dprintf(2, "builtin [%s]\n", cmd);
 		return (0);
 
 	}
-	else if (ft_strncmp(cmd, "unset\0", len))
+	else if (!ft_strncmp(cmd, "unset\0", len))
 	{
 		dprintf(2, "builtin [%s]\n", cmd);
 		return (0);
 
 	}
-	else if (ft_strncmp(cmd, "exit\0", len))
+	else if (!ft_strncmp(cmd, "exit\0", len))
 	{
+		dprintf(2, "starting exit cmd\n");
 		if (all->info->total_proc == 1)
 		{
-			if (ft_lstsize(all->tokens) == 1)
+			if (nodes == 1)
 			{
 				all->return_val = 0;
 				exit ((int)all->return_val);
 			}
-			//else if (nodes == 2 && ft_isdigit(all->tokens->next)
-			//{
-			//	all->return_val = ft_atoi(all->tokens->next);
-			//	exit ((int)all->return_val);
-			//}
+			else if (nodes == 2 && !(isnt_number(all->tokens->token)))
+			{
+				all->return_val = ft_atoi(all->tokens->token);
+				dprintf(2, "return_val: [%d]\n", all->return_val);
+				exit (all->return_val);
+			}
+			else if (nodes >= 2 && isnt_number(cmd_node->next->token))
+			{
+				all->return_val = 255;
+				dprintf(2, "bash: exit: %s: numeric argument required. Jamon\n", all->tokens->token);
+				exit (all->return_val);
+			}
+			else if (nodes > 2 && !(isnt_number(cmd_node->next->token)))
+			{
+				all->return_val = 255;
+				dprintf(2, "exit\n");
+				dprintf(2, "bash: exit: too many arguments. Jamon\n");
+				return (1);
+			}
 		}
-		return (0);
 
 	}
 	return (0);
