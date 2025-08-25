@@ -65,7 +65,10 @@ static void	token_pretty(t_data *all)
 		if (ft_strlen(ft_strchr(temp->token, '$')))
 		{
 			i++;
-			expansion(all, temp, &i);
+			if (temp->type != HERE_DOC)
+				expansion(all, temp, &i);
+			else
+			 	printf("temp->type is HERE_DOC, fix this! (lexing)\n"), exit(1);
 		}
 		if (ft_strlen(ft_strchr(temp->token, '\'')) > ft_strlen(ft_strchr(temp->token, '"')))
 		{

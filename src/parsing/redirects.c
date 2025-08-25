@@ -33,6 +33,13 @@ int	redirects(t_data *all)
 				close (info_temp->in_fd);
 			info_temp->in_fd = open(token_temp->token, O_RDONLY);
 		}
+		else if (token_temp->type == HERE_DOC)
+		{
+			//TODO:keep a record of all here_doc fds, but only pass the last fd.
+			if (info_temp->in_fd > 2)
+				close (info_temp->in_fd);
+			info_temp->in_fd = open(ft_strjoin(".", token_temp->token), O_CREAT | O_TRUNC | O_WRONLY, 0644);
+		}
 		else if (token_temp->type == RE_OUT)
 		{	
 			if (info_temp->out_fd > 2)

@@ -212,7 +212,7 @@ int	execution(t_data *all)
 	{
 		if (current->process_nbr != curr_proc)
 			curr_proc = current->next->process_nbr;
-		if (current->type == COMMAND || current->type == BUILTIN)
+		if (current->type == COMMAND)
 		{
 			ft_printf("[%d], command: %s   ", curr_proc, current->token);
 		}
