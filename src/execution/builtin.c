@@ -86,6 +86,9 @@ int	ft_echo(char **array)
 
 	i = 0;
 	line_flag = 1;
+	if (!array || !array[i])
+		return (0);
+	i++;
 	while (array[i] && ft_strncmp(array[i], "-n\0", 3) == 0)
 	{
 		line_flag = 0;
@@ -110,7 +113,8 @@ int	which_builtin(char *cmd, t_data *all, int proc)
 	t_token	*cmd_node;
 
 	len = ft_strlen(cmd);
-	nodes = ft_lstsize(all->tokens);
+	nodes = ft_lstsize(all->tokens, proc);
+	dprintf(2, "nodes in which builtin [%d]\n", nodes);
 	cmd_node = get_cmd_node(all->tokens->next, 0);
 	dprintf(2, "which builder\n");
 	if (!ft_strncmp(cmd, "echo\0", len))
@@ -118,7 +122,7 @@ int	which_builtin(char *cmd, t_data *all, int proc)
 		char	**args;
 
 		args = array_builder(all, proc);
-		ft_echo(args + 1);
+		ft_echo(args);
 		dprintf(2, "My %s \n", cmd);
 		return (1);
 	}

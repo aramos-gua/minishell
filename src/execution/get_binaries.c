@@ -20,16 +20,16 @@ char  **array_builder(t_data *all, int proc)
 
   i = 0;
 	//ft_printf("array builder\n");
-  arr = malloc ((ft_lstsize(all->tokens) + 1) * sizeof(char *));
+  arr = malloc ((ft_lstsize(all->tokens, proc) + 1) * sizeof(char *));
   if (!arr)
     return (NULL);
   tmp = all->tokens;
-  while ((tmp->type != COMMAND && tmp->type != BUILTIN ) || tmp->process_nbr != proc)
+  while ((tmp->type != COMMAND || tmp->process_nbr != proc))
     tmp = tmp->next;
   arr[i++] = tmp->token;
   tmp = tmp->next;
   //ft_printf("[%d][%s]  ", i - 1, arr[i - 1]);
-  while (tmp->type != COMMAND && tmp->type != BUILTIN)
+  while (tmp->type != COMMAND && tmp->process_nbr == proc)
   {
     arr[i++] = tmp->token;
     tmp = tmp->next;

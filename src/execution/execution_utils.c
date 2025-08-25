@@ -40,25 +40,29 @@ t_token *get_cmd_node(t_token *list, int i)
   dprintf(2, "get_cmd_node start\n");
   current = list;
   dprintf(2, "the type is: %d\n", current->type);
-  while ((current->type != COMMAND && current->type != BUILTIN) || current->process_nbr != i)
+  while ((current->type != COMMAND && current->builtin != 1) || current->process_nbr != i)
     current = current->next;
   return(current);
 }
 
-int ft_lstsize(t_token *list)
+int ft_lstsize(t_token *list, int proc)
 {
   t_token *current;
   int     i;
 
-  i = 1;
+  i = 0;
   if (!list)
     return (0);
   current = list;
-  while (current->next != list)
+  while (1)
   {
-    i++;
+    if (current->process_nbr == proc)
+      i++;
     current = current->next;
+    if (current == list)
+      break ;
   }
+  dprintf(2, "size of list is [%d]\n", i);
   return (i);
 }
 

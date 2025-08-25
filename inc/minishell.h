@@ -99,7 +99,7 @@ char	*get_cmd_path(char *cmd, char **env);
 //execution_utils.
 t_token *get_process(t_token *list, int i);
 t_token *get_cmd_node(t_token *list, int i);
-int 	ft_lstsize(t_token *list);
+int 	ft_lstsize(t_token *list, int proc);
 
 //commands.c
 int		first_command(t_data *all, int **pipes);

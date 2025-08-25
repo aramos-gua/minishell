@@ -20,22 +20,30 @@ int	child_process(int i, t_data *all, int **pipes)
   if (i == 0)
     write(2, "starting child, [0]\n", 20);
   else if (i == 1)
-  {
     write(2, "starting child, [1]\n", 20);
-    if (i == 0)
-      first_command(all, pipes);
-    else
-    {
-      dup2(pipes[i - 1][0], STDIN_FILENO);
-    }
-    if (i == all->info->total_proc - 1)
-    {
-      last_command(all, pipes);
-    }
-    else if (i < all->info->total_proc - 1)
-      dup2(pipes[i][1], STDOUT_FILENO);
+  if (i == 0)
+  {
+    dprintf(2, "first command\n");
+    first_command(all, pipes);
   }
-	while (j < all->info->total_proc - 1)
+  else// if (i != 0 && i < (all->info->total_proc - 1))
+  {
+    dprintf(2, "mid command\n");
+    dup2(pipes[i - 1][0], STDIN_FILENO);
+    ft_printf("out of mid command is is [%d]\n", pipes[i - 1][0]);
+  }
+  if (i == (all->info->total_proc - 1))
+  {
+    dprintf(2, "last command\n");
+    last_command(all, pipes);
+  }
+  else if (i != 0 && i < all->info->total_proc - 1)
+  {
+    dprintf(2, "any command\n");
+    dup2(pipes[i][1], STDOUT_FILENO);
+    ft_printf("out of any command is is [%d]\n", pipes[i][1]);
+  }
+	while (j < (all->info->total_proc - 1))
 	{
 		close(pipes[j][0]);
 		close(pipes[j][1]);
@@ -212,7 +220,7 @@ int	execution(t_data *all)
 	{
 		if (current->process_nbr != curr_proc)
 			curr_proc = current->next->process_nbr;
-		if (current->type == COMMAND || current->type == BUILTIN)
+		if (current->type == COMMAND || current->builtin)
 		{
 			ft_printf("[%d], command: %s   ", curr_proc, current->token);
 		}

@@ -21,7 +21,7 @@ int	first_command(t_data *all, int **pipes)
   {
 		dup2(all->info->in_fd, STDIN_FILENO);
     //close(all->info->in_fd);
-    ft_printf("dup2 in_fd\n");
+    ft_printf("input of first command is [%d]\n", all->info->in_fd);
   }
 	else
 	{
@@ -32,6 +32,7 @@ int	first_command(t_data *all, int **pipes)
 	}
   write(2, "about to dup2 out\n", 18);
 	dup2(pipes[0][1], STDOUT_FILENO);
+  ft_printf("out of first command is is [%d]\n", pipes[0][1]);
   write(2, "all good at first_command\n", 26);
 	return (0);
 }
@@ -42,6 +43,7 @@ int	last_command(t_data *all, int **pipes)
 	if (all->info->out_fd >= 0)
   {
 		dup2(all->info->out_fd, STDOUT_FILENO);
+    ft_printf("out of last command is is [%d]\n", all->info->out_fd);
     //close(all->info->out_fd);
     ft_printf("dup2 out_fd\n");
   }
@@ -65,12 +67,21 @@ int	execute_command(t_data *all, int i)
 
 	write(2, "execute_command\n", 16);
 	cmd = get_process(all->tokens, i);
-  dprintf(2, "the cmd found after get_process is [%s]\n", cmd->token);
+  dprintf(2, "the cmd [%d] found after get_process is [%s]\n", i, cmd->token);
   write(2, "\n", 1);
 	if (!cmd)
   {
     write(2, "exited after cmd\n", 17);
 	  exit (1);
+  }
+  write(2, "checking if builtin\n\n", 17);
+  if (is_builtin(cmd->token))
+  {
+    dprintf(2, "BUILTIN ABOUT TO STARTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT\n");
+    which_builtin(cmd->token, all, i);
+    dprintf(2, "BUILTIN FINIEHSEEEEEEE\n");
+    exit (0);
+    return (0);
   }
 	path = get_cmd_path(cmd->token, all->c_envp);
   dprintf(2, "path: [%s] process id: [%d]\n", path, all->info->pid);
@@ -83,11 +94,6 @@ int	execute_command(t_data *all, int i)
   write(2, "starting array_builder\n", 23);
 	cmd_arr = array_builder(all, i);
   write(2, "starting execve\n\n", 17);
-  if (which_builtin(cmd->token, all, i) == 1)
-  {
-    //handle_builtin(all, i);
-    return (0);
-  }
 	if (execve(path, cmd_arr, all->c_envp) == -1)
 	{
     ft_printf("exited after execve\n");

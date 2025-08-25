@@ -38,8 +38,8 @@ int	main(int argc, char *argv[], char *envp[])
 			print_env(&all);
 		else if (parsing(&all, input))
 			continue ;
-		// else if (execution(&all))
-		// 	continue ;
+		 else if (execution(&all))
+		 	continue ;
 	}	
 	rl_clear_history();
 	//free_all();
