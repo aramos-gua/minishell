@@ -26,6 +26,8 @@ int	main(int argc, char *argv[], char *envp[])
 		return (1); //TODO:free_all();
 	while (42)
 	{
+		if (!isatty(fileno(stdin)))
+			break;
 		input = readline("minishell> ");
 		if (!input || input[0] == '\0' || rl_on_new_line())
 			continue ;

@@ -116,10 +116,10 @@ static void	do_expansion(t_data *all, t_token *tkn_ptr)
 			while (tkn_ptr->token[i] != '"' && tkn_ptr->token[i] != '$' && tkn_ptr->token[i] != '\0')
 				i++, len++;
 		}
-		else if (tkn_ptr->token[i] == '$' && (ft_isalpha(tkn_ptr->token[i + 1]) || tkn_ptr->token[i + 1] == '_'))
+		else if (tkn_ptr->token[i] == '$' && (ft_isalnum(tkn_ptr->token[i + 1]) || tkn_ptr->token[i + 1] == '_'))
 		{
 			i++;
-			while (ft_isalpha(tkn_ptr->token[i]) || tkn_ptr->token[i] == '_')
+			while (ft_isalnum(tkn_ptr->token[i]) || tkn_ptr->token[i] == '_')
 				i++, len++;
 			to_expand = 1;
 		}

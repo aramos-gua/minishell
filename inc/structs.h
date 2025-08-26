@@ -62,12 +62,6 @@ typedef struct s_token
 	struct s_token	*next;
 }				t_token;
 
-//------------------------------------------------------------------------------
-typedef struct	s_heredoc
-{
-	int		*fds;
-}				t_heredoc;
-
 //-----------------------------------------------------------------------------
 //stores EVERYTHING will always be declared as t_data *all
 //stores a pointer to the other structs
@@ -75,11 +69,11 @@ typedef struct	s_heredoc
 //c_envp: a copy of envp obtained in the main TODO: use to search paths && alter env vars
 typedef	struct s_data
 {
-	int		err;
 	char	**c_envp;
 	char	**procs;
 	t_proc	*info;
 	t_token	*tokens;
+	int		*heredocs;
 	int		total_proc;//think this doesnt work well
 	unsigned char	return_val;
 }				t_data;

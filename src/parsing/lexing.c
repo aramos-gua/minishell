@@ -24,7 +24,6 @@ static void	assign_types(t_token *tokens)
 	{
 		if (i == -1)
 			temp = tokens->next;
-		printf("PROCESS_NBR:%d I:%d\n", temp->process_nbr, i);
 		if (!ft_strncmp(temp->token, "<\0", 2) || !ft_strncmp(temp->token, "<<\0", 3)
 				|| !ft_strncmp(temp->token, ">\0", 2) || !ft_strncmp(temp->token, ">>\0", 3))
 			temp->type = OPERATOR;
@@ -69,8 +68,6 @@ static void	token_pretty(t_data *all)
 			i++;
 			if (temp->type != HERE_DOC)
 				expansion(all, temp, &i);
-			else
-			 	printf("temp->type is HERE_DOC, fix this! (lexing)\n"), exit(1);
 		}
 		if (ft_strlen(ft_strchr(temp->token, '\'')) > ft_strlen(ft_strchr(temp->token, '"')))
 		{
