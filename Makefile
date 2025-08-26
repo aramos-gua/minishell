@@ -20,6 +20,7 @@ SRC :=	$(SRC_DIR)/main.c \
 		$(SRC_DIR)/execution/get_binaries.c \
 		$(SRC_DIR)/execution/execution_utils.c \
 		$(SRC_DIR)/execution/builtin.c \
+		$(SRC_DIR)/execution/export.c \
 		$(SRC_DIR)/execution/cleaner.c
 
 

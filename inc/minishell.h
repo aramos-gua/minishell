@@ -6,7 +6,7 @@
 /*   By: mtice <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 15:29:12 by mtice             #+#    #+#             */
-/*   Updated: 2025/08/21 20:57:28 by mtice            ###   ########.fr       */
+/*   Updated: 2025/08/26 20:26:15 by Alejandro Ram    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,5 +111,8 @@ int		free_split(char **arr);
 int		close_pipes(t_data *all, int **pipes);
 
 //builtin.c
-int	which_builtin(char *cmd, t_data *all, int proc);
+int		which_builtin(char *cmd, t_data *all, int proc);
+
+//export.c
+int		ft_export(t_data *all, int proc, t_token *cmd_node);
 #endif

@@ -6,7 +6,7 @@
 /*   By: Alejandro Ramos <alejandro.ramos.gua@gmai  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 11:42:22 by Alejandro Ram     #+#    #+#             */
-/*   Updated: 2025/08/21 12:41:59 by Alejandro Ram    ###   ########.fr       */
+/*   Updated: 2025/08/26 23:02:24 by Alejandro Ram    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,20 @@ static int	isnt_number(char *str)
 	return (0);
 }
 
+int	only_n(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (str && str[0] == '-' && str[i + 1])
+		i++;
+	while (str[i] == 'n')
+		i++;
+	if (str[i] == '\0')
+		return (1);
+	return (0);
+}
+
 int	ft_echo(char **array)
 {
 	int	i;
@@ -89,11 +103,8 @@ int	ft_echo(char **array)
 	if (!array || !array[i])
 		return (0);
 	i++;
-	while (array[i] && ft_strncmp(array[i], "-n\0", 3) == 0)
-	{
-		line_flag = 0;
+	while (only_n(array[i]) && line_flag == 0)
 		i++;
-	}
 	while (array[i])
 	{
 		ft_printf("%s", array[i]);
@@ -142,7 +153,8 @@ int	which_builtin(char *cmd, t_data *all, int proc)
 	}
 	else if (!ft_strncmp(cmd, "export\0", len))
 	{
-		dprintf(2, "builtin [%s]\n", cmd);
+		dprintf(2, "my %s\n", cmd);
+		ft_export(all, proc, cmd_node);
 		return (0);
 
 	}
