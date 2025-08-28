@@ -71,6 +71,7 @@ typedef	struct s_data
 {
 	int		err;
 	char	**c_envp;
+	char	**c_exp;
 	char	**procs;
 	t_proc	*info;
 	t_token	*tokens;
