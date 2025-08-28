@@ -20,8 +20,9 @@ int	main(int argc, char *argv[], char *envp[])
 	t_data	all;
 	char 	*input = NULL;
 
-	(void)argc;
-	(void)argv;
+	if (argc > 1 || argv[0] == NULL || argv[0][0] == '\0')
+		return (1);
+	//init_all(all);
 	if (find_envp(&all, envp))
 		return (1); //TODO:free_all();
 	while (42)

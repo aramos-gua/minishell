@@ -57,6 +57,7 @@ int		tokeniser(t_data *all);
 int		lexing(t_data *all);
 
 //expansion.c
+char	*do_expansion(t_data *all, char *token);
 void	expansion(t_data *all, t_token *tkn_ptr, int *position);
 
 //redirects.c

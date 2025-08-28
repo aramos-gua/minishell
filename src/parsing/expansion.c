@@ -6,13 +6,13 @@
 /*   By: mtice <mtice@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 20:59:44 by mtice             #+#    #+#             */
-/*   Updated: 2025/08/21 21:40:18 by mtice            ###   ########.fr       */
+/*   Updated: 2025/08/28 21:01:42 by mtice            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-static	void	check_var(t_data *all, t_token *tkn_ptr, char **env_var, int *position)
+static	void	word_splitting(t_data *all, t_token *tkn_ptr, char **env_var, int *position)
 {
 	int		i;
 	int		len;
@@ -81,7 +81,7 @@ static	void	expand_var(char **c_envp, char **env_var, int to_expand)
 //e$a (should give echo: builtin, hello: argument)
 //handle heredoc expansions
 
-static void	do_expansion(t_data *all, t_token *tkn_ptr)
+char	*do_expansion(t_data *all, char *token)
 {
 	int		i;
 	int		len;
@@ -91,64 +91,63 @@ static void	do_expansion(t_data *all, t_token *tkn_ptr)
 
 	i = 0;
 	env_var = NULL;
-	while (tkn_ptr->token[i] != '\0')
+	while (token[i] != '\0')
 	{
 		len = 0;
 		to_expand = 0;
 		prev_env_var = env_var;
-		if (tkn_ptr->token[i] == '$' && tkn_ptr->token[i + 1] == '?')
+		if (token[i] == '$' && token[i + 1] == '?')
+			env_var = ft_itoa(all->return_val);
+		else if (token[i] == '$' && token[i + 1] == '\'' && printf("CONDITION 2\n"))
 		{
-			printf("UNIMPLEMENTED: return exit code (expansion)\n");
-			return ;
-		}
-		else if (tkn_ptr->token[i] == '$' && tkn_ptr->token[i + 1] == '\'')
-		{
-			if (tkn_ptr->token[i - 1] != '"')
+			if (token[i - 1] != '"')
 				i += 2, len++;
 			else
 			 	i++, len++;
-			while (tkn_ptr->token[i] != '\'' && tkn_ptr->token[i] != '\0')
+			while (token[i] != '\'' && token[i] != '\0')
 				i++, len++;
 		}
-		else if (tkn_ptr->token[i] == '$' && tkn_ptr->token[i + 1] == '"')
+		else if (token[i] == '$' && token[i + 1] == '"' && printf("CONDITION 3\n"))
 		{
 			i += 2, len++;
-			while (tkn_ptr->token[i] != '"' && tkn_ptr->token[i] != '$' && tkn_ptr->token[i] != '\0')
+			while (token[i] != '"' && token[i] != '$' && token[i] != '\0')
 				i++, len++;
 		}
-		else if (tkn_ptr->token[i] == '$' && (ft_isalnum(tkn_ptr->token[i + 1]) || tkn_ptr->token[i + 1] == '_'))
+		else if (token[i] == '$' && (ft_isalpha(token[i + 1]) || token[i + 1] == '_') && printf("CONDITION 4\n"))
 		{
 			i++;
-			while (ft_isalnum(tkn_ptr->token[i]) || tkn_ptr->token[i] == '_')
+			while (ft_isalnum(token[i]) || token[i] == '_')
 				i++, len++;
 			to_expand = 1;
 		}
-		else if (tkn_ptr->token[i] == '$' && tkn_ptr->token[i + 1] == '\0')
+		else if (token[i] == '$' && token[i + 1] == '\0' && printf("CONDITION 5\n"))
 			i++, len++;
-		else if (tkn_ptr->token[i] == '\'')
+		else if (token[i] == '\'' && token[i + 1] != '\'' && printf("CONDITION 6\n"))
 		{
 			i++, len++;
-			while(tkn_ptr->token[i] != '\'' && tkn_ptr->token[i] != '\0')
+			while(token[i] != '\'' && token[i] != '\0')
 				i++, len++;
 		}
-		else if (tkn_ptr->token[i] == '"')
+		else if (token[i] == '"' && printf("CONDITION 7\n"))
 		{
 			i++, len++;
-			while (tkn_ptr->token[i] != '$' && tkn_ptr->token[i] != '"' && tkn_ptr->token[i] != '\0')
+			while (token[i] != '$' && token[i] != '"' && token[i] != '\0')
 				i++, len++;
+			printf("token[i]: %c\n", token[i]);
 		}
-		else if (tkn_ptr->token[i] != '$')
+		else if (token[i] != '$' && printf("CONDITION 8\n"))
 		{
-			while (tkn_ptr->token[i] != '$' && tkn_ptr->token[i] != '\0')
+			while (token[i] != '$' && token[i] != '\0')
 				i++, len++;
 		}
-		env_var = find_token(tkn_ptr->token, i--, len);
+		env_var = find_token(token, i--, len);
 		expand_var(all->c_envp, &env_var, to_expand);
 		env_var = ft_strjoin(prev_env_var, env_var);
 		i++;
 	}
-	tkn_ptr->token = env_var;
+	return (env_var);
 }
+
 
 //---------------------------------------------------------------------------------------------------
 //expansion looks for the variable to expand, and constructs the env_var (the expanded environment variable)
@@ -159,6 +158,9 @@ static void	do_expansion(t_data *all, t_token *tkn_ptr)
 //TODO: heredoc expansions
 void	expansion(t_data *all, t_token *tkn_ptr, int *position)
 {
-	do_expansion(all, tkn_ptr);
-	check_var(all, tkn_ptr, &(tkn_ptr->token), position);
+	char	*expanded;
+
+	expanded = do_expansion(all, (tkn_ptr->token));
+	tkn_ptr->token = expanded;
+	word_splitting(all, tkn_ptr, &(tkn_ptr->token), position);
 }

@@ -23,7 +23,10 @@ static void	assign_types(t_token *tokens)
 	while (temp != tokens->next)
 	{
 		if (i == -1)
+		{
 			temp = tokens->next;
+			i++;
+		}
 		if (!ft_strncmp(temp->token, "<\0", 2) || !ft_strncmp(temp->token, "<<\0", 3)
 				|| !ft_strncmp(temp->token, ">\0", 2) || !ft_strncmp(temp->token, ">>\0", 3))
 			temp->type = OPERATOR;
@@ -38,7 +41,7 @@ static void	assign_types(t_token *tokens)
 			else if (!ft_strncmp(temp->prev->token, ">>\0", 3))
 				temp->type = APPEND;
 		}
-		else if (temp->process_nbr > i)
+		else if (temp->process_nbr == i)
 		{
 			temp->type = COMMAND;
 			if (is_builtin(temp->token))
@@ -71,12 +74,14 @@ static void	token_pretty(t_data *all)
 		}
 		if (ft_strlen(ft_strchr(temp->token, '\'')) > ft_strlen(ft_strchr(temp->token, '"')))
 		{
-			del_char(temp->token, '\'');
+			if (temp->type != HERE_DOC)
+				del_char(temp->token, '\'');
 			sub_char(temp->token, 26, '|');
 		}
 		else if (ft_strlen(ft_strchr(temp->token, '"')) > ft_strlen(ft_strchr(temp->token, '\'')))
 		{
-			del_char(temp->token, '"');
+			if (temp->type != HERE_DOC)
+				del_char(temp->token, '"');
 			sub_char(temp->token, 26, '|');
 		}
 		temp = temp->next;
@@ -90,7 +95,7 @@ static void	token_pretty(t_data *all)
 //TODO: handle variable expansion in the HERE_DOC case
 int	lexing(t_data *all)
 {
-	token_pretty(all);
 	assign_types(all->tokens);
+	token_pretty(all);
 	return (0);
 }
