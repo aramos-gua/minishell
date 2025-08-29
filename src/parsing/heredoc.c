@@ -6,21 +6,11 @@
 /*   By: mtice <mtice@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 14:37:21 by mtice             #+#    #+#             */
-/*   Updated: 2025/08/28 21:01:39 by mtice            ###   ########.fr       */
+/*   Updated: 2025/08/28 21:01:38 by mtice            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
-
-// static int	expand_heredoc(char *line)
-// {
-//
-// }
-//
-// static int unlink_heredoc(t_token *tkn_ptr)
-// {
-// 	unlink(ft_strjoin("/tmp/heredoc_p", ft_itoa(tkn_ptr->process_nbr)));
-// }
 
 static int	write_heredoc(t_data *all, t_token *tkn_ptr, int to_expand)
 {
@@ -48,12 +38,9 @@ static int	write_heredoc(t_data *all, t_token *tkn_ptr, int to_expand)
 	return (0);
 }
 
-
 //------------------------------------------------------------------------------
-//find_heredoc() finds all the heredoc tokens, and fills the delimiter array, with the delimiter names
-//create_tmp() creates all the temp files for each heredoc
-//fill_tmp() populates each temp file with the lines read up to the delimiter
-//heredoc_expansion() checks each delimiter for expansion, and checks each line for expansion as well
+//heredoc() 
+//TODO:notes
 int	heredoc(t_data *all)
 {
 	int		i;
@@ -69,18 +56,12 @@ int	heredoc(t_data *all)
 			temp = all->tokens->next;
 		if (temp->type == HERE_DOC)
 		{
-			// if (temp->process_nbr == temp->next->process_nbr)
-			// 	unlink_heredoc(temp);
 			if (ft_strlen(ft_strchr(temp->token, '"')) > ft_strlen(ft_strchr(temp->token, '\'')))
-			{
 				del_char(temp->token, '"');
-				to_expand = 1;
-			}
 			else if (ft_strlen(ft_strchr(temp->token, '\'')) > ft_strlen(ft_strchr(temp->token, '\'')))
-			{
 				del_char(temp->token, '\'');
-				to_expand = 1;
-			}
+			else
+			 	to_expand = 1;
 			if (write_heredoc(all, temp, to_expand))
 				return (1);
 		}
