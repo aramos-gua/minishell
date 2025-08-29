@@ -90,6 +90,7 @@ void	open_pipes(int **pipes, t_data *all);
 int		get_files(t_data *all);
 int		one_command(t_data *all);
 int		execution(t_data *all);
+void 	fill_exp(t_data *all);
 
 //get_binaries.c
 char  	**array_builder(t_data *all, int proc);

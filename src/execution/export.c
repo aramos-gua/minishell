@@ -30,6 +30,9 @@ int	exist_in_arr(char *str, char **array)
 	int	i;
 
   i = 0;
+  dprintf(2, "exist_in_arr start\n");
+  dprintf(2, "str:[%s]\n", str);
+  dprintf(2, "array[0]:[%s]\n", array[0]);
 	len = ft_strlen(str);
   while (array[i])
   {
@@ -51,80 +54,128 @@ char *nullify(char *cmd)
   return (cmd_cut);
 }
 
-int	ft_export(t_data *all, int proc, t_token *cmd_node)
+void fill_exp(t_data *all)
 {
-	char	**array;
-  char  *cmd_cpy;
-	int		len;
-	int		i;
+    int i;
 
-  if (!all->c_exp || all->c_exp[0] == '\0')
-  {
-    int j;
+    i = 0;
 
-    j = 0;
-    while (all->c_envp[j])
-      j++;
-    all->c_exp = calloc((j + 1), sizeof(char *));
-    j = 0;
-    while (all->c_envp[j])
+    dprintf(2, "fill_exp STARTING\n");
+    while (all->c_envp[i])
+      i++;
+    all->c_exp = calloc((i + 1), sizeof(char *));
+    if (!all->c_exp)
     {
-      all->c_exp[j] = all->c_envp[j];
-      j++;
+      dprintf(2, "not posibile to aloc for c_exp\n");
     }
-    all->c_exp[j] = NULL;
-  }
-  if (ft_lstsize(all->tokens, proc) == 1)
-  {
-    int	j;
-
-    j = 0;
-    dprintf(2, "filling exp\n");
-    while (all->c_exp[j] != NULL)
-      printf("%s\n", all->c_exp[j++]);
-  }
-  cmd_cpy = nullify(cmd_node->next->token);
-  if (cmd_cpy[ft_strlen(cmd_cpy) - 1] != '=')
-    array = all->c_exp;
-	array = all->c_envp;
-	dprintf(2, "[%d]\n", proc);
-	len = 1;
-	i = 0;
-  if (exist_in_arr(cmd_cpy, array) != -1)
-  {
-    dprintf(2, "coincidence found\n");
-    i = exist_in_arr(cmd_cpy, array);
-    dprintf(2, "found here [%d]\n", i);
-    array[i] = cmd_node->next->token;
-    return (1);
-  }
-  while (array[len])
-    len++;
-  array = NULL;
-  array = malloc ((len + 2) * sizeof(char *));
-  if (!array)
-    return (0);
-  if (cmd_cpy[ft_strlen(cmd_cpy) - 1] != '=')
-  {
-    while (all->c_exp[i])
+    i = 0;
+    while (all->c_envp[i])
     {
-      array[i] = all->c_exp[i];
+      all->c_exp[i] = ft_strdup(all->c_envp[i]);
       i++;
     }
-    //array[i - 1] = cmd_node->next->token;
-    array[i] = NULL;
-    //free(all->c_exp);
-    all->c_exp = array;
-    return (1);
+    all->c_exp[i] = NULL;
+}
+
+char  **update_exp(t_data *all, char *new_element, t_token *cmd_node)
+{
+  char  **array;
+  int   i;
+
+  i = exist_in_arr(new_element, all->c_exp);
+  if (i != -1)
+  {
+    dprintf(2, "replacing [%d]\n", i);
+    free(all->c_exp[i]);
+    all->c_exp[i] = cmd_node->next->token;
+    return (all->c_exp);
   }
+  i = 0;
+  while (all->c_exp[i])
+    i++;
+  array = malloc((i + 2) * sizeof(char *));
+  if (!array)
+    return (NULL);
+  i = 0;
+  while (all->c_exp[i])
+  {
+    array[i] = all->c_exp[i];
+    i++;
+  }
+  array[i++] = ft_strdup(cmd_node->next->token);
+  array[i] = NULL;
+  return (array);
+}
+
+char  **update_envp(t_data *all, char *new_element, t_token *cmd_node)
+{
+  char  **array;
+  int   i;
+
+  i = exist_in_arr(new_element, all->c_envp);
+  if (i != -1)
+  {
+    dprintf(2, "replacing [%d]\n", i);
+    free(all->c_envp[i]);
+    all->c_envp[i] = cmd_node->next->token;
+    return (all->c_envp);
+  }
+  i = 0;
+  while (all->c_envp[i])
+    i++;
+  dprintf(2, "array len is [%d]\n", i);
+  array = malloc((i + 2) * sizeof(char *));
+  if (!array)
+    return (NULL);
+  i = 0;
   while (all->c_envp[i])
   {
     array[i] = all->c_envp[i];
     i++;
   }
-	array[i++] = cmd_node->next->token;
-	array[i] = NULL;
-	free(all->c_envp);
-	all->c_envp = array;
-	return (1);
+  array[i++] = ft_strdup(cmd_node->next->token);
+  array[i] = NULL;
+  return (array);
+}
+
+int	ft_export(t_data *all, int proc, t_token *cmd_node)
+{
+	char	**array;
+  char  *cmd_cpy;
+	int		i;
+
+  if (all->c_exp == NULL)
+    fill_exp(all);
+  else
+    dprintf(2, "no need to fill_exp\n");
+  if ((ft_lstsize(all->tokens, proc)) == 1)
+  {
+    i = 0;
+    while (all->c_exp[i])
+    {
+      ft_printf("%s\n", all->c_exp[i]);
+      i++;
+    }
+    return (1);
+  }
+  cmd_cpy = nullify(cmd_node->next->token);
+  if (cmd_cpy[ft_strlen(cmd_cpy) - 1] != '=')
+  {
+    dprintf(2,"array is c_exp\n");
+    array = update_exp(all, cmd_cpy, cmd_node);
+    free(all->c_exp);
+    all->c_exp = array;
+    return (1);
+  }
+  else
+  {
+    dprintf(2,"array is c_envp\n");
+    array = update_envp(all, cmd_cpy, cmd_node);
+    free(all->c_envp);
+    all->c_envp = array;
+    array = update_exp(all, cmd_cpy, cmd_node);
+    free(all->c_exp);
+    all->c_exp = array;
+    return (1);
+  }
 }

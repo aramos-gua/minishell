@@ -38,5 +38,6 @@ int	find_envp(t_data *all, char *envp[])
 		j++;
 	}
 	all->c_envp[j] = NULL;
+	all->c_exp = NULL;
 	return (0);
 }
