@@ -147,7 +147,7 @@ static	void	expand_var(char **c_envp, char **env_var)
 static char	*keep_expansion(char *token, int *i)
 {
 	int		len;
-	char	*env_var;
+	char	*env_var = NULL;
 
 	len = 1;
 	(*i)++;
@@ -159,11 +159,16 @@ static char	*keep_expansion(char *token, int *i)
 			len++;
 		}
 	}
-	else if (token[*i - 1] == '"' && token[*i] != '\0')
+	else
 	{
 		while (token[*i] != '"' && token[*i] != '\0')
 		{
-			if (token[*i] == '$' && token[*i + 1] != '\'')
+			if (token[*i] == '$' && token[*i + 1] == '$')
+			{
+				while (token[*i] != '"')
+					(*i)++, len++;
+			}
+			if (token[*i] == '$' && token[*i + 1] != '"')
 				break;
 			(*i)++;
 			len++;
@@ -176,20 +181,29 @@ static char	*keep_expansion(char *token, int *i)
 static char	*valid_expansion(t_data *all, char *token, int *i)
 {
 	int		len;
-	char	*env_var;
+	char	*env_var = NULL;
 
 	len = 0;
 	(*i)++;
-	if (ft_isalpha(token[*i]) || token[*i] == '_')
+	if (token[*i] == '0')
+		env_var = ft_strdup("minishell");
+	else if (ft_isalpha(token[*i]) || token[*i] == '_')
 	{
 		while (ft_isalnum(token[*i]) || token[*i] == '_')
 		{
 			(*i)++;
 			len++;
 		}
+		env_var = find_token(token, (*i)--, len);
+		expand_var(all->c_envp, &env_var);
 	}
-	env_var = find_token(token, (*i)--, len);
-	expand_var(all->c_envp, &env_var);
+	else if (token[*i + 1] == '$')
+	{
+		env_var = ft_strdup("$");
+		(*i) += 2;
+	}
+	else
+	 	env_var = ft_strdup("");
 	return (env_var);
 }
 
@@ -204,22 +218,21 @@ char *do_expansion(t_data *all, char *token)
 	env_var = NULL;
 	while (token[i] != '\0')
 	{
-		int len = 0;
 		prev_env_var = env_var;
-		if (token[i] == '$' && token[i + 1] == '?')
+		
+		if (token[i] == '$' && token[i + 1] == '?') 
+		{
 			env_var = ft_strdup(ft_itoa(all->return_val));
-		else if (token[i] == '$' && (token[i + 1] == '"' || token[i + 1] == '\0') && i != 0)
+			i++;
+		}
+		else if (token[i] == '$' && token[i + 1] == '\0')
 			env_var = ft_strdup("$");
 		else if (token[i] == '$')
 			env_var = valid_expansion(all, token, &i);
 		else if (token[i] == '"' || token[i] == '\'')
 			env_var = keep_expansion(token, &i);
 		else
-		{
-			while (token[i] != '$' && token[i] != '\0')
-				i++, len++;
-			env_var = ft_strjoin(prev_env_var, find_token(token, i--, len));
-		}
+			env_var = keep_expansion(token, &i);
 		env_var = ft_strjoin(prev_env_var, env_var);
 		i++;
 	}

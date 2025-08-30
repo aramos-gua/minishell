@@ -31,22 +31,6 @@ typedef	struct	s_proc
 }				t_proc;
 
 //-----------------------------------------------------------------------------
-//stores the redirects for each process (DOUBLY-CIRCULAR-LIST)
-//name: if (RE_IN || RE_OUT || APPEND) name of the file, else if (HERE_DOC), delimiter
-//fd : the fd belonging to the OUTFILE or INFILE
-//type : (enum) INFILE or OUTFILE
-//process_no : the number of the process to which it belongs (will always start at 0)
-typedef struct s_redir
-{
-	struct	s_redir *next;
-	char			*name;
-	int				type;
-	int				fd;
-	int				process_nbr;
-	struct	s_redir	*prev;
-}				t_redir;
-
-//-----------------------------------------------------------------------------
 //stores the tokens for each process (DOUBLY-CIRCULAR-LIST)
 //process: the string containing all the tokens for the current process(process_nbr)
 //pid: the pid that will be assigned to that process during execution (after fork)
@@ -73,7 +57,6 @@ typedef	struct s_data
 	char	**procs;
 	t_proc	*info;
 	t_token	*tokens;
-	int		*heredocs;
 	int		total_proc;//think this doesnt work well
 	unsigned char	return_val;
 }				t_data;
