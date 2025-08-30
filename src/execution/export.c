@@ -24,16 +24,16 @@ int	var_len(char *str)
 	return (-1);
 }
 
-int	exist_in_arr(char *str, char **array)
+int	exist_in_arr(char *str, char **array, bool flag)
 {
 	int	len;
 	int	i;
 
   i = 0;
-  dprintf(2, "exist_in_arr start\n");
-  dprintf(2, "str:[%s]\n", str);
-  dprintf(2, "array[0]:[%s]\n", array[0]);
-	len = ft_strlen(str);
+  if (flag == true)
+    len = ft_strlen(str) - 1;
+  else
+    len = ft_strlen(str);
   while (array[i])
   {
     if (ft_strncmp(str, array[i], len) == 0)
@@ -81,13 +81,16 @@ char  **update_exp(t_data *all, char *new_element, t_token *arg_node)
 {
   char  **array;
   int   i;
+  int   len;
 
-  i = exist_in_arr(new_element, all->c_exp);
-  if (i != -1)
+  len = ft_strlen(new_element);
+  dprintf(2, "len of[%s] is [%d]\n", new_element, len);
+  i = exist_in_arr(new_element, all->c_exp, true);
+  if (i != -1 && new_element[len - 1] == '=')
   {
     dprintf(2, "replacing [%d]\n", i);
     free(all->c_exp[i]);
-    all->c_exp[i] = malloc(ft_strlen(arg_node->token) * sizeof(char));
+    all->c_exp[i] = calloc(ft_strlen(arg_node->token), sizeof(char));
     all->c_exp[i] = arg_node->token;
     return (all->c_exp);
   }
@@ -113,7 +116,7 @@ char  **update_envp(t_data *all, char *new_element, t_token *arg_node)
   char  **array;
   int   i;
 
-  i = exist_in_arr(new_element, all->c_envp);
+  i = exist_in_arr(new_element, all->c_envp, false);
   if (i != -1)
   {
     dprintf(2, "replacing [%d]\n", i);
@@ -142,24 +145,29 @@ char  **update_envp(t_data *all, char *new_element, t_token *arg_node)
 
 void  ft_putexp(char *str)
 {
-  int i;
+  int   i;
 
   i = 0;
-  while (str[i])
+  while (str[i] && str[i] != '=')
   {
-    if (str[i - 1] == '=')
-      write(1, "\"", 1);
     write(1, &str[i], 1);
     i++;
   }
-  write(1, "\"", 1);
-  write(1, "\n", 1);
+  write(1, &str[i++], 1);
+  write(1, "\"", 2);
+  while (str[i])
+  {
+    if (str[i] == '\"')
+        i++;
+    write(1, &str[i], 1);
+    i++;
+  }
+  ft_putendl_fd("\"", 1);
 }
 
 int	ft_export(t_data *all, int proc, t_token *cmd_node)
 {
   t_token *arg;
-	//char	  **array;
   char    *cmd_cpy;
 	int		  i;
 
@@ -187,18 +195,12 @@ int	ft_export(t_data *all, int proc, t_token *cmd_node)
     {
       dprintf(2,"array is c_exp\n");
       all->c_exp = update_exp(all, cmd_cpy, arg);
-      //free(all->c_exp);
-      //all->c_exp = array;
     }
     else
     {
       dprintf(2,"array is c_envp\n");
       all->c_envp = update_envp(all, cmd_cpy, arg);
-      //free(all->c_envp);
-      //all->c_envp = array;
       all->c_exp = update_exp(all, cmd_cpy, arg);
-      //free(all->c_exp);
-      //all->c_exp = array;
     }
     arg = arg->next;
   }

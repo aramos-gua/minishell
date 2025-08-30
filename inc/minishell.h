@@ -19,6 +19,7 @@
 # include "structs.h"
 
 # include <stdio.h> //readline //printf
+# include <stdbool.h> //bool for flags ft_export
 # include <stdlib.h> //malloc //free //exit //getenv
 # include <unistd.h> //write //access//read//close//getcwd//chdir//execve//dup//dup2//pipe//isatty//ttyname//ttyslot
 # include <fcntl.h> //open //unlink
