@@ -63,7 +63,7 @@ void fill_exp(t_data *all)
     dprintf(2, "fill_exp STARTING\n");
     while (all->c_envp[i])
       i++;
-    all->c_exp = malloc((i + 1) * sizeof(char *));
+    all->c_exp = ft_calloc((i + 1) * sizeof(char *));
     if (!all->c_exp)
     {
       dprintf(2, "not posibile to aloc for c_exp\n");
@@ -90,7 +90,7 @@ char  **update_exp(t_data *all, char *new_element, t_token *arg_node)
   {
     dprintf(2, "replacing [%d]\n", i);
     free(all->c_exp[i]);
-    all->c_exp[i] = calloc(ft_strlen(arg_node->token), sizeof(char));
+    all->c_exp[i] = malloc(ft_strlen(arg_node->token) * sizeof(char));
     all->c_exp[i] = arg_node->token;
     return (all->c_exp);
   }
