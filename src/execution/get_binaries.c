@@ -51,6 +51,7 @@ char	*build_path(char *cmd, char **paths)
 	{
 		full_path_len = ft_strlen(paths[i]) + ft_strlen(cmd) + 2;
 		full_path = malloc(full_path_len);
+		full_path[ft_strlen(paths[i])] = '\0';
 		if (!full_path)
 		{
 			i++;

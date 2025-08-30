@@ -155,7 +155,7 @@ int	which_builtin(char *cmd, t_data *all, int proc)
 	{
 		dprintf(2, "my %s\n", cmd);
 		ft_export(all, proc, cmd_node);
-		return (0);
+		return (1);
 
 	}
 	else if (!ft_strncmp(cmd, "unset\0", len))
