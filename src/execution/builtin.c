@@ -12,14 +12,14 @@
 
 #include "../inc/minishell.h"
 
-int	ft_pwd(void)
+int	ft_pwd(t_data *all)
 {
 	char	*pwd;
 
 	pwd = getcwd(NULL, 0);
 	if (!pwd)
 		dprintf(2, "Error with pwd\n");
-	ft_printf("%s\n", pwd);
+	ft_putendl_fd(pwd, all->info->out_fd);
 	free(pwd);
 	return (0);
 }
@@ -75,41 +75,41 @@ static int	isnt_number(char *str)
 	return (0);
 }
 
-int	only_n(char *str)
+int	only_n(char *arg)
 {
 	int	i;
 
 	i = 0;
-	if (str && str[0] == '-' && str[i + 1])
+	if (arg && arg[0] == '-' && arg[i + 1])
 		i++;
-	while (str[i] == 'n')
+	while (arg[i] == 'n')
 		i++;
-	if (str[i] == '\0')
+	if (arg[i] == '\0')
 		return (1);
 	return (0);
 }
 
-int	ft_echo(char **array)
+int	ft_echo(t_data *all, t_token *cmd_node)
 {
-	int	i;
-	int	line_flag;
+	int		line_flag;
+	t_token	*arg;
 
-	i = 0;
 	line_flag = 1;
-	if (!array || !array[i])
-		return (0);
-	i++;
-	while (only_n(array[i]) && line_flag == 0)
-		i++;
-	while (array[i])
+	arg = cmd_node->next;
+	while (arg->token && only_n(arg->token))
 	{
-		ft_printf("%s", array[i]);
-		if (array[i + 1])
-			ft_printf(" ");
-		i++;
+		line_flag = 0;
+		arg = arg->next;
+	}
+	while (arg->type == ARGUMENT)
+	{
+		sh_putstr(arg->token, all->info->out_fd);
+		if (arg->next->type == ARGUMENT)
+			sh_putstr(" ", all->info->out_fd);
+		arg = arg->next;
 	}
 	if (line_flag)
-		ft_printf("\n");
+		sh_putstr("\n", all->info->out_fd);
 	return (0);
 }
 
@@ -132,83 +132,59 @@ int	ft_unset(t_data *all, int proc, t_token *cmd_node)
 	return (0);
 }
 
+int	ft_exit(t_data *all, int nodes, t_token *cmd_node)
+{
+	if (all->info->total_proc == 1)
+	{
+		if (nodes == 1)
+		{
+			all->return_val = 0;
+			exit ((int)all->return_val);
+		}
+		else if (nodes == 2 && !(isnt_number(all->tokens->token)))
+		{
+			all->return_val = ft_atoi(all->tokens->token);
+			exit (all->return_val);
+		}
+		else if (nodes >= 2 && isnt_number(cmd_node->next->token))
+		{
+			all->return_val = 255;
+			dprintf(2, "bash: exit: %s: numeric argument required. Jamon\n", all->tokens->token);
+			exit (all->return_val);
+		}
+		else if (nodes > 2 && !(isnt_number(cmd_node->next->token)))
+		{
+			all->return_val = 255;
+			sh_putstr("exit\n", STDERR_FILENO);
+			sh_putstr("bash: exit: too many arguments. Jamon\n", STDERR_FILENO);
+			return (1);
+		}
+	}
+	return (0);
+}
+
 int	which_builtin(char *cmd, t_data *all, int proc)
 {
-	int	len;
-	int	nodes;
+	int		len;
+	int		nodes;
 	t_token	*cmd_node;
 
 	len = ft_strlen(cmd);
 	nodes = ft_lstsize(all->tokens, proc);
 	cmd_node = get_cmd_node(all->tokens->next, 0);
 	if (!ft_strncmp(cmd, "echo\0", len))
-	{
-		char	**args;
-
-		args = array_builder(all, proc);
-		ft_echo(args);
-		dprintf(2, "My %s \n", cmd);
-		return (1);
-	}
+		return (ft_echo(all, cmd_node), 1);
 	else if (!ft_strncmp(cmd, "cd\0", len))
-	{
-		dprintf(2, "My %s \n", cmd);
-		ft_cd(all);
-		return (1);
-
-	}
+		return (ft_cd(all), 1);
 	else if (!ft_strncmp(cmd, "pwd\0", len))
-	{
-		dprintf(2, "My %s \n", cmd);
-		ft_pwd();
-		return (1);
-
-	}
+		return (ft_pwd(all), 1);
 	else if (!ft_strncmp(cmd, "export\0", len))
-	{
-		dprintf(2, "my %s\n", cmd);
-		ft_export(all, proc, cmd_node);
-		return (1);
-
-	}
+		return (ft_export(all, proc, cmd_node), 1);
 	else if (!ft_strncmp(cmd, "unset\0", len))
-	{
-		dprintf(2, "my [%s]\n", cmd);
-		ft_unset(all, proc, cmd_node);
-		return (1);
-
-	}
+		return (ft_unset(all, proc, cmd_node), 1);
+	else if (!ft_strncmp(cmd, "env\0", 4))
+		print_env(all);
 	else if (!ft_strncmp(cmd, "exit\0", len))
-	{
-		if (all->info->total_proc == 1)
-		{
-			if (nodes == 1)
-			{
-				all->return_val = 0;
-				exit ((int)all->return_val);
-			}
-			else if (nodes == 2 && !(isnt_number(all->tokens->token)))
-			{
-				all->return_val = ft_atoi(all->tokens->token);
-				dprintf(2, "return_val: [%d]\n", all->return_val);
-				exit (all->return_val);
-			}
-			else if (nodes >= 2 && isnt_number(cmd_node->next->token))
-			{
-				all->return_val = 255;
-				dprintf(2, "bash: exit: %s: numeric argument required. Jamon\n", all->tokens->token);
-				exit (all->return_val);
-			}
-			else if (nodes > 2 && !(isnt_number(cmd_node->next->token)))
-			{
-				all->return_val = 255;
-				dprintf(2, "exit\n");
-				dprintf(2, "bash: exit: too many arguments. Jamon\n");
-				return (1);
-			}
-		}
-		return (1);
-
-	}
+		return (ft_exit(all, nodes, cmd_node), 1);
 	return (0);
 }

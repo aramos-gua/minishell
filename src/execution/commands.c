@@ -37,42 +37,39 @@ int	last_command(t_data *all, int **pipes)
 	{
 		write(2, "minishell: Outfile Error\n", 25);
 		close_pipes(all, pipes);
-		//close(all->info->out_fd);
-		//close(all->info->in_fd);
-		//return (1);
 	}
 	return (0);
 }
 
 int	execute_command(t_data *all, int i)
 {
-	t_token *cmd;
-	char	  *path;
-	char    **cmd_arr;
+	t_token	*cmd;
+	char	*path;
+	char	**cmd_arr;
 
 	cmd = get_process(all->tokens, i);
-  dprintf(2, "the cmd [%d] found after get_process is [%s]\n", i, cmd->token);
-  if (is_builtin(cmd->token))
-  {
-    which_builtin(cmd->token, all, i);
-    exit (0);
-    return (0);
-  }
+	dprintf(2, "the cmd [%d] found after get_process is [%s]\n", i, cmd->token);
+	if (is_builtin(cmd->token))
+	{
+		which_builtin(cmd->token, all, i);
+		exit (0);
+		return (0);
+	}
 	path = get_cmd_path(cmd->token, all->c_envp);
 	if (!path)
 	{
-    all->return_val = 127;
-    ft_printf("%s:command not found\n", cmd->token);
+		all->return_val = 127;
+		ft_printf("%s:command not found\n", cmd->token);
 		exit (1);
 	}
 	cmd_arr = array_builder(all, i);
 	if (execve(path, cmd_arr, all->c_envp) == -1)
 	{
-    dprintf(2, "exited after execve\n");
+		dprintf(2, "exited after execve\n");
 		//perror(cmd_arr[0]);
 		free(path);
 		//free_split(all->tokens->next->token);
-    exit (1);
+		exit (1);
 	}
 	free(path);
 	//free_split(&all->tokens->next->token);
