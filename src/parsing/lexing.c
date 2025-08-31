@@ -97,5 +97,6 @@ int	lexing(t_data *all)
 {
 	assign_types(all->tokens);
 	token_pretty(all);
+	assign_types(all->tokens);
 	return (0);
 }
