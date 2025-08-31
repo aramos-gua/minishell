@@ -134,6 +134,16 @@ int	one_command(t_data *all)
 	all->info->pid = fork();
 	if (all->info->pid == 0)
 	{
+		if (all->info->in_fd > 0)
+		{
+			dup2(all->info->in_fd, STDIN_FILENO);
+			close(all->info->in_fd);
+		}
+		if (all->info->out_fd != 1 && all->info->out_fd >= 0)
+		{
+			dup2(all->info->out_fd, STDOUT_FILENO);
+			close(all->info->out_fd);
+		}
 		(execute_command(all, 0));
 	}
 	else if (all->info->pid > 0)

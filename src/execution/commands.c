@@ -16,7 +16,7 @@ int	first_command(t_data *all, int **pipes)
 {
 	int	devnull;
 
-	if (all->info->in_fd >= 0)
+	if (all->info->in_fd > 0)
 		dup2(all->info->in_fd, STDIN_FILENO);
 	else
 	{
@@ -31,7 +31,7 @@ int	first_command(t_data *all, int **pipes)
 
 int	last_command(t_data *all, int **pipes)
 {
-	if (all->info->out_fd >= 0)
+	if (all->info->out_fd >= 0 && all->info->out_fd != 1)
 		dup2(all->info->out_fd, STDOUT_FILENO);
 	else
 	{

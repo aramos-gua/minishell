@@ -29,7 +29,7 @@ char	**array_builder(t_data *all, int proc)
 	arr[i++] = tmp->token;
 	tmp = tmp->next;
 	//ft_printf("[%d][%s]  ", i - 1, arr[i - 1]);
-	while (tmp->type != COMMAND && tmp->process_nbr == proc)
+	while (tmp->type == ARGUMENT && tmp->process_nbr == proc)
 	{
 		arr[i++] = tmp->token;
 		tmp = tmp->next;
