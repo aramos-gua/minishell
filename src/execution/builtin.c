@@ -12,15 +12,14 @@
 
 #include "../inc/minishell.h"
 
-int	ft_pwd(char *cmd)
+int	ft_pwd(void)
 {
 	char	*pwd;
 
-	dprintf(2, "running [%s]\n", cmd);
 	pwd = getcwd(NULL, 0);
 	if (!pwd)
 		dprintf(2, "Error with pwd\n");
-	dprintf(2, "%s\n", pwd);
+	ft_printf("%s\n", pwd);
 	free(pwd);
 	return (0);
 }
@@ -49,15 +48,12 @@ int	update_env_cd(t_data *all, char *search, char *path)
 	return (0);
 }
 
-int	ft_cd(char *cmd, t_data *all)
+int	ft_cd(t_data *all)
 {
 	t_token	*cd_node;
 
-	dprintf(2, "running [%s]\n", cmd);
 	update_env_cd(all, "OLDPWD=", getcwd(NULL, 0));
 	cd_node = all->tokens->next;
-	dprintf(2, "token in node is [%s]\n", cd_node->token);
-	dprintf(2, "env [1] is [%s]\n", all->c_envp[0]);
 	while (ft_strncmp(cd_node->token, "cd", 2))
 		cd_node = cd_node->next;
 	chdir((const char *)cd_node->next->token);
@@ -144,9 +140,7 @@ int	which_builtin(char *cmd, t_data *all, int proc)
 
 	len = ft_strlen(cmd);
 	nodes = ft_lstsize(all->tokens, proc);
-	dprintf(2, "nodes in which builtin [%d]\n", nodes);
 	cmd_node = get_cmd_node(all->tokens->next, 0);
-	dprintf(2, "which builder\n");
 	if (!ft_strncmp(cmd, "echo\0", len))
 	{
 		char	**args;
@@ -159,14 +153,14 @@ int	which_builtin(char *cmd, t_data *all, int proc)
 	else if (!ft_strncmp(cmd, "cd\0", len))
 	{
 		dprintf(2, "My %s \n", cmd);
-		ft_cd(cmd, all);
+		ft_cd(all);
 		return (1);
 
 	}
 	else if (!ft_strncmp(cmd, "pwd\0", len))
 	{
 		dprintf(2, "My %s \n", cmd);
-		ft_pwd(cmd);
+		ft_pwd();
 		return (1);
 
 	}
@@ -186,7 +180,6 @@ int	which_builtin(char *cmd, t_data *all, int proc)
 	}
 	else if (!ft_strncmp(cmd, "exit\0", len))
 	{
-		dprintf(2, "starting exit cmd\n");
 		if (all->info->total_proc == 1)
 		{
 			if (nodes == 1)

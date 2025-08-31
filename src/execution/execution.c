@@ -18,38 +18,19 @@ int	child_process(int i, t_data *all, int **pipes)
 
 	j = 0;
   if (i == 0)
-    write(2, "starting child, [0]\n", 20);
-  else if (i == 1)
-    write(2, "starting child, [1]\n", 20);
-  if (i == 0)
-  {
-    dprintf(2, "first command\n");
     first_command(all, pipes);
-  }
-  else// if (i != 0 && i < (all->info->total_proc - 1))
-  {
-    dprintf(2, "mid command\n");
+  else
     dup2(pipes[i - 1][0], STDIN_FILENO);
-    ft_printf("out of mid command is is [%d]\n", pipes[i - 1][0]);
-  }
   if (i == (all->info->total_proc - 1))
-  {
-    dprintf(2, "last command\n");
     last_command(all, pipes);
-  }
   else if (i != 0 && i < all->info->total_proc - 1)
-  {
-    dprintf(2, "any command\n");
     dup2(pipes[i][1], STDOUT_FILENO);
-    ft_printf("out of any command is is [%d]\n", pipes[i][1]);
-  }
 	while (j < (all->info->total_proc - 1))
 	{
 		close(pipes[j][0]);
 		close(pipes[j][1]);
     j++;
 	}
-  write(2, "about to execute_command\n", 25);
 	if (execute_command(all, i) == 0)
     return (0);
   ft_printf("execute failed\n");
@@ -61,13 +42,9 @@ int	pipes_init(int ***pipes, t_data *all)
 	int	i;
 
 	i = 0;
-	ft_printf("starting pipes_init\n");
-	ft_printf("total_proc = [%d]\n", all->info->total_proc);
 	*pipes = malloc((all->info->total_proc - 1) * sizeof (int *));
 	if (!*pipes)
 		return (ft_printf("Error: Malloc Failure\n"), 1);
-  else
-    ft_printf("pipes pointer created\n");
 	while (i < all->info->total_proc - 1)
 	{
 		(*pipes)[i] = malloc(2 * sizeof(int));
@@ -79,7 +56,6 @@ int	pipes_init(int ***pipes, t_data *all)
 			return (ft_printf("Error: Malloc Failure\n"), 1);
 		}
 		i++;
-		ft_printf("%d pipe created\n", i);
 	}
 	return (0);
 }
@@ -90,7 +66,6 @@ int	fork_init(t_data *all, int **pipes)
 	t_token *token;
 
 	i = 0;
-	ft_printf("starting fork_init\n");
 	while (i < all->info->total_proc)
 	{
 		all->info->pid = fork();
@@ -114,7 +89,6 @@ int	fork_init(t_data *all, int **pipes)
     }
 		i++;
 	}
-  dprintf(2, "finished forking\n");
   return (0);
 }
 
@@ -123,7 +97,6 @@ void	open_pipes(int **pipes, t_data *all)
 	int	i;
 
 	i = 0;
-	ft_printf("opening pipes\n");
 	while (i < all->info->total_proc - 1)
 	{
 		if (pipe(pipes[i]) == -1)
@@ -132,7 +105,6 @@ void	open_pipes(int **pipes, t_data *all)
 			exit(1);
 		}
 		i++;
-		ft_printf("%d pipe opened\n\n", i);
 	}
 	fork_init(all, pipes);
 	i = 0;
@@ -145,46 +117,18 @@ void	open_pipes(int **pipes, t_data *all)
   i = 0;
   while (i < all->info->total_proc)
   {
-    write(2, "waiting\n", 8);
     waitpid(-1, NULL, 0);
     i++;
   }
-	//return (pipes);
 }
-
-////TODO: Delete this after, mtice will do this in parsing
-//int	get_files(t_data *all)
-//{
-//	if (all->info->infile)
-//		all->info->in_fd = open(all->info->infile, O_RDONLY);
-//  else if (!all->info->infile)
-//    all->info->in_fd = 0;
-//	if (all->info->in_fd < 0)
-//		ft_printf("Error: %s not found\n", all->info->infile);
-//	if (all->info->outfile)
-//		all->info->out_fd = open(all->info->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0666);
-//  else if (!all->info->outfile)
-//    all->info->out_fd = 1;
-//	if (all->info->out_fd < 0)
-//		ft_printf("Error: %s incorrect permissions\n", all->info->infile);
-//	if (all->info->append)
-//		all->info->app_fd = open(all->info->append, O_WRONLY | O_CREAT | O_APPEND, 0666);
-//	if (all->info->app_fd < 0)
-//		ft_printf("Error: %s incorrect permissions\n", all->info->infile);
-//  ft_printf("in fd: [%d]\n", all->info->in_fd);
-//  ft_printf("out fd: [%d]\n", all->info->out_fd);
-//	return (0);
-//}
 
 int	one_command(t_data *all)
 {
   t_token *cmd;
 
   cmd = get_process(all->tokens, 0);
-  dprintf(2, "one_command cmd is [%s]\n", cmd->token);
   if (which_builtin(cmd->token, all, 0) == 1)
   {
-    //handle_builtin(all, i);
     return (0);
   }
   all->info->pid = fork();
@@ -205,10 +149,8 @@ int	execution(t_data *all)
 {
 	int	**pipes;
 
-  all->info->in_fd = 0;
-  all->info->out_fd = 1;
 	ft_printf("\nStarting exec\n");
-	ft_printf("\n----------EXECUTION---------\n");
+	ft_printf("\n-------------EXECUTION-------------\n");
 ///////////////////////////////////////////////////////////////////////////////
 	int		curr_proc;
 	t_token	*tail;
@@ -232,6 +174,7 @@ int	execution(t_data *all)
 			break ;
 		current = current->next;
 	}
+  ft_printf("\ninfile: [%d]   outfile [%d]\n", all->info->in_fd, all->info->out_fd);
 	ft_printf("\n\n");
 //////////////////////////////////////////////////////////////////////////////////
 	if (all->info->total_proc == 1)
