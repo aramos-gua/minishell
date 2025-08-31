@@ -11,29 +11,23 @@
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
-//TODO:re-structure lexing to immediately break down into tokens
 int	parsing(t_data *all, char *input)
 {
-	if (!input || input[0] == '\0')
-		return (1);
-	else if (input_check(input))
-		return (1);
+	if (input_check(input))
+		return (all->return_val = 2, all->return_val);
 	else if (find_processes(all, input))
 		return (1);
 	else if (tokeniser(all))
 		return (1);
 	else if (lexing(all))
 		return (1);
+	else if (heredoc(all))
+		return (1);
 	else if (redirects(all))
-	 	return (1);
-	// else if (heredoc(all))
-	// 	return (1);
+	 	return (all->return_val = 1, all->return_val);
 	printf("-----------INFO LIST----------------\n");
 	print_t_proc(all->info);	
 	printf("----------TOKEN LIST----------------\n");
 	print_t_token(all->tokens);
-	// printf("---------- REDIRECTS LIST-----------\n");
-	// print_t_redir(all->redirects);
-	
-	return (0);
+	return (all->return_val = 0, all->return_val);
 }
