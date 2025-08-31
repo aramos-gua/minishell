@@ -91,7 +91,22 @@ int	tokeniser(t_data *all)
 			{
 				while (!ft_isspace(temp->proc[i]) && temp->proc[i] != '>'
 						&& temp->proc[i] != '<' && temp->proc[i] != '\0')
-					i++, len++;
+				{
+					if (temp->proc[i] == '"')
+					{
+						i++, len++;
+						while (temp->proc[i] != '"' && temp->proc[i] != '\0')
+							i++, len++;
+					}
+					else if (temp->proc[i] == '\'')
+					{
+						i++, len++;
+						while (temp->proc[i] != '\'' && temp->proc[i] != '\0')
+							i++, len++;
+					}
+					else 
+						i++, len++;
+				}
 			}
 			token = find_token(temp->proc, i--, len);
 			tokens = add_t_token(tokens, token, temp->process_nbr);

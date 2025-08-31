@@ -207,32 +207,32 @@ int	execution(t_data *all)
 
   all->info->in_fd = 0;
   all->info->out_fd = 1;
-	ft_printf("\nStarting exec\n");
+	//ft_printf("\nStarting exec\n");
 	ft_printf("\n----------EXECUTION---------\n");
 ///////////////////////////////////////////////////////////////////////////////
-	int		curr_proc;
-	t_token	*tail;
-	t_token	*current;
-	tail = all->tokens;
-	current = tail->next;
-	curr_proc = current->process_nbr;
-	while (1)
-	{
-		if (current->process_nbr != curr_proc)
-			curr_proc = current->next->process_nbr;
-		if (current->type == COMMAND || current->builtin)
-		{
-			ft_printf("[%d], command: %s   ", curr_proc, current->token);
-		}
-		else if (current->type == ARGUMENT)
-		{
-			ft_printf(" arg: %s ", current->token);
-		}
-		if (current == tail)
-			break ;
-		current = current->next;
-	}
-	ft_printf("\n\n");
+	// int		curr_proc;
+	// t_token	*tail;
+	// t_token	*current;
+	// tail = all->tokens;
+	// current = tail->next;
+	// curr_proc = current->process_nbr;
+	// while (1)
+	// {
+	// 	if (current->process_nbr != curr_proc)
+	// 		curr_proc = current->next->process_nbr;
+	// 	if (current->type == COMMAND || current->builtin)
+	// 	{
+	// 		ft_printf("[%d], command: %s   ", curr_proc, current->token);
+	// 	}
+	// 	else if (current->type == ARGUMENT)
+	// 	{
+	// 		ft_printf(" arg: %s ", current->token);
+	// 	}
+	// 	if (current == tail)
+	// 		break ;
+	// 	current = current->next;
+	// }
+	// ft_printf("\n\n");
 //////////////////////////////////////////////////////////////////////////////////
 	if (all->info->total_proc == 1)
 		one_command(all);
