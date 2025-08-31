@@ -117,4 +117,5 @@ int		which_builtin(char *cmd, t_data *all, int proc);
 
 //export.c
 int		ft_export(t_data *all, int proc, t_token *cmd_node);
+int		exist_in_arr(char *str, char **array, bool flag);
 #endif

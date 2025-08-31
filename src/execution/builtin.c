@@ -117,6 +117,25 @@ int	ft_echo(char **array)
 	return (0);
 }
 
+int	ft_unset(t_data *all, int proc, t_token *cmd_node)
+{
+	int		i;
+	t_token	*arg;
+
+	dprintf(2, "proc: [%d]\n", proc);
+	if (cmd_node->next->type == ARGUMENT)
+		arg = cmd_node->next;
+	else
+		return (0);
+	i = exist_in_arr(arg->token, all->c_envp, false);
+	if (i > -1)
+		all->c_envp[i][0] = '\0';
+	i = exist_in_arr(arg->token, all->c_exp, true);
+	if (i > -1)
+		all->c_exp[i][0] = '\0';
+	return (0);
+}
+
 int	which_builtin(char *cmd, t_data *all, int proc)
 {
 	int	len;
@@ -160,8 +179,9 @@ int	which_builtin(char *cmd, t_data *all, int proc)
 	}
 	else if (!ft_strncmp(cmd, "unset\0", len))
 	{
-		dprintf(2, "builtin [%s]\n", cmd);
-		return (0);
+		dprintf(2, "my [%s]\n", cmd);
+		ft_unset(all, proc, cmd_node);
+		return (1);
 
 	}
 	else if (!ft_strncmp(cmd, "exit\0", len))

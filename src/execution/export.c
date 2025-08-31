@@ -63,7 +63,7 @@ void fill_exp(t_data *all)
     dprintf(2, "fill_exp STARTING\n");
     while (all->c_envp[i])
       i++;
-    all->c_exp = ft_calloc((i + 1) * sizeof(char *));
+    all->c_exp = ft_calloc((i + 1), sizeof(char *));
     if (!all->c_exp)
     {
       dprintf(2, "not posibile to aloc for c_exp\n");
@@ -176,7 +176,7 @@ int	ft_export(t_data *all, int proc, t_token *cmd_node)
   if ((ft_lstsize(all->tokens, proc)) == 1)
   {
     i = 0;
-    while (all->c_exp[i])
+    while (all->c_exp[i] && all->c_exp[i][0] != '\0')
     {
       ft_printf("declare -x ");
       if (ft_strchr(all->c_exp[i], '='))
@@ -190,6 +190,13 @@ int	ft_export(t_data *all, int proc, t_token *cmd_node)
   arg = cmd_node->next;
   while (arg->type == ARGUMENT && arg->process_nbr == proc)
   {
+    dprintf(2, "token[0] is [%c]\n", arg->token[0]);
+    if (arg->token && (!ft_isalpha(arg->token[0]) && arg->token[0] != '_'))
+    {
+      ft_printf("bash: export: \'%s\': not a valid identifier\n", arg->token);
+      arg = arg->next;
+      continue ;
+    }
     cmd_cpy = nullify(arg->token);
     if (cmd_cpy[ft_strlen(cmd_cpy) - 1] != '=')
     {

@@ -17,7 +17,7 @@ void	print_env(t_data *all)
 	int	j;
 
 	j = 0;
-	while (all->c_envp[j] != NULL)
+	while (all->c_envp[j] != NULL && all->c_envp[j][0] != '\0')
 		printf("%s\n", all->c_envp[j++]);
 }
 
