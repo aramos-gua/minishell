@@ -6,7 +6,7 @@
 /*   By: mtice <mtice@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/27 22:48:45 by mtice             #+#    #+#             */
-/*   Updated: 2025/08/10 00:14:11 by mtice            ###   ########.fr       */
+/*   Updated: 2025/08/28 21:01:38 by mtice            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,18 @@ int	redirects(t_data *all)
 			token_temp = all->tokens->next;
 		if (token_temp->process_nbr != info_temp->process_nbr)
 		 	info_temp = info_temp->next;
+
 		if (token_temp->type == RE_IN)
 		{
 			if (info_temp->in_fd > 2)
 				close (info_temp->in_fd);
 			info_temp->in_fd = open(token_temp->token, O_RDONLY);
+		}
+		else if (token_temp->type == HERE_DOC)
+		{
+			if (info_temp->in_fd > 2)
+				close (info_temp->in_fd);
+			info_temp->in_fd = open(ft_strjoin("/tmp/.heredoc_p", ft_itoa(token_temp->process_nbr)), O_RDONLY);
 		}
 		else if (token_temp->type == RE_OUT)
 		{	
