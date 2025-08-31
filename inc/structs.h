@@ -6,7 +6,7 @@
 /*   By: mtice <mtice@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/14 13:54:53 by mtice             #+#    #+#             */
-/*   Updated: 2025/08/21 21:39:50 by mtice            ###   ########.fr       */
+/*   Updated: 2025/08/26 23:02:21 by Alejandro Ram    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ typedef	struct s_data
 {
 	int		err;
 	char	**c_envp;
+	char	**c_exp;
 	char	**procs;
 	t_proc	*info;
 	t_token	*tokens;

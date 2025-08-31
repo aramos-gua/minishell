@@ -20,6 +20,7 @@ SRC :=	$(SRC_DIR)/main.c \
 		$(SRC_DIR)/execution/get_binaries.c \
 		$(SRC_DIR)/execution/execution_utils.c \
 		$(SRC_DIR)/execution/builtin.c \
+		$(SRC_DIR)/execution/export.c \
 		$(SRC_DIR)/execution/cleaner.c
 
 
@@ -31,7 +32,7 @@ FT_PRINTF := my_libft/ft_printf/ft_printf.a
 GNL := my_libft/gnl/gnl.a
 
 CC := cc
-CFLAGS := -Wall -Wextra -Werror -g3 -gdwarf-3 -I$(INCLUDE)
+CFLAGS := -Wall -Wextra -Werror -g3 -gdwarf-3 -I$(INCLUDE) #-fsanitize=address,undefined
 
 RM := rm -rf
 

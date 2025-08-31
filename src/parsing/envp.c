@@ -17,8 +17,8 @@ void	print_env(t_data *all)
 	int	j;
 
 	j = 0;
-	while (all->c_envp[j] != NULL)
-		printf("%s\n", all->c_envp[j++]);
+	while (all->c_envp[j] != NULL && all->c_envp[j][0] != '\0')
+		ft_putendl_fd(all->c_envp[j++], all->info->out_fd);
 }
 
 int	find_envp(t_data *all, char *envp[])
@@ -38,5 +38,6 @@ int	find_envp(t_data *all, char *envp[])
 		j++;
 	}
 	all->c_envp[j] = NULL;
+	all->c_exp = NULL;
 	return (0);
 }

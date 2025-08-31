@@ -6,7 +6,7 @@
 /*   By: mtice <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 15:29:12 by mtice             #+#    #+#             */
-/*   Updated: 2025/08/21 20:57:28 by mtice            ###   ########.fr       */
+/*   Updated: 2025/08/26 20:26:15 by Alejandro Ram    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include "structs.h"
 
 # include <stdio.h> //readline //printf
+# include <stdbool.h> //bool for flags ft_export
 # include <stdlib.h> //malloc //free //exit //getenv
 # include <unistd.h> //write //access//read//close//getcwd//chdir//execve//dup//dup2//pipe//isatty//ttyname//ttyslot
 # include <fcntl.h> //open //unlink
@@ -90,6 +91,7 @@ void	open_pipes(int **pipes, t_data *all);
 int		get_files(t_data *all);
 int		one_command(t_data *all);
 int		execution(t_data *all);
+void 	fill_exp(t_data *all);
 
 //get_binaries.c
 char  	**array_builder(t_data *all, int proc);
@@ -99,7 +101,8 @@ char	*get_cmd_path(char *cmd, char **env);
 //execution_utils.
 t_token *get_process(t_token *list, int i);
 t_token *get_cmd_node(t_token *list, int i);
-int 	ft_lstsize(t_token *list);
+int 	ft_lstsize(t_token *list, int proc);
+void  	sh_putstr(char *str, int fd);
 
 //commands.c
 int		first_command(t_data *all, int **pipes);
@@ -111,5 +114,9 @@ int		free_split(char **arr);
 int		close_pipes(t_data *all, int **pipes);
 
 //builtin.c
-int	which_builtin(char *cmd, t_data *all, int proc);
+int		which_builtin(char *cmd, t_data *all, int proc);
+
+//export.c
+int		ft_export(t_data *all, int proc, t_token *cmd_node);
+int		exist_in_arr(char *str, char **array, bool flag);
 #endif

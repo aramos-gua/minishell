@@ -34,12 +34,12 @@ int	main(int argc, char *argv[], char *envp[])
 			break ;
 		else if (!ft_strncmp("$?\0", input, 3))
 			printf("%d: command not found\n", all.info->last_pid); //TODO: return the correct exit code
-		else if (!ft_strncmp("env\0", input, 4))
-			print_env(&all);
+		//else if (!ft_strncmp("env\0", input, 4))
+		//	print_env(&all);
 		else if (parsing(&all, input))
 			continue ;
-		// else if (execution(&all))
-		// 	continue ;
+		 else if (execution(&all))
+		 	continue ;
 	}	
 	rl_clear_history();
 	//free_all();
