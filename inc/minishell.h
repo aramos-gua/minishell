@@ -58,11 +58,11 @@ int		tokeniser(t_data *all);
 int		lexing(t_data *all);
 
 //expansion.c
+char	*do_expansion(t_data *all, char *token);
 void	expansion(t_data *all, t_token *tkn_ptr, int *position);
 
 //redirects.c
 int		redirects(t_data *all);
-void	print_t_redir(t_redir *redirects);
 
 //heredoc.c
 int		heredoc(t_data *all);
@@ -73,7 +73,6 @@ t_token	*add_t_token(t_token *tail, char *token, int nbr);
 t_token	*add_at_pos(t_token *tail, char *token, int nbr, int position);
 t_token	*del_t_token(t_token *tail, int position);
 void	print_t_token(t_token *tokens);
-int		list_size(t_token *tail);
 
 //utils
 int		is_builtin(char *s);
