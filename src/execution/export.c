@@ -156,6 +156,14 @@ void	ft_putexp(t_data *all, char *str)
 	ft_putendl_fd("\"", all->info->out_fd);
 }
 
+//TODO: implement HO="ho 123". 123" is in an individual node
+//int exp_is_valid(t_token *arg)
+//{
+//  t_token *current;
+//
+//  current = arg->token;
+//}
+
 int	ft_export(t_data *all, int proc, t_token *cmd_node)
 {
 	t_token	*arg;
@@ -181,7 +189,7 @@ int	ft_export(t_data *all, int proc, t_token *cmd_node)
 	arg = cmd_node->next;
 	while (arg->type == ARGUMENT && arg->process_nbr == proc)
 	{
-		if (arg->token && (!ft_isalpha(arg->token[0]) && arg->token[0] != '_'))
+		if (arg->token && (!ft_isalpha(arg->token[0]) && arg->token[0] != '_'))//exp_is_valid(arg))
 		{
 			sh_putstr("bash: export: ", STDERR_FILENO);
 			sh_putstr(arg->token, STDERR_FILENO);

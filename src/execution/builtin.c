@@ -21,7 +21,7 @@ int	ft_pwd(t_data *all)
 		dprintf(2, "Error with pwd\n");
 	ft_putendl_fd(pwd, all->info->out_fd);
 	free(pwd);
-	return (0);
+	return (all->return_val = 0, 0);
 }
 
 int	get_env_index(char **arr, char *to_update, int len)
@@ -58,7 +58,7 @@ int	ft_cd(t_data *all)
 		cd_node = cd_node->next;
 	chdir((const char *)cd_node->next->token);
 	update_env_cd(all, "PWD=", getcwd(NULL, 0));
-	return (0);
+	return (all->return_val = 0, 0);
 }
 
 static int	isnt_number(char *str)
@@ -110,7 +110,7 @@ int	ft_echo(t_data *all, t_token *cmd_node)
 	}
 	if (line_flag)
 		sh_putstr("\n", all->info->out_fd);
-	return (0);
+	return (all->return_val = 0, 0);
 }
 
 int	ft_unset(t_data *all, int proc, t_token *cmd_node)
@@ -129,7 +129,7 @@ int	ft_unset(t_data *all, int proc, t_token *cmd_node)
 	i = exist_in_arr(arg->token, all->c_exp, true);
 	if (i > -1)
 		all->c_exp[i][0] = '\0';
-	return (0);
+	return (all->return_val = 0, 0);
 }
 
 int	ft_exit(t_data *all, int nodes, t_token *cmd_node)

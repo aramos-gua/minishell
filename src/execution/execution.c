@@ -150,7 +150,7 @@ int	one_command(t_data *all)
 		waitpid(all->info->pid, NULL, 0);
 	else
 		perror("minishell");
-	return (0);
+	return (all->return_val = 0, 0);
 }
 
 int	execution(t_data *all)
