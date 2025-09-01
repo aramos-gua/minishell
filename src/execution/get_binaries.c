@@ -19,7 +19,6 @@ char  **array_builder(t_data *all, int proc)
   int     i;
 
   i = 0;
-	//ft_printf("array builder\n");
   arr = malloc ((ft_lstsize(all->tokens, proc) + 1) * sizeof(char *));
   if (!arr)
     return (NULL);
@@ -28,15 +27,12 @@ char  **array_builder(t_data *all, int proc)
     tmp = tmp->next;
   arr[i++] = tmp->token;
   tmp = tmp->next;
-  //ft_printf("[%d][%s]  ", i - 1, arr[i - 1]);
-  while (tmp->type != COMMAND && tmp->process_nbr == proc)
+  while (tmp->type == ARGUMENT && tmp->process_nbr == proc)
   {
     arr[i++] = tmp->token;
     tmp = tmp->next;
-    //ft_printf("[%d][%s]  ", i - 1, arr[i - 1]);
   }
   arr[i] = NULL;
-  //ft_printf("[%d][%s]\n\n\n", i, "NULL");
   return (arr);
 }
 

@@ -14,42 +14,35 @@
 
 int	child_process(int i, t_data *all, int **pipes)
 {
-	int	j;
+	//int	j;
 
-	j = 0;
-  if (i == 0)
-    write(2, "starting child, [0]\n", 20);
-  else if (i == 1)
-    write(2, "starting child, [1]\n", 20);
-  if (i == 0)
-  {
-    dprintf(2, "first command\n");
+	//j = 0;
+  dprintf(2, "process [%d]\n", i);
+  if (i == 5)
     first_command(all, pipes);
-  }
-  else// if (i != 0 && i < (all->info->total_proc - 1))
+  else if (i != 0 && i < (all->info->total_proc - 1))
   {
-    dprintf(2, "mid command\n");
+    dprintf(2, "middle command\n");
     dup2(pipes[i - 1][0], STDIN_FILENO);
-    ft_printf("out of mid command is is [%d]\n", pipes[i - 1][0]);
-  }
-  if (i == (all->info->total_proc - 1))
-  {
-    dprintf(2, "last command\n");
-    last_command(all, pipes);
-  }
-  else if (i != 0 && i < all->info->total_proc - 1)
-  {
-    dprintf(2, "any command\n");
     dup2(pipes[i][1], STDOUT_FILENO);
-    ft_printf("out of any command is is [%d]\n", pipes[i][1]);
+    close(pipes[i - 1][0]);
+    close(pipes[i][1]);
+    close(pipes[i - 1][1]);
+    close(pipes[i][0]);
   }
-	while (j < (all->info->total_proc - 1))
-	{
-		close(pipes[j][0]);
-		close(pipes[j][1]);
-    j++;
-	}
-  write(2, "about to execute_command\n", 25);
+  else if (i == (all->info->total_proc - 1))
+    last_command(all, pipes);
+  //else if (i != 0 && i < all->info->total_proc - 1)
+  //{
+  //  dup2(pipes[1][1], STDOUT_FILENO);
+  //  close(pipes[1][1]);
+  //}
+	//while (j < (all->info->total_proc - 1))
+	//{
+	//	close(pipes[j][0]);
+	//	close(pipes[j][1]);
+  //  j++;
+	//}
 	if (execute_command(all, i) == 0)
     return (0);
   ft_printf("execute failed\n");
@@ -61,8 +54,6 @@ int	pipes_init(int ***pipes, t_data *all)
 	int	i;
 
 	i = 0;
-	ft_printf("starting pipes_init\n");
-	ft_printf("total_proc = [%d]\n", all->info->total_proc);
 	*pipes = malloc((all->info->total_proc - 1) * sizeof (int *));
 	if (!*pipes)
 		return (ft_printf("Error: Malloc Failure\n"), 1);
@@ -87,16 +78,17 @@ int	pipes_init(int ***pipes, t_data *all)
 int	fork_init(t_data *all, int **pipes)
 {
 	int	  	i;
+  int     tmp_fd;
 	t_token *token;
 
 	i = 0;
-	ft_printf("starting fork_init\n");
+  tmp_fd = STDIN_FILENO;
 	while (i < all->info->total_proc)
 	{
 		all->info->pid = fork();
 		if (all->info->pid < 0)
 		{
-			ft_printf("Error: Fork Failure\n");
+			sh_putstr("Error: Fork Failure\n", 2);
 			exit(1);
 		}
 		if (all->info->pid == 0)
@@ -114,7 +106,6 @@ int	fork_init(t_data *all, int **pipes)
     }
 		i++;
 	}
-  dprintf(2, "finished forking\n");
   return (0);
 }
 
@@ -152,30 +143,6 @@ void	open_pipes(int **pipes, t_data *all)
 	//return (pipes);
 }
 
-////TODO: Delete this after, mtice will do this in parsing
-//int	get_files(t_data *all)
-//{
-//	if (all->info->infile)
-//		all->info->in_fd = open(all->info->infile, O_RDONLY);
-//  else if (!all->info->infile)
-//    all->info->in_fd = 0;
-//	if (all->info->in_fd < 0)
-//		ft_printf("Error: %s not found\n", all->info->infile);
-//	if (all->info->outfile)
-//		all->info->out_fd = open(all->info->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0666);
-//  else if (!all->info->outfile)
-//    all->info->out_fd = 1;
-//	if (all->info->out_fd < 0)
-//		ft_printf("Error: %s incorrect permissions\n", all->info->infile);
-//	if (all->info->append)
-//		all->info->app_fd = open(all->info->append, O_WRONLY | O_CREAT | O_APPEND, 0666);
-//	if (all->info->app_fd < 0)
-//		ft_printf("Error: %s incorrect permissions\n", all->info->infile);
-//  ft_printf("in fd: [%d]\n", all->info->in_fd);
-//  ft_printf("out fd: [%d]\n", all->info->out_fd);
-//	return (0);
-//}
-
 int	one_command(t_data *all)
 {
   t_token *cmd;
@@ -205,8 +172,8 @@ int	execution(t_data *all)
 {
 	int	**pipes;
 
-  all->info->in_fd = 0;
-  all->info->out_fd = 1;
+  //all->info->in_fd = 0;
+  //all->info->out_fd = 1;
 	ft_printf("\nStarting exec\n");
 	ft_printf("\n----------EXECUTION---------\n");
 ///////////////////////////////////////////////////////////////////////////////

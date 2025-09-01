@@ -101,6 +101,7 @@ char	*get_cmd_path(char *cmd, char **env);
 t_token *get_process(t_token *list, int i);
 t_token *get_cmd_node(t_token *list, int i);
 int 	ft_lstsize(t_token *list, int proc);
+void	sh_putstr(char *str, int fd);
 
 //commands.c
 int		first_command(t_data *all, int **pipes);
