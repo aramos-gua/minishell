@@ -48,32 +48,6 @@ int	child_process(int i, t_data *all, int *pipes)
   return (1);
 }
 
-//int	pipes_init(int **pipes, t_data *all)
-//{
-//	int	i;
-//
-//	i = 0;
-//	*pipes = malloc((all->info->total_proc - 1) * sizeof (int *));
-//	if (!*pipes)
-//		return (ft_printf("Error: Malloc Failure\n"), 1);
-//  else
-//    ft_printf("pipes pointer created\n");
-//	while (i < all->info->total_proc - 1)
-//	{
-//		(*pipes)[i] = malloc(2 * sizeof(int));
-//		if (!*pipes)
-//		{
-//			while (--i >= 0)
-//				free (*pipes[i]);
-//			free(*pipes);
-//			return (ft_printf("Error: Malloc Failure\n"), 1);
-//		}
-//		i++;
-//		ft_printf("%d pipe created\n", i);
-//	}
-//	return (0);
-//}
-
 int	fork_init(t_data *all, int *pipes)
 {
 	int	  	i;
@@ -147,6 +121,35 @@ void	open_pipes(int *pipes, t_data *all)
 	//return (pipes);
 }
 
+void  executron(t_data *all)
+{
+  int pipe_fds[2];
+
+  if (all->total_proc > 1)
+    pipe(pipe_fds);
+  all->info->pid = fork();
+  if (all->info->pid == 0)
+  {
+    //TODO:Child process
+    dup2(pipe_fds[1], STDOUT_FILENO);
+    close(pipe_fds[0]);
+    close(pipe_fds[1]);
+    execute_command(all, i);
+  }
+  else
+  {
+    //TODO:Parent
+    all->info->pid2 = fork();
+    if (all->info->pid2 == 0)
+    {
+      //TODO:Second child
+      dup(pipe_fds[0], STDIN_FILENO);
+    close(pipe_fds[0]);
+    close(pipe_fds[1]);
+    }
+  }
+}
+
 int	one_command(t_data *all)
 {
   t_token *cmd;
@@ -209,8 +212,6 @@ int	execution(t_data *all)
 		one_command(all);
   else if (all->info->total_proc > 1)
 	{
-		//pipes_init(&pipes, all);
-		open_pipes(pipes, all);
   }
 	return (0);
 }

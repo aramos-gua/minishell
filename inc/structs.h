@@ -23,6 +23,7 @@ typedef	struct	s_proc
 	char			*proc;
 	int				process_nbr;
 	int				pid;
+	int				pid2;
 	int				last_pid;
 	int				in_fd;
 	int				out_fd;
