@@ -19,6 +19,7 @@ int	first_command(t_data *all, int **pipes)
   dprintf(2, "first command\n");
 	if (all->info->in_fd != STDIN_FILENO)
   {
+    dprintf(2, "first jamoncito\n");
 		dup2(all->info->in_fd, STDIN_FILENO);
 		close(all->info->in_fd);
   }
@@ -30,26 +31,27 @@ int	first_command(t_data *all, int **pipes)
 	//	return (1);
 	//}
 	dup2(pipes[0][1], STDOUT_FILENO);
-  close(pipes[0][0]);
 	close(pipes[0][1]);
-  close(pipes[1][0]);
-  close(pipes[1][1]);
 	return (0);
 }
 
 int	last_command(t_data *all, int **pipes)
 {
-  dprintf(2, "first command\n");
+  int pipe_id;
+  
+  pipe_id = all->total_proc - 2;
+  dprintf(2, "last command\n");
 	if (all->info->out_fd != STDOUT_FILENO)
   {
+    dprintf(2, "last jamoncito\n");
 		dup2(all->info->out_fd, STDOUT_FILENO);
 		close(all->info->out_fd);
   }
-	dup2(pipes[1][0], STDIN_FILENO);
-  close(pipes[1][0]);
-  close(pipes[0][0]);
-  close(pipes[0][1]);
-  close(pipes[1][1]);
+	dup2(pipes[pipe_id][0], STDIN_FILENO);
+  close(pipes[pipe_id][0]);
+  close(pipes[pipe_id][1]);
+  //close(pipes[0][0]);
+  //close(pipes[0][1]);
 	//else
 	//{
 	//	write(2, "minishell: Outfile Error\n", 25);

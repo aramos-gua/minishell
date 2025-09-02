@@ -17,8 +17,8 @@ int	child_process(int i, t_data *all, int **pipes)
 	//int	j;
 
 	//j = 0;
-  dprintf(2, "process [%d]\n", i);
-  if (i == 5)
+  dprintf(2, "process [%d] command [%d] out of [%d] commands\n", i, i +1, all->info->total_proc);
+  if (i == 0)
     first_command(all, pipes);
   else if (i != 0 && i < (all->info->total_proc - 1))
   {
@@ -126,13 +126,13 @@ void	open_pipes(int **pipes, t_data *all)
 		ft_printf("%d pipe opened\n\n", i);
 	}
 	fork_init(all, pipes);
-	i = 0;
-	while (i < all->info->total_proc - 1)
-	{
-		close(pipes[i][0]);
-		close(pipes[i][1]);
-		i++;
-	}
+  i = 0;
+  while (i < all->info->total_proc - 1)
+  {
+    close(pipes[i][0]);
+    close(pipes[i][1]);
+    i++;
+  }
   i = 0;
   while (i < all->info->total_proc)
   {
