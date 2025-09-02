@@ -12,7 +12,7 @@
 
 #include "../inc/minishell.h"
 
-int	child_process(int i, t_data *all, int **pipes)
+int	child_process(int i, t_data *all, int *pipes)
 {
 	//int	j;
 
@@ -23,19 +23,18 @@ int	child_process(int i, t_data *all, int **pipes)
   else if (i != 0 && i < (all->info->total_proc - 1))
   {
     dprintf(2, "middle command\n");
-    dup2(pipes[i - 1][0], STDIN_FILENO);
-    dup2(pipes[i][1], STDOUT_FILENO);
-    close(pipes[i - 1][0]);
-    close(pipes[i][1]);
-    close(pipes[i - 1][1]);
-    close(pipes[i][0]);
+    dup2(pipes[0], STDIN_FILENO);
+    //close(pipes[0]);
+    dup2(pipes[1], STDOUT_FILENO);
+    //close(pipes[1]);
   }
-  else if (i == (all->info->total_proc - 1))
+  if (i == (all->info->total_proc - 1))
     last_command(all, pipes);
-  //else if (i != 0 && i < all->info->total_proc - 1)
+  //else if (i != 0 && i < (all->info->total_proc - 1))
   //{
-  //  dup2(pipes[1][1], STDOUT_FILENO);
-  //  close(pipes[1][1]);
+  //  dup2(pipes[1], STDOUT_FILENO);
+  ////  dup2(pipes[1][1], STDOUT_FILENO);
+  ////  close(pipes[1][1]);
   //}
 	//while (j < (all->info->total_proc - 1))
 	//{
@@ -49,40 +48,38 @@ int	child_process(int i, t_data *all, int **pipes)
   return (1);
 }
 
-int	pipes_init(int ***pipes, t_data *all)
-{
-	int	i;
+//int	pipes_init(int **pipes, t_data *all)
+//{
+//	int	i;
+//
+//	i = 0;
+//	*pipes = malloc((all->info->total_proc - 1) * sizeof (int *));
+//	if (!*pipes)
+//		return (ft_printf("Error: Malloc Failure\n"), 1);
+//  else
+//    ft_printf("pipes pointer created\n");
+//	while (i < all->info->total_proc - 1)
+//	{
+//		(*pipes)[i] = malloc(2 * sizeof(int));
+//		if (!*pipes)
+//		{
+//			while (--i >= 0)
+//				free (*pipes[i]);
+//			free(*pipes);
+//			return (ft_printf("Error: Malloc Failure\n"), 1);
+//		}
+//		i++;
+//		ft_printf("%d pipe created\n", i);
+//	}
+//	return (0);
+//}
 
-	i = 0;
-	*pipes = malloc((all->info->total_proc - 1) * sizeof (int *));
-	if (!*pipes)
-		return (ft_printf("Error: Malloc Failure\n"), 1);
-  else
-    ft_printf("pipes pointer created\n");
-	while (i < all->info->total_proc - 1)
-	{
-		(*pipes)[i] = malloc(2 * sizeof(int));
-		if (!*pipes)
-		{
-			while (--i >= 0)
-				free (*pipes[i]);
-			free(*pipes);
-			return (ft_printf("Error: Malloc Failure\n"), 1);
-		}
-		i++;
-		ft_printf("%d pipe created\n", i);
-	}
-	return (0);
-}
-
-int	fork_init(t_data *all, int **pipes)
+int	fork_init(t_data *all, int *pipes)
 {
 	int	  	i;
-  int     tmp_fd;
 	t_token *token;
 
 	i = 0;
-  tmp_fd = STDIN_FILENO;
 	while (i < all->info->total_proc)
 	{
 		all->info->pid = fork();
@@ -109,30 +106,37 @@ int	fork_init(t_data *all, int **pipes)
   return (0);
 }
 
-void	open_pipes(int **pipes, t_data *all)
+void	open_pipes(int *pipes, t_data *all)
 {
 	int	i;
 
-	i = 0;
-	ft_printf("opening pipes\n");
-	while (i < all->info->total_proc - 1)
-	{
-		if (pipe(pipes[i]) == -1)
-		{
-			ft_printf("Error: Pipes Failure\n");
-			exit(1);
-		}
-		i++;
-		ft_printf("%d pipe opened\n\n", i);
-	}
-	fork_init(all, pipes);
-  i = 0;
-  while (i < all->info->total_proc - 1)
+	//i = 0;
+	//ft_printf("opening pipes\n");
+	//while (i < all->info->total_proc - 1)
+	//{
+	//	if (pipe(pipes[i]) == -1)
+	//	{
+	//		ft_printf("Error: Pipes Failure\n");
+	//		exit(1);
+	//	}
+	//	i++;
+	//	ft_printf("%d pipe opened\n\n", i);
+	//}
+  if (pipe(pipes) == -1)
   {
-    close(pipes[i][0]);
-    close(pipes[i][1]);
-    i++;
+    dprintf(2, "Error opening pipes\n");
+    exit (1);
   }
+	fork_init(all, pipes);
+  close(pipes[0]);
+  close(pipes[1]);
+  //i = 0;
+  //while (i < all->info->total_proc - 1)
+  //{
+  //  close(pipes[i][0]);
+  //  close(pipes[i][1]);
+  //  i++;
+  //}
   i = 0;
   while (i < all->info->total_proc)
   {
@@ -170,7 +174,7 @@ int	one_command(t_data *all)
 
 int	execution(t_data *all)
 {
-	int	**pipes;
+	int	pipes[2];
 
   //all->info->in_fd = 0;
   //all->info->out_fd = 1;
@@ -205,7 +209,7 @@ int	execution(t_data *all)
 		one_command(all);
   else if (all->info->total_proc > 1)
 	{
-		pipes_init(&pipes, all);
+		//pipes_init(&pipes, all);
 		open_pipes(pipes, all);
   }
 	return (0);

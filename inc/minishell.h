@@ -83,10 +83,10 @@ void	free_double_char(char **arr);
 void	handle_error(char *message, char exit_status);
 
 //execution.c
-int		child_process(int i, t_data *all, int **pipes);
-int		pipes_init(int ***pipes, t_data *all);
-int		fork_init(t_data *all, int **pipes);
-void	open_pipes(int **pipes, t_data *all);
+int		child_process(int i, t_data *all, int *pipes);
+int		pipes_init(int **pipes, t_data *all);
+int		fork_init(t_data *all, int *pipes);
+void	open_pipes(int *pipes, t_data *all);
 int		get_files(t_data *all);
 int		one_command(t_data *all);
 int		execution(t_data *all);
@@ -104,13 +104,13 @@ int 	ft_lstsize(t_token *list, int proc);
 void	sh_putstr(char *str, int fd);
 
 //commands.c
-int		first_command(t_data *all, int **pipes);
-int		last_command(t_data *all, int **pipes);
+int		first_command(t_data *all, int *pipes);
+int		last_command(t_data *all, int *pipes);
 int	execute_command(t_data *all, int i);
 
 //cleaner.c
 int		free_split(char **arr);
-int		close_pipes(t_data *all, int **pipes);
+int		close_pipes(t_data *all, int *pipes);
 
 //builtin.c
 int		which_builtin(char *cmd, t_data *all, int proc);

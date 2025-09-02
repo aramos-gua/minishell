@@ -12,7 +12,7 @@
 
 #include "../inc/minishell.h"
 
-int	first_command(t_data *all, int **pipes)
+int	first_command(t_data *all, int *pipes)
 {
 	//int	devnull;
 
@@ -30,16 +30,17 @@ int	first_command(t_data *all, int **pipes)
 	//	close(devnull);
 	//	return (1);
 	//}
-	dup2(pipes[0][1], STDOUT_FILENO);
-	close(pipes[0][1]);
+	dup2(pipes[1], STDOUT_FILENO);
+	close(pipes[1]);
+	//close(pipes[0]);
 	return (0);
 }
 
-int	last_command(t_data *all, int **pipes)
+int	last_command(t_data *all, int *pipes)
 {
-  int pipe_id;
+  //int pipe_id;
   
-  pipe_id = all->total_proc - 2;
+  //pipe_id = all->total_proc - 2;
   dprintf(2, "last command\n");
 	if (all->info->out_fd != STDOUT_FILENO)
   {
@@ -47,9 +48,9 @@ int	last_command(t_data *all, int **pipes)
 		dup2(all->info->out_fd, STDOUT_FILENO);
 		close(all->info->out_fd);
   }
-	dup2(pipes[pipe_id][0], STDIN_FILENO);
-  close(pipes[pipe_id][0]);
-  close(pipes[pipe_id][1]);
+	dup2(pipes[0], STDIN_FILENO);
+  //close(pipes[0]);
+  close(pipes[1]);
   //close(pipes[0][0]);
   //close(pipes[0][1]);
 	//else
