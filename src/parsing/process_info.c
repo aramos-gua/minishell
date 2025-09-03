@@ -13,19 +13,24 @@
 #include "../../inc/minishell.h"
 
 //creates a t_proc node
-static t_proc	*create_t_proc(void) //same create_node function
+static t_proc	*create_t_proc(void)
 {
 	t_proc	*new;
-	new = malloc(sizeof(t_proc));
+
+	new = ft_calloc(sizeof(t_proc), 1);
 	if (!new)
 		return (NULL);
 	new->next = new;
 	new->prev = new;
+	new->pid = -1;
+	new->last_pid = -1;
+	new->in_fd = 0;
+	new->out_fd = 1;
 	return (new);
 }
 
 //adds a node to the doubly linked list in t_proc *info
-static t_proc	*add_t_proc(t_proc *tail, char *proc) //same add_at_end function
+static t_proc	*add_t_proc(t_proc *tail, char *proc)
 {
 	t_proc	*new_node;
 	t_proc	*temp;
@@ -46,15 +51,36 @@ static t_proc	*add_t_proc(t_proc *tail, char *proc) //same add_at_end function
 	}
 }
 
+t_proc	*del_t_proc(t_proc *tail, int position)
+{
+	t_proc	*temp;
+	t_proc	*temp2;
+
+	temp = tail->next;
+	while (position-- > 1)
+		temp = temp->next;
+	if (temp->in_fd > 2)
+		close(temp->in_fd);
+	if (temp->out_fd > 2)
+		close(temp->out_fd);
+	temp2 = temp->prev;
+	temp2->next = temp->next;
+	temp->next->prev = temp2;
+	free(temp);
+	if (temp == tail)
+		tail = temp2;
+	return (tail);
+}
+
 //prints the info stored int t_proc *info
 void	print_t_proc(t_proc *info)
 {
-	t_proc *temp;
-	int	i;
+	t_proc	*temp;
+	int		i;
 
 	if (!info)
 		printf("no element in the list!\n");
-	else 
+	else
 	{
 		temp = NULL;
 		i = -1;
@@ -73,66 +99,31 @@ void	print_t_proc(t_proc *info)
 	}
 }
 
-//------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //after checking raw input for syntax errors
 //breaks the raw input into a 2d array of processes (char **procs)
 //puts the information into a t_proc linked list stored in t_proc *info
 int	find_processes(t_data *all, char *input)
 {
-	char	**procs;
-	t_proc	*info;
 	int		j;
 	int		len;
 	char	*temp;
 
-	procs = ft_split(input, '|');
-	info = NULL;
+	all->procs = ft_split(input, '|');
 	j = 0;
-	while (procs[j] != NULL)
+	while (all->procs[j] != NULL)
 		j++;
 	len = j;
 	j = 0;
-	while (procs[j] != NULL)
+	while (all->procs[j] != NULL)
 	{
-		temp = procs[j];
-		procs[j] = ft_strtrim(procs[j], " ");
-		info = add_t_proc(info, procs[j]);
-		info->process_nbr = j;
-		info->pid = -1;
-		info->last_pid = -1;
-		info->in_fd = 0;
-		info->out_fd = 1;
-		info->total_proc = len;
+		temp = all->procs[j];
+		all->procs[j] = ft_strtrim(all->procs[j], " ");
 		free(temp);
+		all->info = add_t_proc(all->info, all->procs[j]);
+		all->info->process_nbr = j;
 		j++;
 	}
-	all->info = info;
 	all->total_proc = len;
 	return (0);
 }
-
-
-//--------------------------------------------------IGNORE------------------------------
-//after looking for syntax errors
-//this function breaks the raw input into a 2d array of processes
-//stored in the struct t_proc, a pointer stored in t_data *all
-// int	find_processes(t_data *all, char *input)
-// {
-// 	t_proc	info;
-// 	int		j;
-// 	char	*temp;
-// 	j = 0;
-// 	info.procs = ft_split(input, '|'); //think about the case where the pipe is in quotes
-// 	while (info.procs[j] != NULL)
-// 	{
-// 		temp = info.procs[j];
-// 		info.procs[j] = ft_strtrim(info.procs[j], " ");
-// 		free(temp);
-// 		j++;	
-// 	}
-// 	if (j == 0)
-// 		return (1);
-// 	info.total_proc = j;
-// 	all->info = info;
-// 	return (0);
-// }

@@ -29,7 +29,7 @@ static int	write_heredoc(t_data *all, t_token *tkn_ptr, int to_expand)
 	while (ft_strncmp(line, tkn_ptr->token, ft_strlen(tkn_ptr->token) + 1))
 	{
 		if (!to_expand)
-			ft_putendl_fd(line, here_fd); //heredoc expansion
+			ft_putendl_fd(line, here_fd);
 		else
 			ft_putendl_fd(do_expansion(all, line), here_fd);
 		line = readline("> ");
@@ -56,12 +56,10 @@ int	heredoc(t_data *all)
 			temp = all->tokens->next;
 		if (temp->type == HERE_DOC)
 		{
-			if (ft_strlen(ft_strchr(temp->token, '"')) > ft_strlen(ft_strchr(temp->token, '\'')))
-				del_char(temp->token, '"');
-			else if (ft_strlen(ft_strchr(temp->token, '\'')) > ft_strlen(ft_strchr(temp->token, '\'')))
-				del_char(temp->token, '\'');
+			if (ft_strchr(temp->token, '"') || ft_strchr(temp->token, '\''))
+				delete_quotes(temp->token);
 			else
-			 	to_expand = 1;
+				to_expand = 1;
 			if (write_heredoc(all, temp, to_expand))
 				return (1);
 		}

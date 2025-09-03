@@ -10,30 +10,76 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../inc/minishell.h"
 
 void	free_double_char(char **arr)
 {
 	int	j;
-	
+
 	j = 0;
 	while (arr[j] != NULL)
 		free(arr[j++]);
 	free(arr);
 }
 
-void	handle_error(char *message, char exit_status)
+static void	free_t_proc(t_proc *info, int total_procs)
 {
-	if (errno != 0 && message != NULL)
-		perror(message);
-	else if (errno == 0 && message != NULL)
+	int		len;
+
+	len = total_procs;
+	while (len--)
+		del_t_proc(info, 0);
+}
+
+static void	free_t_token(t_token *tokens)
+{
+	t_token	*temp;
+	int		i;
+
+	temp = NULL;
+	i = -1;
+	while (temp != tokens->next)
 	{
-		ft_putstr_fd("Error: ", 2);
-		ft_putendl_fd(message, 2);
+		if (i == -1)
+		{
+			temp = tokens->next;
+			i++;
+		}
+		temp = temp->next;
+		i++;
 	}
-	//free_all(info);
-	if (exit_status == 'f')
-		exit(EXIT_FAILURE);
-	else if (exit_status == 's')
-		exit(EXIT_SUCCESS);
+	while (i--)
+		del_t_token(tokens, 0);
+}
+
+static void unlink_heredocs(int total_procs)
+{
+	int		len;
+	char	*path;
+	char	*proc_nbr;
+
+	len = total_procs;
+	while (len--)
+	{
+		proc_nbr = ft_itoa(len);
+		path = ft_strjoin("/tmp/.heredoc_p", proc_nbr);
+		unlink(path);
+		free(proc_nbr);
+		free(path);
+	}
+}
+
+void	free_all(t_data *all)
+{
+	if (all->c_envp)
+		free_double_char(all->c_envp);
+	if (all->c_exp)
+		free_double_char(all->c_exp);
+	if (all->procs)
+		free_double_char(all->procs);
+	if (all->info)
+		free_t_proc(all->info, all->total_proc);
+	if (all->tokens)
+		free_t_token(all->tokens);
+	unlink_heredocs(all->total_proc);
 }

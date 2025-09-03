@@ -43,7 +43,7 @@ int	main(int argc, char *argv[], char *envp[])
 		if (!input || input[0] == '\0' || rl_on_new_line())
 			continue ;
 		add_history(input);
-		if (!ft_strncmp("exit\0", input, 5))
+		if (!ft_strncmp("exit\0", input, 5)) //TODO: remove because it causes mem leaks
 			break ;
 		else if (!ft_strncmp("$?\0", input, 3))
 			printf("%d: command not found\n", all.return_val); //TODO: return the correct exit code
@@ -51,10 +51,10 @@ int	main(int argc, char *argv[], char *envp[])
 			print_env(&all);
 		else if (parsing(&all, input))
 			continue ;
-		 else if (execution(&all))
-		 	continue ;
+		// else if (execution(&all))
+		//  	continue ;
+		free_all(&all);
 	}	
 	rl_clear_history();
-	//free_all();
 	return (all.return_val);
 }

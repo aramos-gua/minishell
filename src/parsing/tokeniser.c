@@ -23,9 +23,9 @@ char *find_token(char *process, int i, int len)
 
 	if (len == 0)
 		return (NULL);
-    p = malloc(sizeof(char) * (len + 1));
+    p = ft_calloc(sizeof(char), (len + 1));
 	if (!p)
-		return (perror("Malloc error"), NULL);
+		return (NULL);
     j = 0;
 	if (p == NULL)
         return (NULL);
@@ -43,16 +43,117 @@ char *find_token(char *process, int i, int len)
 //based on t_proc struct (which holds the raw input broken down by pipes)
 //splits the process strings into tokens
 //builds the t_token *tokens linked list
-//SUUPPER IMPORTAAANNNTT
+// int	tokeniser(t_data *all)
+// {
+// 	int		i;
+// 	int		len;
+// 	char	*token;
+// 	t_token	*tokens = NULL;
+//
+// 	t_proc	*temp = NULL;
+// 	i = -1;
+// 	while (temp != all->info->next)
+// 	{
+// 		if (i == -1)
+// 			temp = all->info->next;
+// 		i = 0;
+// 		while (temp->proc[i] != '\0')
+// 		{
+// 			while(ft_isspace(temp->proc[i]) && temp->proc[i] != '\0')
+// 				i++;
+// 			len = 0;
+// 			if (temp->proc[i] == '"')
+// 			{
+// 				i++, len++;
+// 				while (temp->proc[i] != '"' && temp->proc[i] != '\0')
+// 					i++, len++;
+// 			}
+// 			else if (temp->proc[i] == '\'')
+// 			{
+// 				i++, len++;
+// 				while (temp->proc[i] != '\'' && temp->proc[i] != '\0')
+// 					i++, len++;
+// 			}
+// 			if (temp->proc[i] == '<')
+// 			{
+// 				i++, len++;
+// 				if (temp->proc[i] == '<')
+// 					i++, len++;
+// 			}
+// 			else if (temp->proc[i] == '>')
+// 			{
+// 				i++, len++;
+// 				if (temp->proc[i] == '>')
+// 					i++, len++;
+// 			}
+// 			else if (!ft_isspace(temp->proc[i]))
+// 			{
+// 				while (!ft_isspace(temp->proc[i]) && temp->proc[i] != '>'
+// 						&& temp->proc[i] != '<' && temp->proc[i] != '\0')
+// 				{
+// 					if (temp->proc[i] == '"')
+// 					{
+// 						i++, len++;
+// 						while (temp->proc[i] != '"' && temp->proc[i] != '\0')
+// 							i++, len++;
+// 					}
+// 					else if (temp->proc[i] == '\'')
+// 					{
+// 						i++, len++;
+// 						while (temp->proc[i] != '\'' && temp->proc[i] != '\0')
+// 							i++, len++;
+// 					}
+// 					else 
+// 						i++, len++;
+// 				}
+// 			}
+// 			token = find_token(temp->proc, i--, len);
+// 			tokens = add_t_token(tokens, token, temp->process_nbr);
+// 			i++;
+// 		}
+// 		temp = temp->next;
+// 	}
+// 	all->tokens = tokens;
+// 	if (!tokens)
+// 		return (1);
+// 	return(0);
+// }
+
+void	skip_to(char *process, char skip_to, int *i, int *len)
+{
+	(*i)++;
+	(*len)++;
+	if ((process[*i - 1] == '<' && process[*i] == '<')
+		|| (process[*i - 1] == '>' && process[*i] == '>'))
+	{
+		(*i)++;
+		(*len)++;
+	}
+	else if ((process[*i - 1] == '<' && process[*i] != '<')
+		|| (process[*i - 1] == '>' && process[*i] != '>'))
+		return ;
+	else 
+	{
+		while (process[*i] != skip_to && process[*i] != '\0')
+		{
+			(*i)++;
+			(*len)++;
+		}
+		(*i)++;
+		(*len)++;
+	}
+}
+
 int	tokeniser(t_data *all)
 {
 	int		i;
 	int		len;
 	char	*token;
-	t_token	*tokens = NULL;
+	t_proc	*temp;
 
-	t_proc	*temp = NULL;
 	i = -1;
+	temp = NULL;
+	token = NULL;
 	while (temp != all->info->next)
 	{
 		if (i == -1)
@@ -60,63 +161,29 @@ int	tokeniser(t_data *all)
 		i = 0;
 		while (temp->proc[i] != '\0')
 		{
-			while(ft_isspace(temp->proc[i]) && temp->proc[i] != '\0')
-				i++;
 			len = 0;
-			if (temp->proc[i] == '"')
+			while (ft_isspace(temp->proc[i]) && temp->proc[i] != '\0')
+				i++;
+			while (!ft_isspace(temp->proc[i]) && temp->proc[i] != '<'
+				&& temp->proc[i] != '>' && temp->proc[i] != '\0')
 			{
-				i++, len++;
-				while (temp->proc[i] != '"' && temp->proc[i] != '\0')
-					i++, len++;
-			}
-			else if (temp->proc[i] == '\'')
-			{
-				i++, len++;
-				while (temp->proc[i] != '\'' && temp->proc[i] != '\0')
-					i++, len++;
-			}
-			if (temp->proc[i] == '<')
-			{
-				i++, len++;
-				if (temp->proc[i] == '<')
-					i++, len++;
-			}
-			else if (temp->proc[i] == '>')
-			{
-				i++, len++;
-				if (temp->proc[i] == '>')
-					i++, len++;
-			}
-			else if (!ft_isspace(temp->proc[i]))
-			{
-				while (!ft_isspace(temp->proc[i]) && temp->proc[i] != '>'
-						&& temp->proc[i] != '<' && temp->proc[i] != '\0')
+				if (temp->proc[i] == '"' || temp->proc[i] == '\'' )
+					skip_to(temp->proc, temp->proc[i], &i, &len);
+				else
 				{
-					if (temp->proc[i] == '"')
-					{
-						i++, len++;
-						while (temp->proc[i] != '"' && temp->proc[i] != '\0')
-							i++, len++;
-					}
-					else if (temp->proc[i] == '\'')
-					{
-						i++, len++;
-						while (temp->proc[i] != '\'' && temp->proc[i] != '\0')
-							i++, len++;
-					}
-					else 
-						i++, len++;
+					i++;
+					len++;
 				}
 			}
+			if (temp->proc[i] == '<' || temp->proc[i] == '>')
+				skip_to(temp->proc, temp->proc[i], &i, &len);
 			token = find_token(temp->proc, i--, len);
-			tokens = add_t_token(tokens, token, temp->process_nbr);
+			all->tokens = add_t_token(all->tokens, token, temp->process_nbr);
 			i++;
 		}
 		temp = temp->next;
 	}
-	all->tokens = tokens;
-	if (tokens)
-		return (0);
-	return(1);
+	if (!(all->tokens))
+		return (1);
+	return (0);
 }
-

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing_utils.c                                    :+:      :+:    :+:   */
+/*   t_token_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mtice <mtice@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/16 16:16:04 by mtice             #+#    #+#             */
-/*   Updated: 2025/08/21 20:57:25 by mtice            ###   ########.fr       */
+/*   Created: 2025/09/02 15:39:32 by mtice             #+#    #+#             */
+/*   Updated: 2025/09/02 15:39:36 by mtice            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,13 @@
 t_token	*create_t_token(void)
 {
 	t_token	*new;
-	new = malloc(sizeof(t_token));
+	new = ft_calloc(sizeof(t_token), 1);
 	if (!new)
 		return (NULL);
 	new->next = new;
 	new->type = UNDEFINED;
 	new->builtin = 0;
+	new->token = NULL;
 	new->prev = new;
 	return (new);
  }
@@ -80,6 +81,7 @@ t_token	*del_t_token(t_token *tail, int position)
 	temp2 = temp->prev;
 	temp2->next = temp->next;
 	temp->next->prev = temp2;
+	free(temp->token);
 	free(temp);
 	if (temp == tail)
 		tail = temp2;

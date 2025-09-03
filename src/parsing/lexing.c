@@ -12,6 +12,20 @@
 
 #include "../../inc/minishell.h"
 
+static int	is_redirect(char *token)
+{
+	if (!ft_strncmp(token, "<\0", 2))
+		return (RE_IN);
+	else if (!ft_strncmp(token, ">\0", 2))
+		return (RE_OUT);
+	else if (!ft_strncmp(token, "<<\0", 3))
+		return (HERE_DOC);
+	else if (!ft_strncmp(token, ">>\0", 3))
+		return (APPEND);
+	else
+		return (0);
+}
+
 //assigns a type to each token
 static void	assign_types(t_token *tokens)
 {
@@ -22,25 +36,12 @@ static void	assign_types(t_token *tokens)
 	i = -1;
 	while (temp != tokens->next)
 	{
-		if (i == -1)
-		{
+		if (i == -1 && i++)
 			temp = tokens->next;
-			i++;
-		}
-		if (!ft_strncmp(temp->token, "<\0", 2) || !ft_strncmp(temp->token, "<<\0", 3)
-				|| !ft_strncmp(temp->token, ">\0", 2) || !ft_strncmp(temp->token, ">>\0", 3))
+		if (is_redirect(temp->token))
 			temp->type = OPERATOR;
-		else if (temp->prev->type == OPERATOR) 
-		{
-			if (!ft_strncmp(temp->prev->token, "<\0", 2))
-				temp->type = RE_IN;
-			else if (!ft_strncmp(temp->prev->token, "<<\0", 3))
-				temp->type = HERE_DOC;
-			else if (!ft_strncmp(temp->prev->token, ">\0", 2))
-				temp->type = RE_OUT;
-			else if (!ft_strncmp(temp->prev->token, ">>\0", 3))
-				temp->type = APPEND;
-		}
+		else if (is_redirect(temp->prev->token))
+			temp->type = is_redirect(temp->prev->token);
 		else if (temp->process_nbr == i)
 		{
 			temp->type = COMMAND;
@@ -49,8 +50,34 @@ static void	assign_types(t_token *tokens)
 			i++;
 		}
 		else
-		 	temp->type = ARGUMENT;
+			temp->type = ARGUMENT;
 		temp = temp->next;
+	}
+}
+
+void	delete_quotes(char *token)
+{
+	int	i;
+
+	i = 0;
+	while (token[i] != '\0')
+	{
+		if (token[i] == '"')
+		{
+			del_char(token, i);
+			if (token[i] != '"')
+				(skip_to(token, '"', &i, (int []){0})), i--;
+			del_char(token, i);
+		}
+		else if (token[i] == '\'')
+		{
+			del_char(token, i);
+			if (token[i] != '\'')
+				(skip_to(token, '\'', &i, (int []){0})), i--;
+			del_char(token, --i);
+		}
+		else
+			i++;
 	}
 }
 
@@ -58,7 +85,7 @@ static void	assign_types(t_token *tokens)
 static void	token_pretty(t_data *all)
 {
 	t_token	*temp;
-	int	i;
+	int		i;
 
 	temp = NULL;
 	i = -1;
@@ -66,31 +93,22 @@ static void	token_pretty(t_data *all)
 	{
 		if (i++ == -1)
 			temp = all->tokens->next;
-		if (ft_strlen(ft_strchr(temp->token, '$')))
+		if (ft_strchr(temp->token, '$'))
 		{
 			i++;
 			if (temp->type != HERE_DOC)
 				expansion(all, temp, &i);
 		}
-		if (ft_strlen(ft_strchr(temp->token, '\'')) > ft_strlen(ft_strchr(temp->token, '"')))
-		{
-			if (temp->type != HERE_DOC)
-				del_char(temp->token, '\'');
-			sub_char(temp->token, 26, '|');
-		}
-		else if (ft_strlen(ft_strchr(temp->token, '"')) > ft_strlen(ft_strchr(temp->token, '\'')))
-		{
-			if (temp->type != HERE_DOC)
-				del_char(temp->token, '"');
-			sub_char(temp->token, 26, '|');
-		}
+		if (temp->type != HERE_DOC)
+			delete_quotes(temp->token);
+		sub_char(temp->token, 26, '|');
 		temp = temp->next;
 	}
 }
 
-//----------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //iterates through the t_token *tokens linked list to redefine tokens
-//token_pretty: performs expansions, resubs pipes into literal strings, removes quotes
+//token_pretty: expansions, resubs pipes into literal strings, removes quotes
 //assign_types: assigns a type to each token
 //TODO: handle variable expansion in the HERE_DOC case
 int	lexing(t_data *all)
