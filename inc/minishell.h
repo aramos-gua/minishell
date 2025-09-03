@@ -89,6 +89,7 @@ int		fork_init(t_data *all, int *pipes);
 void	open_pipes(int *pipes, t_data *all);
 int		get_files(t_data *all);
 int		one_command(t_data *all);
+void	executron(t_data *all, int i, int in_fd);
 int		execution(t_data *all);
 void 	fill_exp(t_data *all);
 
@@ -117,5 +118,4 @@ int		which_builtin(char *cmd, t_data *all, int proc);
 
 //export.c
 int		ft_export(t_data *all, int proc, t_token *cmd_node);
-int		exist_in_arr(char *str, char **array, bool flag);
 #endif

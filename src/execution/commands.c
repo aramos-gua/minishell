@@ -84,6 +84,7 @@ int	execute_command(t_data *all, int i)
     return (0);
   }
 	path = get_cmd_path(cmd->token, all->c_envp);
+  dprintf(2, "path is [%s]\n", path);
 	if (!path)
 	{
     all->return_val = 127;
@@ -91,6 +92,24 @@ int	execute_command(t_data *all, int i)
 		exit (1);
 	}
 	cmd_arr = array_builder(all, i);
+  //TODO:Delete this printing loop. Debug only
+  //////////////////////////////////////////////////////////////////////////////////////////
+  int j = 0;
+  int k = 0;
+  while (cmd_arr[j])
+  {
+    k = 0;
+    dprintf(2, "[");
+    while (cmd_arr[j][k])
+      dprintf(2, "%c", cmd_arr[j][k++]);
+    dprintf(2, "]");
+    dprintf(2, " -> ");
+    j++;
+  }
+  if (cmd_arr[j] == NULL)
+    dprintf(2, " [NULL] ");
+  write(2, "\n", 1);
+  //////////////////////////////////////////////////////////////////////////////////////////
 	if (execve(path, cmd_arr, all->c_envp) == -1)
 	{
     ft_printf("exited after execve\n");
