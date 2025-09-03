@@ -54,7 +54,7 @@ int	redirects(t_data *all)
 			info_temp->out_fd = open(token_temp->token, O_CREAT | O_WRONLY | O_APPEND, 0644);
 		}
 		if (info_temp->out_fd < 0 || info_temp->in_fd < 0)
-			return (printf("bash: %s: %s\n", token_temp->token, strerror(errno))); //TODO: print message on STDERR_FILENO
+			return (ft_putstr_fd("minishell: ", 2), perror(token_temp->token), 1);
 		token_temp = token_temp->next;
 	}
 	return (0);

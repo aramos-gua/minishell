@@ -17,6 +17,7 @@
 # include "../my_libft/gnl/inc/get_next_line_bonus.h"
 
 # include "structs.h"
+# include "macros.h"
 
 # include <stdio.h> //readline //printf
 # include <stdbool.h> //bool for flags ft_export
@@ -82,6 +83,9 @@ int		is_shell_var(char *s);
 
 //free_utils
 void	free_double_char(char **arr);
+void	free_t_proc(t_proc *info, int total_procs);
+void	free_t_token(t_token *tokens);
+void	unlink_heredocs(int total_procs);
 void	free_all(t_data *all);
 
 //execution.c

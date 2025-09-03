@@ -12,34 +12,34 @@
 
 #include "../../inc/minishell.h"
 
-//-------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //supporting function to tokeniser() function and other functions within my code
 //based on a string, and index and a length, it returns a char *
 //helps to find a token within the process string
-char *find_token(char *process, int i, int len)
+char	*find_token(char *process, int i, int len)
 {
-	char *p;
-	int j;
+	char	*p;
+	int		j;
 
 	if (len == 0)
 		return (NULL);
-    p = ft_calloc(sizeof(char), (len + 1));
+	p = ft_calloc(sizeof(char), (len + 1));
 	if (!p)
 		return (NULL);
-    j = 0;
+	j = 0;
 	if (p == NULL)
-        return (NULL);
-    while (len > 0) 
+		return (NULL);
+	while (len > 0)
 	{
-        p[j] = process[i - len];
-        len--;
-        j++;
-    }
-    p[j] = '\0';
-    return (p);
+		p[j] = process[i - len];
+		len--;
+		j++;
+	}
+	p[j] = '\0';
+	return (p);
 }
 
-//-------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //based on t_proc struct (which holds the raw input broken down by pipes)
 //splits the process strings into tokens
 //builds the t_token *tokens linked list
@@ -132,7 +132,7 @@ void	skip_to(char *process, char skip_to, int *i, int *len)
 	else if ((process[*i - 1] == '<' && process[*i] != '<')
 		|| (process[*i - 1] == '>' && process[*i] != '>'))
 		return ;
-	else 
+	else
 	{
 		while (process[*i] != skip_to && process[*i] != '\0')
 		{
@@ -153,7 +153,6 @@ int	tokeniser(t_data *all)
 
 	i = -1;
 	temp = NULL;
-	token = NULL;
 	while (temp != all->info->next)
 	{
 		if (i == -1)
@@ -164,19 +163,22 @@ int	tokeniser(t_data *all)
 			len = 0;
 			while (ft_isspace(temp->proc[i]) && temp->proc[i] != '\0')
 				i++;
-			while (!ft_isspace(temp->proc[i]) && temp->proc[i] != '<'
-				&& temp->proc[i] != '>' && temp->proc[i] != '\0')
-			{
-				if (temp->proc[i] == '"' || temp->proc[i] == '\'' )
-					skip_to(temp->proc, temp->proc[i], &i, &len);
-				else
-				{
-					i++;
-					len++;
-				}
-			}
 			if (temp->proc[i] == '<' || temp->proc[i] == '>')
 				skip_to(temp->proc, temp->proc[i], &i, &len);
+			else if (!ft_isspace(temp->proc[i]))
+			{
+				while (!ft_isspace(temp->proc[i]) && temp->proc[i] != '<'
+					&& temp->proc[i] != '>' && temp->proc[i] != '\0')
+				{
+					if (temp->proc[i] == '"' || temp->proc[i] == '\'' )
+						skip_to(temp->proc, temp->proc[i], &i, &len);
+					else
+					{
+						i++;
+						len++;
+					}
+				}
+			}
 			token = find_token(temp->proc, i--, len);
 			all->tokens = add_t_token(all->tokens, token, temp->process_nbr);
 			i++;

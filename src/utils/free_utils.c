@@ -22,7 +22,7 @@ void	free_double_char(char **arr)
 	free(arr);
 }
 
-static void	free_t_proc(t_proc *info, int total_procs)
+void	free_t_proc(t_proc *info, int total_procs)
 {
 	int		len;
 
@@ -31,7 +31,7 @@ static void	free_t_proc(t_proc *info, int total_procs)
 		del_t_proc(info, 0);
 }
 
-static void	free_t_token(t_token *tokens)
+void	free_t_token(t_token *tokens)
 {
 	t_token	*temp;
 	int		i;
@@ -52,7 +52,7 @@ static void	free_t_token(t_token *tokens)
 		del_t_token(tokens, 0);
 }
 
-static void unlink_heredocs(int total_procs)
+void unlink_heredocs(int total_procs)
 {
 	int		len;
 	char	*path;
@@ -71,8 +71,6 @@ static void unlink_heredocs(int total_procs)
 
 void	free_all(t_data *all)
 {
-	if (all->c_envp)
-		free_double_char(all->c_envp);
 	if (all->c_exp)
 		free_double_char(all->c_exp);
 	if (all->procs)

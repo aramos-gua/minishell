@@ -110,7 +110,6 @@ static void	token_pretty(t_data *all)
 //iterates through the t_token *tokens linked list to redefine tokens
 //token_pretty: expansions, resubs pipes into literal strings, removes quotes
 //assign_types: assigns a type to each token
-//TODO: handle variable expansion in the HERE_DOC case
 int	lexing(t_data *all)
 {
 	assign_types(all->tokens);

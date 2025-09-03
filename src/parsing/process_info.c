@@ -125,5 +125,7 @@ int	find_processes(t_data *all, char *input)
 		j++;
 	}
 	all->total_proc = len;
+	if (!(all->total_proc) || !(all->info))
+		return (1);
 	return (0);
 }
