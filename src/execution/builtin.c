@@ -113,7 +113,7 @@ int	ft_echo(t_data *all, t_token *cmd_node)
 	}
 	if (line_flag)
 		sh_putstr("\n", all->info->out_fd);
-	return (0);
+	return (all->return_val = 0, 0);
 }
 
 int	ft_unset(t_data *all, int proc, t_token *cmd_node)

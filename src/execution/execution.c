@@ -132,7 +132,7 @@ void  executron(t_data *all, int i)
   first_fork_pid = fork();
   if (first_fork_pid == 0)
   {
-    dup2(pipe_fds[1], STDOUT_FILENO);
+    dup2(pipe_fds[1], all->info->out_fd);
     close(pipe_fds[0]);
     close(pipe_fds[1]);
     execute_command(all, i);
@@ -142,7 +142,7 @@ void  executron(t_data *all, int i)
     second_fork_pid = fork();
     if (second_fork_pid == 0)
     {
-      dup2(pipe_fds[0], STDIN_FILENO);
+      dup2(pipe_fds[0], all->info->in_fd);
       close(pipe_fds[0]);
       close(pipe_fds[1]);
       int j = i + 1;
@@ -161,50 +161,6 @@ void  executron(t_data *all, int i)
     }
   }
 }
-
-//void  executron(t_data *all, int i)
-//{
-//  int pipe_fds[2];
-//  int first_fork_pid;
-//  int second_fork_pid;
-//
-//  if (i < all->total_proc)
-//    pipe(pipe_fds);
-//  first_fork_pid = fork();
-//  if (first_fork_pid == 0)
-//  {
-//    //TODO:Child process
-//    dup2(pipe_fds[1], STDOUT_FILENO);
-//    close(pipe_fds[0]);
-//    close(pipe_fds[1]);
-//    execute_command(all, i);
-//  }
-//  else
-//  {
-//    //TODO:Parent
-//    second_fork_pid = fork();
-//    if (second_fork_pid == 0)
-//    {
-//      //TODO:Second child
-//      dup2(pipe_fds[0], STDIN_FILENO);
-//      close(pipe_fds[0]);
-//      close(pipe_fds[1]);
-//      int j = i + 1;
-//      if (j < all->total_proc)
-//        executron(all, j);
-//      else
-//        execute_command(all, 0);
-//    }
-//    else
-//    {
-//      int k = 0;
-//      close(pipe_fds[0]);
-//      close(pipe_fds[1]);
-//      //while (k < all->total_proc)
-//      waitpid(-1, NULL, 0);
-//    }
-//  }
-//}
 
 int	one_command(t_data *all)
 {
