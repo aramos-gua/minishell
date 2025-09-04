@@ -89,7 +89,7 @@ int		fork_init(t_data *all, int *pipes);
 void	open_pipes(int *pipes, t_data *all);
 int		get_files(t_data *all);
 int		one_command(t_data *all);
-void	executron(t_data *all, int i, int in_fd);
+void	executron(t_data *all, int i);
 int		execution(t_data *all);
 void 	fill_exp(t_data *all);
 

@@ -121,39 +121,45 @@ void	open_pipes(int *pipes, t_data *all)
 	//return (pipes);
 }
 
-void  executron(t_data *all, int i, int in_fd)
+void  executron(t_data *all, int i)
 {
   int pipe_fds[2];
   int first_fork_pid;
   int second_fork_pid;
 
-  if (i == all->total_proc -1)
+  if (all->total_proc > 1)
+    pipe(pipe_fds);
+  first_fork_pid = fork();
+  if (first_fork_pid == 0)
   {
-    if (fork() == 0)
-    {
-      dup2(all->info->in_fd, STDIN_FILENO);
-      close(all->info->in_fd);
-      execute_command(all, i);
-    }
-    close(all->info->in_fd);
-    wait(NULL);
-    return ;
-  }
-  pipe(pipe_fds);
-  if (fork() == 0)
-  {
-    dup2(all->info->in_fd, STDIN_FILENO);
-    dup2(all->info->out_fd, STDOUT_FILENO);
-    close(all->info->in_fd);
-    close(all->info->in_fd);
+    dup2(pipe_fds[1], STDOUT_FILENO);
     close(pipe_fds[0]);
     close(pipe_fds[1]);
     execute_command(all, i);
   }
-  close(all->info->in_fd);
-  close(pipe_fds[1]);
-  executron(all, i + 1, pipe_fds[0]);
-  wait(NULL);
+  else
+  {
+    second_fork_pid = fork();
+    if (second_fork_pid == 0)
+    {
+      dup2(pipe_fds[0], STDIN_FILENO);
+      close(pipe_fds[0]);
+      close(pipe_fds[1]);
+      int j = i + 1;
+      if (j < all->total_proc - 1)
+        executron(all, j);
+      else
+        execute_command(all, j);
+    }
+    else
+    {
+      close(pipe_fds[0]);
+      close(pipe_fds[1]);
+      int l = 0;
+      while (l++ < all->total_proc)
+        waitpid(-1, NULL, 0);
+    }
+  }
 }
 
 //void  executron(t_data *all, int i)
@@ -229,8 +235,8 @@ int	execution(t_data *all)
 {
 	int	pipes[2];
 
-  //all->info->in_fd = 0;
-  //all->info->out_fd = 1;
+  all->info->in_fd = 0;
+  all->info->out_fd = 1;
 	ft_printf("\nStarting exec\n");
 	ft_printf("\n----------EXECUTION---------\n");
 ///////////////////////////////////////////////////////////////////////////////
@@ -262,7 +268,7 @@ int	execution(t_data *all)
 		one_command(all);
   else if (all->info->total_proc > 1)
 	{
-    executron(all, 0, all->info->in_fd);
+    executron(all, 0);
   }
 	return (0);
 }

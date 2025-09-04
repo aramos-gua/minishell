@@ -60,6 +60,9 @@ $(GNL):
 #all must always be the first rule!
 all: $(NAME)
 
+v: $(NAME)
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --track-fds=yes --suppressions=readline.supp -s ./minishell
+
 clean:
 		@make clean -C my_libft/libft
 		@make clean -C my_libft/ft_printf
