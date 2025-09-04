@@ -34,7 +34,9 @@ t_token	*add_t_token(t_token *tail, char *token, int nbr)
 	new_node = create_t_token();
 	new_node->process_nbr = nbr;
 	new_node->token = token;
-	if (tail == NULL)
+	if (!new_node->token)
+		return (NULL);
+	if (!tail)
 		return (new_node);
 	else
 	{
@@ -81,7 +83,6 @@ t_token	*del_t_token(t_token *tail, int position)
 	temp2 = temp->prev;
 	temp2->next = temp->next;
 	temp->next->prev = temp2;
-	free(temp->token);
 	free(temp);
 	if (temp == tail)
 		tail = temp2;

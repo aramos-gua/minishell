@@ -49,7 +49,7 @@ void	free_t_token(t_token *tokens)
 		i++;
 	}
 	while (i--)
-		del_t_token(tokens, 0);
+		del_t_token(tokens, i);
 }
 
 void unlink_heredocs(int total_procs)

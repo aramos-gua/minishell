@@ -36,7 +36,7 @@ int	main(int argc, char *argv[], char *envp[])
 	init_all(&all);
 	while (42)
 	{
-		free_all(&all);
+		//free_all(&all);
 		init_all(&all);
 		if (!isatty(fileno(stdin)))
 			break;

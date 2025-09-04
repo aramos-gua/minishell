@@ -22,7 +22,7 @@ static int	write_heredoc(t_data *all, t_token *tkn_ptr, int to_expand)
 	here_fd = open(path, O_CREAT | O_TRUNC | O_WRONLY, 0644);
 	if (here_fd < 0)
 	{
-		perror(ft_strjoin("bash: ", path));
+		perror(ft_strjoin("minishell: ", path));
 		return (1);
 	}
 	line = readline("> ");
@@ -39,7 +39,7 @@ static int	write_heredoc(t_data *all, t_token *tkn_ptr, int to_expand)
 }
 
 //------------------------------------------------------------------------------
-//heredoc() 
+//heredoc()
 //TODO:notes
 int	heredoc(t_data *all)
 {

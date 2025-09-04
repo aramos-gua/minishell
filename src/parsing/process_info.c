@@ -12,8 +12,11 @@
 
 #include "../../inc/minishell.h"
 
+//------------------------DOUBLY CIRCULAR LINKED LIST--------------------------
 //creates a t_proc node
-static t_proc	*create_t_proc(void)
+//initialises pid and last_pid to -1
+//initialises in_fd and out_fd to the stdin and stdout
+static t_proc	*create_t_proc(int total_proc)
 {
 	t_proc	*new;
 
@@ -26,16 +29,18 @@ static t_proc	*create_t_proc(void)
 	new->last_pid = -1;
 	new->in_fd = 0;
 	new->out_fd = 1;
+	new->total_proc = total_proc;
 	return (new);
 }
 
-//adds a node to the doubly linked list in t_proc *info
-static t_proc	*add_t_proc(t_proc *tail, char *proc)
+//------------------------DOUBLY CIRCULAR LINKED LIST--------------------------
+//adds a node to the end of the list
+static t_proc	*add_t_proc(t_proc *tail, char *proc, int total_proc)
 {
 	t_proc	*new_node;
 	t_proc	*temp;
 
-	new_node = create_t_proc();
+	new_node = create_t_proc(total_proc);
 	new_node->proc = proc;
 	if (tail == NULL)
 		return (new_node);
@@ -51,6 +56,10 @@ static t_proc	*add_t_proc(t_proc *tail, char *proc)
 	}
 }
 
+//------------------------DOUBLY CIRCULAR LINKED LIST--------------------------
+//deletes a node at a specific position
+//position is 0 indexed
+//closes fds
 t_proc	*del_t_proc(t_proc *tail, int position)
 {
 	t_proc	*temp;
@@ -72,7 +81,8 @@ t_proc	*del_t_proc(t_proc *tail, int position)
 	return (tail);
 }
 
-//prints the info stored int t_proc *info
+//-----------------------------------------------------------------------------
+//prints the t_proc *info linked list (for visualisation purposes)
 void	print_t_proc(t_proc *info)
 {
 	t_proc	*temp;
@@ -101,30 +111,28 @@ void	print_t_proc(t_proc *info)
 
 //-----------------------------------------------------------------------------
 //after checking raw input for syntax errors
-//breaks the raw input into a 2d array of processes (char **procs)
+//splits the raw input by '|', char **procs contains a list of processes
 //puts the information into a t_proc linked list stored in t_proc *info
 int	find_processes(t_data *all, char *input)
 {
 	int		j;
-	int		len;
 	char	*temp;
 
 	all->procs = ft_split(input, '|');
 	j = 0;
 	while (all->procs[j] != NULL)
 		j++;
-	len = j;
+	all->total_proc = j;
 	j = 0;
 	while (all->procs[j] != NULL)
 	{
 		temp = all->procs[j];
 		all->procs[j] = ft_strtrim(all->procs[j], " ");
 		free(temp);
-		all->info = add_t_proc(all->info, all->procs[j]);
+		all->info = add_t_proc(all->info, all->procs[j], all->total_proc);
 		all->info->process_nbr = j;
 		j++;
 	}
-	all->total_proc = len;
 	if (!(all->total_proc) || !(all->info))
 		return (1);
 	return (0);

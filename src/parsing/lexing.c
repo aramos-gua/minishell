@@ -11,7 +11,10 @@
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
+#include <stdio.h>
 
+//-----------------------------------------------------------------------------
+//determines if a token is a redirection
 static int	is_redirect(char *token)
 {
 	if (!ft_strncmp(token, "<\0", 2))
@@ -26,8 +29,9 @@ static int	is_redirect(char *token)
 		return (0);
 }
 
+//-----------------------------------------------------------------------------
 //assigns a type to each token
-static void	assign_types(t_token *tokens)
+void	assign_types(t_token *tokens)
 {
 	t_token	*temp;
 	int		i;
@@ -55,6 +59,8 @@ static void	assign_types(t_token *tokens)
 	}
 }
 
+//-----------------------------------------------------------------------------
+//deletes double quotes or single quotes in the order in which they appear
 void	delete_quotes(char *token)
 {
 	int	i;
@@ -81,11 +87,16 @@ void	delete_quotes(char *token)
 	}
 }
 
+//-----------------------------------------------------------------------------
 //reformats tokens
-static void	token_pretty(t_data *all)
+//case 1: if a '$' is present in the token expansion() is called
+//case 2: if quotes are present in the token delete_quotes() is called
+//case 3: if type is HERE_DOC, expansion and quotes are dealt in heredoc.c
+static void	reformat_tokens(t_data *all)
 {
 	t_token	*temp;
 	int		i;
+	int		prev;
 
 	temp = NULL;
 	i = -1;
@@ -95,25 +106,34 @@ static void	token_pretty(t_data *all)
 			temp = all->tokens->next;
 		if (ft_strchr(temp->token, '$'))
 		{
+			prev = i;
 			i++;
-			if (temp->type != HERE_DOC)
+			if (is_redirect(temp->prev->token) != HERE_DOC)
 				expansion(all, temp, &i);
+			if (i > prev)
+			{
+				if (all->tokens != all->tokens->next)
+				{
+					temp = temp->next;
+					del_t_token(all->tokens, prev + 1);
+				}
+				continue ;
+			}
 		}
-		if (temp->type != HERE_DOC)
-			delete_quotes(temp->token);
-		sub_char(temp->token, 26, '|');
+		(delete_quotes(temp->token)), (sub_char(temp->token, 26, '|'));
 		temp = temp->next;
 	}
 }
 
 //-----------------------------------------------------------------------------
 //iterates through the t_token *tokens linked list to redefine tokens
-//token_pretty: expansions, resubs pipes into literal strings, removes quotes
-//assign_types: assigns a type to each token
+//reformat_tokens: iterates through tokens and expands and deletes quotes
+//assign_types: assigns a type to each tokens
+//assign_types() must be called twice if env variables have whitespaces in them
+//e.g. export a="cho hello", e$a
 int	lexing(t_data *all)
 {
-	assign_types(all->tokens);
-	token_pretty(all);
+	reformat_tokens(all);
 	assign_types(all->tokens);
 	return (0);
 }
