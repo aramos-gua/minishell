@@ -109,7 +109,6 @@ int	execute_command(t_data *all, int i)
   if (cmd_arr[j] == NULL)
     dprintf(2, " [NULL] ");
   write(2, "\n", 1);
-  //////////////////////////////////////////////////////////////////////////////////////////
 	if (execve(path, cmd_arr, all->c_envp) == -1)
 	{
     ft_printf("exited after execve\n");

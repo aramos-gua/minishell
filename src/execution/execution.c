@@ -121,7 +121,7 @@ void	open_pipes(int *pipes, t_data *all)
 	//return (pipes);
 }
 
-void  executron(t_data *all, int i)
+int  executron(t_data *all, int i)
 {
   int pipe_fds[2];
   int first_fork_pid;
@@ -132,17 +132,18 @@ void  executron(t_data *all, int i)
   first_fork_pid = fork();
   if (first_fork_pid == 0)
   {
-    dup2(pipe_fds[1], all->info->out_fd);
+    dup2(pipe_fds[1], STDOUT_FILENO);
     close(pipe_fds[0]);
     close(pipe_fds[1]);
     execute_command(all, i);
+    return (0);
   }
   else
   {
     second_fork_pid = fork();
     if (second_fork_pid == 0)
     {
-      dup2(pipe_fds[0], all->info->in_fd);
+      dup2(pipe_fds[0], STDIN_FILENO);
       close(pipe_fds[0]);
       close(pipe_fds[1]);
       int j = i + 1;
@@ -158,9 +159,66 @@ void  executron(t_data *all, int i)
       int l = 0;
       while (l++ < all->total_proc)
         waitpid(-1, NULL, 0);
+      return (0);
     }
   }
+  return (0);
 }
+
+//void  executron(t_data *all, int i)
+//{
+//  int pipe_fds[2];
+//  int first_fork_pid;
+//  int second_fork_pid;
+//
+//  if (all->total_proc > 1)
+//    pipe(pipe_fds);
+//  first_fork_pid = fork();
+//  second_fork_pid = fork();
+//  if (first_fork_pid == 0)
+//  {
+//    if (i == 0)
+//      dup2(all->info->in_fd, STDIN_FILENO);
+//    dup2(pipe_fds[1], STDOUT_FILENO);
+//    close(pipe_fds[0]);
+//    close(pipe_fds[1]);
+//    execute_command(all, i);
+//  }
+//  else if (first_fork_pid > 0)
+//  {
+//    close(pipe_fds[0]);
+//    close(pipe_fds[1]);
+//    //int l = 0;
+//    waitpid(first_fork_pid, NULL, 0);
+//  }
+//  if (second_fork_pid == 0)
+//  {
+//    if (i == all->total_proc)
+//      dup2(all->info->out_fd, STDOUT_FILENO);
+//    dup2(pipe_fds[0], STDIN_FILENO);
+//    close(pipe_fds[0]);
+//    close(pipe_fds[1]);
+//    int j = i + 1;
+//    if (j < all->total_proc - 1)
+//      executron(all, j);
+//    else
+//    {
+//      if (j == all->total_proc)
+//      {
+//        dup2(pipe_fds[1], all->info->out_fd);
+//        close(pipe_fds[1]);
+//      }
+//      execute_command(all, j);
+//    }
+//  }
+//  else if (second_fork_pid > 0)
+//  {
+//    //int l = 0;
+//    waitpid(second_fork_pid, NULL, 0);
+//  }
+//  close(pipe_fds[0]);
+//  close(pipe_fds[1]);
+//}
 
 int	one_command(t_data *all)
 {
@@ -189,10 +247,10 @@ int	one_command(t_data *all)
 
 int	execution(t_data *all)
 {
-	int	pipes[2];
+	//int	pipes[2];
 
   all->info->in_fd = 0;
-  all->info->out_fd = 1;
+//  all->info->out_fd = 1;
 	ft_printf("\nStarting exec\n");
 	ft_printf("\n----------EXECUTION---------\n");
 ///////////////////////////////////////////////////////////////////////////////
@@ -202,6 +260,7 @@ int	execution(t_data *all)
 	tail = all->tokens;
 	current = tail->next;
 	curr_proc = current->process_nbr;
+  dprintf(2, "fd_in -> [%d] -> fd_out ->[%d]\n", all->info->in_fd, all->info->out_fd);
 	while (1)
 	{
 		if (current->process_nbr != curr_proc)
@@ -220,11 +279,20 @@ int	execution(t_data *all)
 	}
 	ft_printf("\n\n");
 //////////////////////////////////////////////////////////////////////////////////
+  dup2(all->info->in_fd, STDIN_FILENO);
+  dup2(all->info->out_fd, STDOUT_FILENO);
 	if (all->info->total_proc == 1)
 		one_command(all);
   else if (all->info->total_proc > 1)
 	{
     executron(all, 0);
+    if (all->info->in_fd != 0)
+      close(all->info->in_fd);
+    if (all->info->out_fd != 1)
+    {
+      close(all->info->in_fd);
+      close(all->info->out_fd);
+    }
   }
 	return (0);
 }
