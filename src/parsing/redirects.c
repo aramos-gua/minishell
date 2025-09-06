@@ -12,9 +12,11 @@
 
 #include "../../inc/minishell.h"
 
+//TODO: check permissions for executables
+
 int	redirects(t_data *all)
 {
-	t_token *token_temp;
+	t_token	*token_temp;
 	t_proc	*info_temp;
 	int		i;
 
@@ -26,8 +28,7 @@ int	redirects(t_data *all)
 		if (i++ == -1)
 			token_temp = all->tokens->next;
 		if (token_temp->process_nbr != info_temp->process_nbr)
-		 	info_temp = info_temp->next;
-
+			info_temp = info_temp->next;
 		if (token_temp->type == RE_IN)
 		{
 			if (info_temp->in_fd > 2)
@@ -41,7 +42,7 @@ int	redirects(t_data *all)
 			info_temp->in_fd = open(ft_strjoin("/tmp/.heredoc_p", ft_itoa(token_temp->process_nbr)), O_RDONLY);
 		}
 		else if (token_temp->type == RE_OUT)
-		{	
+		{
 			if (info_temp->out_fd > 2)
 				close(info_temp->out_fd);
 			info_temp->out_fd = open(token_temp->token, O_CREAT | O_TRUNC | O_WRONLY, 0644);
@@ -53,7 +54,7 @@ int	redirects(t_data *all)
 			info_temp->out_fd = open(token_temp->token, O_CREAT | O_WRONLY | O_APPEND, 0644);
 		}
 		if (info_temp->out_fd < 0 || info_temp->in_fd < 0)
-			return (printf("bash: %s: %s\n", token_temp->token, strerror(errno)));
+			return (ft_putstr_fd("minishell: ", 2), perror(token_temp->token), 1);
 		token_temp = token_temp->next;
 	}
 	return (0);

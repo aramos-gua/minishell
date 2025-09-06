@@ -10,7 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../inc/minishell.h"
+
+static void	init_env(t_data *all)
+{
+	all->c_envp = NULL;
+	all->c_exp = NULL;
+}
 
 void	print_env(t_data *all)
 {
@@ -18,19 +24,22 @@ void	print_env(t_data *all)
 
 	j = 0;
 	while (all->c_envp[j] != NULL && all->c_envp[j][0] != '\0')
-		ft_putendl_fd(all->c_envp[j++], all->info->out_fd);
+		printf("%s\n", all->c_envp[j++]);
 }
 
 int	find_envp(t_data *all, char *envp[])
 {
 	int	j;
 
+	init_env(all);
 	j = 0;
 	while (envp[j] != NULL)
 		j++;
 	if (envp[j] == NULL && j == 0)
 		return (1);
-	all->c_envp = malloc(sizeof(char *) * (j + 1));
+	all->c_envp = ft_calloc(sizeof(char *), (j + 1));
+	if (!(all->c_envp))
+		return (1);
 	j = 0;
 	while (envp[j] != NULL)
 	{
@@ -38,6 +47,5 @@ int	find_envp(t_data *all, char *envp[])
 		j++;
 	}
 	all->c_envp[j] = NULL;
-	all->c_exp = NULL;
 	return (0);
 }

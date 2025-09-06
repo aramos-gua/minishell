@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing_utils.c                                    :+:      :+:    :+:   */
+/*   t_token_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mtice <mtice@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/16 16:16:04 by mtice             #+#    #+#             */
-/*   Updated: 2025/08/21 20:57:25 by mtice            ###   ########.fr       */
+/*   Created: 2025/09/02 15:39:32 by mtice             #+#    #+#             */
+/*   Updated: 2025/09/02 15:39:36 by mtice            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,13 @@
 t_token	*create_t_token(void)
 {
 	t_token	*new;
-	new = malloc(sizeof(t_token));
+	new = ft_calloc(sizeof(t_token), 1);
 	if (!new)
 		return (NULL);
 	new->next = new;
 	new->type = UNDEFINED;
 	new->builtin = 0;
+	new->token = NULL;
 	new->prev = new;
 	return (new);
  }
@@ -33,7 +34,9 @@ t_token	*add_t_token(t_token *tail, char *token, int nbr)
 	new_node = create_t_token();
 	new_node->process_nbr = nbr;
 	new_node->token = token;
-	if (tail == NULL)
+	if (!new_node->token)
+		return (NULL);
+	if (!tail)
 		return (new_node);
 	else
 	{
@@ -69,21 +72,24 @@ t_token *add_at_pos(t_token *tail, char *token, int nbr, int position)
 	return (tail);
 }
 
-t_token	*del_t_token(t_token *tail, int position)
+//deletes a token
+//position is 0-indexed
+t_token	*del_t_token(t_token **tail, int position)
 {
 	t_token	*temp;
 	t_token	*temp2;
 
-	temp = tail->next;
+	temp = (*tail)->next;
 	while (position-- > 1)
 		temp = temp->next;
 	temp2 = temp->prev;
 	temp2->next = temp->next;
 	temp->next->prev = temp2;
+	free(temp->token);
 	free(temp);
-	if (temp == tail)
-		tail = temp2;
-	return (tail);
+	if (temp == *tail)
+		*tail = temp2;
+	return (*tail);
 }
 
 void	print_t_token(t_token *tokens)

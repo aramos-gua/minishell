@@ -18,7 +18,7 @@ int	ft_pwd(t_data *all)
 
 	pwd = getcwd(NULL, 0);
 	if (!pwd)
-		dprintf(2, "Error with pwd\n");
+		ft_putendl_fd("Error with pwd", STDERR_FILENO);
 	ft_putendl_fd(pwd, all->info->out_fd);
 	free(pwd);
 	return (0);
@@ -48,12 +48,15 @@ int	update_env_cd(t_data *all, char *search, char *path)
 	return (0);
 }
 
-int	ft_cd(t_data *all)
+int	ft_cd(char *cmd, t_data *all)
 {
 	t_token	*cd_node;
 
+	dprintf(2, "running [%s]\n", cmd);
 	update_env_cd(all, "OLDPWD=", getcwd(NULL, 0));
 	cd_node = all->tokens->next;
+	dprintf(2, "token in node is [%s]\n", cd_node->token);
+	dprintf(2, "env [1] is [%s]\n", all->c_envp[0]);
 	while (ft_strncmp(cd_node->token, "cd", 2))
 		cd_node = cd_node->next;
 	chdir((const char *)cd_node->next->token);
@@ -96,6 +99,8 @@ int	ft_echo(t_data *all, t_token *cmd_node)
 
 	line_flag = 1;
 	arg = cmd_node->next;
+	dprintf(2, "token of arg in ft_echo [%s]\n", arg->token);
+	dprintf(2, "token of arg next in ft_echo [%s]\n", arg->next->token);
 	while (arg->token && only_n(arg->token))
 	{
 		line_flag = 0;
@@ -110,7 +115,7 @@ int	ft_echo(t_data *all, t_token *cmd_node)
 	}
 	if (line_flag)
 		sh_putstr("\n", all->info->out_fd);
-	return (0);
+	return (all->return_val = 0, 0);
 }
 
 int	ft_unset(t_data *all, int proc, t_token *cmd_node)
@@ -149,7 +154,9 @@ int	ft_exit(t_data *all, int nodes, t_token *cmd_node)
 		else if (nodes >= 2 && isnt_number(cmd_node->next->token))
 		{
 			all->return_val = 255;
-			dprintf(2, "bash: exit: %s: numeric argument required. Jamon\n", all->tokens->token);
+			sh_putstr("bash: exit: ", STDERR_FILENO);
+			sh_putstr(all->tokens->token, STDERR_FILENO);
+			sh_putstr(": numeric argument required. Jamon\n", STDERR_FILENO);
 			exit (all->return_val);
 		}
 		else if (nodes > 2 && !(isnt_number(cmd_node->next->token)))
@@ -160,13 +167,13 @@ int	ft_exit(t_data *all, int nodes, t_token *cmd_node)
 			return (1);
 		}
 	}
-	return (0);
+	return (1);
 }
 
 int	which_builtin(char *cmd, t_data *all, int proc)
 {
-	int		len;
-	int		nodes;
+	int	len;
+	int	nodes;
 	t_token	*cmd_node;
 
 	len = ft_strlen(cmd);
@@ -175,15 +182,15 @@ int	which_builtin(char *cmd, t_data *all, int proc)
 	if (!ft_strncmp(cmd, "echo\0", len))
 		return (ft_echo(all, cmd_node), 1);
 	else if (!ft_strncmp(cmd, "cd\0", len))
-		return (ft_cd(all), 1);
+		return (ft_cd(cmd, all), 1);
 	else if (!ft_strncmp(cmd, "pwd\0", len))
 		return (ft_pwd(all), 1);
 	else if (!ft_strncmp(cmd, "export\0", len))
 		return (ft_export(all, proc, cmd_node), 1);
 	else if (!ft_strncmp(cmd, "unset\0", len))
 		return (ft_unset(all, proc, cmd_node), 1);
-	else if (!ft_strncmp(cmd, "env\0", 4))
-		print_env(all);
+	else if (!ft_strncmp(cmd, "env\0", len))
+		return (print_env(all), 1);
 	else if (!ft_strncmp(cmd, "exit\0", len))
 		return (ft_exit(all, nodes, cmd_node), 1);
 	return (0);

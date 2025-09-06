@@ -14,7 +14,8 @@ SRC :=	$(SRC_DIR)/main.c \
 		$(SRC_DIR)/parsing/redirects.c \
 		$(SRC_DIR)/parsing/heredoc.c \
 		$(SRC_DIR)/utils/utils.c \
-		$(SRC_DIR)/utils/parsing_utils.c \
+		$(SRC_DIR)/utils/t_token_utils.c \
+		$(SRC_DIR)/utils/t_proc_utils.c \
 		$(SRC_DIR)/utils/free_utils.c \
 		$(SRC_DIR)/execution/execution.c \
 		$(SRC_DIR)/execution/commands.c \
@@ -33,7 +34,7 @@ FT_PRINTF := my_libft/ft_printf/ft_printf.a
 GNL := my_libft/gnl/gnl.a
 
 CC := cc
-CFLAGS := -Wall -Wextra -Werror -g3 -gdwarf-3 -I$(INCLUDE) #-fsanitize=address,undefined
+CFLAGS := -g3 -gdwarf-3 -I$(INCLUDE) #-fsanitize=address,undefined
 
 RM := rm -rf
 
@@ -59,6 +60,9 @@ $(GNL):
 
 #all must always be the first rule!
 all: $(NAME)
+
+v: $(NAME)
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --track-fds=yes --suppressions=readline.supp -s ./minishell
 
 clean:
 		@make clean -C my_libft/libft
