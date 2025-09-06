@@ -99,6 +99,8 @@ int	ft_echo(t_data *all, t_token *cmd_node)
 
 	line_flag = 1;
 	arg = cmd_node->next;
+	dprintf(2, "token of arg in ft_echo [%s]\n", arg->token);
+	dprintf(2, "token of arg next in ft_echo [%s]\n", arg->next->token);
 	while (arg->token && only_n(arg->token))
 	{
 		line_flag = 0;

@@ -67,5 +67,5 @@ void  sh_putstr(char *str, int fd)
 
   i = 0;
   while (str[i])
-    write(fd, &str[i], 1);
+    write(fd, &str[i++], 1);
 }
