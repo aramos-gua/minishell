@@ -36,7 +36,7 @@ int	main(int argc, char *argv[], char *envp[])
 	init_all(&all);
 	while (42)
 	{
-		//free_all(&all);
+		free_all(&all);
 		init_all(&all);
 		if (!isatty(fileno(stdin)))
 			break;
@@ -55,6 +55,6 @@ int	main(int argc, char *argv[], char *envp[])
 		// else if (execution(&all))
 		//  	continue ;
 	}	
-	rl_clear_history(), free_double_char(all.c_envp), free_all(&all);
+	(rl_clear_history()), (free_double_char(all.c_envp)), (free_all(&all));
 	return (all.return_val);
 }

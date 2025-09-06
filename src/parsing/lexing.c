@@ -104,24 +104,19 @@ static void	reformat_tokens(t_data *all)
 	{
 		if (i++ == -1)
 			temp = all->tokens->next;
+		prev = i;
 		if (ft_strchr(temp->token, '$'))
 		{
-			prev = i;
-			i++;
 			if (is_redirect(temp->prev->token) != HERE_DOC)
 				expansion(all, temp, &i);
-			if (i > prev)
-			{
-				if (all->tokens != all->tokens->next)
-				{
-					temp = temp->next;
-					del_t_token(all->tokens, prev + 1);
-				}
-				continue ;
-			}
 		}
 		(delete_quotes(temp->token)), (sub_char(temp->token, 26, '|'));
 		temp = temp->next;
+		if (i > prev)
+		{
+			del_t_token(&(all->tokens), i + 1);
+			i--;
+		}
 	}
 }
 

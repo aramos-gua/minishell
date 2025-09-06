@@ -15,7 +15,7 @@
 //-----------------------------------------------------------------------------
 //if a variable has been exported with spaces, it will become multiple tokens
 //e.g. export a="cho hello", e$a -> [echo] [hello]
-static void	word_split(t_data *all, t_token *tkn_ptr, char **env_var, int *pos)
+static void	word_split(t_token *tkn_ptr, char **env_var, int *pos)
 {
 	int		i;
 	int		len;
@@ -38,8 +38,9 @@ static void	word_split(t_data *all, t_token *tkn_ptr, char **env_var, int *pos)
 			len++;
 		}
 		new_var = find_token(*env_var, i--, len);
-		all->tokens = add_at_pos(all->tokens, new_var, tkn_ptr->process_nbr, (*pos)++);
+		tkn_ptr->prev = add_t_token(tkn_ptr->prev, new_var, tkn_ptr->process_nbr);
 		i++;
+		(*pos)++;
 	}
 }
 
@@ -64,7 +65,7 @@ static	void	expand_var(char **c_envp, char **env_var)
 			i++;
 		if (!ft_strncmp(c_envp[j], *env_var, ++i))
 		{
-			*env_var = &c_envp[j][i];
+			*env_var = ft_strdup(&c_envp[j][i]);
 			break ;
 		}
 		j++;
@@ -185,6 +186,8 @@ void	expansion(t_data *all, t_token *tkn_ptr, int *position)
 
 	expanded = do_expansion(all, tkn_ptr->token);
 	tkn_ptr->token = expanded;
-	if (ft_strchr(expanded, ' '))
-		word_split(all, tkn_ptr, &expanded, position);
+	if (ft_strchr(expanded, ' ') || ft_strchr(expanded, '\t')
+		|| ft_strchr(expanded, '\n') || ft_strchr(expanded, '\v')
+		|| ft_strchr(expanded, '\f') || ft_strchr(expanded, '\r'))
+		word_split(tkn_ptr, &expanded, position);
 }

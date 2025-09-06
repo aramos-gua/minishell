@@ -72,21 +72,24 @@ t_token *add_at_pos(t_token *tail, char *token, int nbr, int position)
 	return (tail);
 }
 
-t_token	*del_t_token(t_token *tail, int position)
+//deletes a token
+//position is 0-indexed
+t_token	*del_t_token(t_token **tail, int position)
 {
 	t_token	*temp;
 	t_token	*temp2;
 
-	temp = tail->next;
+	temp = (*tail)->next;
 	while (position-- > 1)
 		temp = temp->next;
 	temp2 = temp->prev;
 	temp2->next = temp->next;
 	temp->next->prev = temp2;
+	free(temp->token);
 	free(temp);
-	if (temp == tail)
-		tail = temp2;
-	return (tail);
+	if (temp == *tail)
+		*tail = temp2;
+	return (*tail);
 }
 
 void	print_t_token(t_token *tokens)

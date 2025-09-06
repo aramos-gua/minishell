@@ -60,12 +60,12 @@ static t_proc	*add_t_proc(t_proc *tail, char *proc, int total_proc)
 //deletes a node at a specific position
 //position is 0 indexed
 //closes fds
-t_proc	*del_t_proc(t_proc *tail, int position)
+t_proc	*del_t_proc(t_proc **tail, int position)
 {
 	t_proc	*temp;
 	t_proc	*temp2;
 
-	temp = tail->next;
+	temp = (*tail)->next;
 	while (position-- > 1)
 		temp = temp->next;
 	if (temp->in_fd > 2)
@@ -76,9 +76,9 @@ t_proc	*del_t_proc(t_proc *tail, int position)
 	temp2->next = temp->next;
 	temp->next->prev = temp2;
 	free(temp);
-	if (temp == tail)
-		tail = temp2;
-	return (tail);
+	if (temp == *tail)
+		*tail = temp2;
+	return (*tail);
 }
 
 //-----------------------------------------------------------------------------

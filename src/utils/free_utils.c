@@ -28,7 +28,7 @@ void	free_t_proc(t_proc *info, int total_procs)
 
 	len = total_procs;
 	while (len--)
-		del_t_proc(info, 0);
+		del_t_proc(&info, 0);
 }
 
 void	free_t_token(t_token *tokens)
@@ -49,7 +49,7 @@ void	free_t_token(t_token *tokens)
 		i++;
 	}
 	while (i--)
-		del_t_token(tokens, i);
+		del_t_token(&tokens, i);
 }
 
 void unlink_heredocs(int total_procs)

@@ -47,7 +47,7 @@ int		parsing(t_data *all, char *input);
 int		input_check(char *input);
 
 //process_info.c
-t_proc	*del_t_proc(t_proc *tail, int position);
+t_proc	*del_t_proc(t_proc **tail, int position);
 void	print_t_proc(t_proc *info);
 int		find_processes(t_data *all, char *input);
 
@@ -75,7 +75,7 @@ int		heredoc(t_data *all);
 t_token	*create_t_token(void);
 t_token	*add_t_token(t_token *tail, char *token, int nbr);
 t_token	*add_at_pos(t_token *tail, char *token, int nbr, int position);
-t_token	*del_t_token(t_token *tail, int position);
+t_token	*del_t_token(t_token **tail, int position);
 void	print_t_token(t_token *tokens);
 
 //utils
