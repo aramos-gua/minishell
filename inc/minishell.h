@@ -17,6 +17,7 @@
 # include "../my_libft/gnl/inc/get_next_line_bonus.h"
 
 # include "structs.h"
+# include "macros.h"
 
 # include <stdio.h> //readline //printf
 # include <stdbool.h> //bool for flags ft_export
@@ -46,15 +47,18 @@ int		parsing(t_data *all, char *input);
 int		input_check(char *input);
 
 //process_info.c
+t_proc	*del_t_proc(t_proc **tail, int position);
 void	print_t_proc(t_proc *info);
 int		find_processes(t_data *all, char *input);
 
-
 //tokeniser.c
 char	*find_token(char *process, int i, int len);
+void	skip_to(char *process, char skip_to, int *i, int *len);
 int		tokeniser(t_data *all);
 
 //lexing.c
+void	assign_types(t_token *tokens);
+void	delete_quotes(char *token);
 int		lexing(t_data *all);
 
 //expansion.c
@@ -71,7 +75,7 @@ int		heredoc(t_data *all);
 t_token	*create_t_token(void);
 t_token	*add_t_token(t_token *tail, char *token, int nbr);
 t_token	*add_at_pos(t_token *tail, char *token, int nbr, int position);
-t_token	*del_t_token(t_token *tail, int position);
+t_token	*del_t_token(t_token **tail, int position);
 void	print_t_token(t_token *tokens);
 
 //utils
@@ -80,7 +84,10 @@ int		is_shell_var(char *s);
 
 //free_utils
 void	free_double_char(char **arr);
-void	handle_error(char *message, char exit_status);
+void	free_t_proc(t_proc *info, int total_procs);
+void	free_t_token(t_token *tokens);
+void	unlink_heredocs(int total_procs);
+void	free_all(t_data *all);
 
 //execution.c
 int		child_process(int i, t_data *all, int *pipes);

@@ -12,25 +12,35 @@
 
 #include "../../inc/minishell.h"
 
+//------------------------DOUBLY CIRCULAR LINKED LIST--------------------------
 //creates a t_proc node
-static t_proc	*create_t_proc(void) //same create_node function
+//initialises pid and last_pid to -1
+//initialises in_fd and out_fd to the stdin and stdout
+static t_proc	*create_t_proc(int total_proc)
 {
 	t_proc	*new;
-	new = malloc(sizeof(t_proc));
+
+	new = ft_calloc(sizeof(t_proc), 1);
 	if (!new)
 		return (NULL);
 	new->next = new;
 	new->prev = new;
+	new->pid = -1;
+	new->last_pid = -1;
+	new->in_fd = 0;
+	new->out_fd = 1;
+	new->total_proc = total_proc;
 	return (new);
 }
 
-//adds a node to the doubly linked list in t_proc *info
-static t_proc	*add_t_proc(t_proc *tail, char *proc) //same add_at_end function
+//------------------------DOUBLY CIRCULAR LINKED LIST--------------------------
+//adds a node to the end of the list
+static t_proc	*add_t_proc(t_proc *tail, char *proc, int total_proc)
 {
 	t_proc	*new_node;
 	t_proc	*temp;
 
-	new_node = create_t_proc();
+	new_node = create_t_proc(total_proc);
 	new_node->proc = proc;
 	if (tail == NULL)
 		return (new_node);
@@ -46,15 +56,41 @@ static t_proc	*add_t_proc(t_proc *tail, char *proc) //same add_at_end function
 	}
 }
 
-//prints the info stored int t_proc *info
+//------------------------DOUBLY CIRCULAR LINKED LIST--------------------------
+//deletes a node at a specific position
+//position is 0 indexed
+//closes fds
+t_proc	*del_t_proc(t_proc **tail, int position)
+{
+	t_proc	*temp;
+	t_proc	*temp2;
+
+	temp = (*tail)->next;
+	while (position-- > 1)
+		temp = temp->next;
+	if (temp->in_fd > 2)
+		close(temp->in_fd);
+	if (temp->out_fd > 2)
+		close(temp->out_fd);
+	temp2 = temp->prev;
+	temp2->next = temp->next;
+	temp->next->prev = temp2;
+	free(temp);
+	if (temp == *tail)
+		*tail = temp2;
+	return (*tail);
+}
+
+//-----------------------------------------------------------------------------
+//prints the t_proc *info linked list (for visualisation purposes)
 void	print_t_proc(t_proc *info)
 {
-	t_proc *temp;
-	int	i;
+	t_proc	*temp;
+	int		i;
 
 	if (!info)
 		printf("no element in the list!\n");
-	else 
+	else
 	{
 		temp = NULL;
 		i = -1;
@@ -73,66 +109,31 @@ void	print_t_proc(t_proc *info)
 	}
 }
 
-//------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //after checking raw input for syntax errors
-//breaks the raw input into a 2d array of processes (char **procs)
+//splits the raw input by '|', char **procs contains a list of processes
 //puts the information into a t_proc linked list stored in t_proc *info
 int	find_processes(t_data *all, char *input)
 {
-	char	**procs;
-	t_proc	*info;
 	int		j;
-	int		len;
 	char	*temp;
 
-	procs = ft_split(input, '|');
-	info = NULL;
+	all->procs = ft_split(input, '|');
 	j = 0;
-	while (procs[j] != NULL)
+	while (all->procs[j] != NULL)
 		j++;
-	len = j;
+	all->total_proc = j;
 	j = 0;
-	while (procs[j] != NULL)
+	while (all->procs[j] != NULL)
 	{
-		temp = procs[j];
-		procs[j] = ft_strtrim(procs[j], " ");
-		info = add_t_proc(info, procs[j]);
-		info->process_nbr = j;
-		info->pid = -1;
-		info->last_pid = -1;
-		info->in_fd = 0;
-		info->out_fd = 1;
-		info->total_proc = len;
+		temp = all->procs[j];
+		all->procs[j] = ft_strtrim(all->procs[j], " ");
 		free(temp);
+		all->info = add_t_proc(all->info, all->procs[j], all->total_proc);
+		all->info->process_nbr = j;
 		j++;
 	}
-	all->info = info;
-	all->total_proc = len;
+	if (!(all->total_proc) || !(all->info))
+		return (1);
 	return (0);
 }
-
-
-//--------------------------------------------------IGNORE------------------------------
-//after looking for syntax errors
-//this function breaks the raw input into a 2d array of processes
-//stored in the struct t_proc, a pointer stored in t_data *all
-// int	find_processes(t_data *all, char *input)
-// {
-// 	t_proc	info;
-// 	int		j;
-// 	char	*temp;
-// 	j = 0;
-// 	info.procs = ft_split(input, '|'); //think about the case where the pipe is in quotes
-// 	while (info.procs[j] != NULL)
-// 	{
-// 		temp = info.procs[j];
-// 		info.procs[j] = ft_strtrim(info.procs[j], " ");
-// 		free(temp);
-// 		j++;	
-// 	}
-// 	if (j == 0)
-// 		return (1);
-// 	info.total_proc = j;
-// 	all->info = info;
-// 	return (0);
-// }

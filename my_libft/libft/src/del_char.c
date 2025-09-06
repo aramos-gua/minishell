@@ -11,16 +11,18 @@
 /* ************************************************************************** */
 
 #include "../inc/libft.h"
-//deletes char d from a string s
-void	del_char(char *s, char d)
+//deletes a char at position pos from a string s
+void	del_char(char *s, int pos)
 {
-	int		i;
-	int		new;
-
+	int	i;
+	int	new;
+	
 	i = 0;
+	if (pos >= ft_strlen(s))
+		return ;
 	while (s[i] != '\0')
 	{
-		if (s[i] == d)
+		if (i == pos)
 		{
 			new = i;
 			while (s[new] != '\0')
@@ -28,18 +30,22 @@ void	del_char(char *s, char d)
 				s[new] = s[new + 1];
 				new++;
 			}
+			return ;
 		}
 		else
 			i++;
 	}
 }
+// #include <stdio.h>
+// #include <string.h>
 // int main(void)
 // {
 // 	char s[]= "hiiii'|'";
 //
 // 	printf("old: %s\n", s);
 // 	printf("old_len: %ld\n", strlen(s));
-// 	del_char(s, '\'');
+// 	del_char(s, 10);
+// 	//del_char(s, 6);
 // 	printf("new: %s\n", s);
 // 	printf("new_len: %ld\n", strlen(s));
 // 	return (0);

@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
+
 int	parsing(t_data *all, char *input)
 {
 	if (input_check(input))
@@ -24,9 +25,9 @@ int	parsing(t_data *all, char *input)
 	else if (heredoc(all))
 		return (1);
 	else if (redirects(all))
-	 	return (all->return_val = 1, all->return_val);
+		return (all->return_val = 1, all->return_val);
 	printf("-----------INFO LIST----------------\n");
-	print_t_proc(all->info);	
+	print_t_proc(all->info);
 	printf("----------TOKEN LIST----------------\n");
 	print_t_token(all->tokens);
 	return (all->return_val = 0, all->return_val);
