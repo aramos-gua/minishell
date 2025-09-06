@@ -12,7 +12,7 @@
 
 #include "../inc/minishell.h"
 
-int get_fd(t_proc *list, int proc, bool in)
+int get_fd(t_proc *list, int proc, bool out, int pipe_fd)
 {
   t_proc  *current;
   int     fd;
@@ -22,10 +22,28 @@ int get_fd(t_proc *list, int proc, bool in)
   current = list;
   while (current->process_nbr != proc)
     current = current->next;
-  if (in)
-    return (fd = current->in_fd);
-  return (fd = current->out_fd);
-
+  if (!out)
+    fd = current->in_fd;
+  else
+    fd = current->out_fd;
+  if (fd > 2)
+  {
+    dup2(fd, pipe_fd);
+    close(fd);
+    close(pipe_fd);
+  }
+  else
+  {
+    if (!out)
+    {
+      dup2(pipe_fd, STDIN_FILENO);
+    }
+    else
+    {
+      dup2(pipe_fd, STDOUT_FILENO);
+    }
+    close(pipe_fd);
+  }
 }
 
 int  executron(t_data *all, int i)
@@ -36,26 +54,30 @@ int  executron(t_data *all, int i)
 
   if (all->total_proc > 1)
   {
-    int new_out;
-    int new_in;
+    //int new_out;
+    //int new_in;
 
     pipe(pipe_fds);
-    new_in = get_fd(all->info, i, 1);
-    new_out = get_fd(all->info, i, 0);
-    dup2(new_in, pipe_fds[0]);
-    dup2(new_out, pipe_fds[1]);
-    close(new_in);
-    close(new_out);
-    dprintf(2, "pipes[0] fd:[%d] -> ", pipe_fds[0]);
-    dprintf(2, "pipe[1] fd:[%d]\n", pipe_fds[1]);
+   // get_fd(all->info, i, 0, pipe_fds[0]);
+   // get_fd(all->info, i, 1, pipe_fds[1]);
+   // new_in = get_fd(all->info, i, 1);
+   // new_out = get_fd(all->info, i, 0);
+   // dup2(new_in, pipe_fds[0]);
+   // dup2(new_out, pipe_fds[1]);
+   // close(new_in);
+   // close(new_out);
+   // dprintf(2, "pipes[0] fd:[%d] -> ", pipe_fds[0]);
+   // dprintf(2, "pipe[1] fd:[%d]\n", pipe_fds[1]);
   }
   first_fork_pid = fork();
   if (first_fork_pid == 0)
   {
-    dup2(pipe_fds[0], STDIN_FILENO);
-    dup2(pipe_fds[1], STDOUT_FILENO);
-    close(pipe_fds[0]);
-    close(pipe_fds[1]);
+    get_fd(all->info, i, 0, pipe_fds[0]);
+    get_fd(all->info, i, 1, pipe_fds[1]);
+    //dup2(pipe_fds[0], STDIN_FILENO);
+    //dup2(pipe_fds[1], STDOUT_FILENO);
+    //close(pipe_fds[0]);
+    //close(pipe_fds[1]);
     execute_command(all, i);
     return (0);
   }
@@ -64,10 +86,12 @@ int  executron(t_data *all, int i)
     second_fork_pid = fork();
     if (second_fork_pid == 0)
     {
-      dup2(pipe_fds[0], STDIN_FILENO);
-      dup2(pipe_fds[1], STDOUT_FILENO);
-      close(pipe_fds[0]);
-      close(pipe_fds[1]);
+      get_fd(all->info, i, 0, pipe_fds[0]);
+      get_fd(all->info, i, 1, pipe_fds[1]);
+      //dup2(pipe_fds[0], STDIN_FILENO);
+      //dup2(pipe_fds[1], STDOUT_FILENO);
+      //close(pipe_fds[0]);
+      //close(pipe_fds[1]);
       int j = i + 1;
       if (j < all->total_proc - 1)
         executron(all, j);
