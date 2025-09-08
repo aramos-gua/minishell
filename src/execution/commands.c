@@ -29,8 +29,12 @@ int	execute_command(t_data *all, int i, int piped)
     write(2, "exited after cmd\n", 17);
 	  exit (1);
   }
-  if (is_builtin(cmd->token))
+  if (is_builtin(cmd->token) && !piped)
   {
+    if (all->info->in_fd != STDIN_FILENO)
+      get_fd(all, i, 0);
+    if (all->info->out_fd != STDOUT_FILENO)
+      get_fd(all, i, 1);
     which_builtin(cmd->token, all, i);
     if (piped)
       exit (0);
