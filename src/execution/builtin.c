@@ -19,7 +19,7 @@ int	ft_pwd(t_data *all)
 	pwd = getcwd(NULL, 0);
 	if (!pwd)
 		ft_putendl_fd("Error with pwd", STDERR_FILENO);
-	ft_putendl_fd(pwd, all->info->out_fd);
+	ft_putendl_fd(pwd, STDOUT_FILENO);
 	free(pwd);
 	return (0);
 }
@@ -99,8 +99,8 @@ int	ft_echo(t_data *all, t_token *cmd_node)
 
 	line_flag = 1;
 	arg = cmd_node->next;
-	dprintf(2, "token of arg in ft_echo [%s]\n", arg->token);
-	dprintf(2, "token of arg next in ft_echo [%s]\n", arg->next->token);
+	// dprintf(2, "token of arg in ft_echo [%s]\n", arg->token);
+	// dprintf(2, "token of arg next in ft_echo [%s]\n", arg->next->token);
 	while (arg->token && only_n(arg->token))
 	{
 		line_flag = 0;
@@ -108,13 +108,13 @@ int	ft_echo(t_data *all, t_token *cmd_node)
 	}
 	while (arg->type == ARGUMENT)
 	{
-		sh_putstr(arg->token, all->info->out_fd);
+		sh_putstr(arg->token, STDOUT_FILENO);
 		if (arg->next->type == ARGUMENT)
-			sh_putstr(" ", all->info->out_fd);
+			sh_putstr(" ", STDOUT_FILENO);
 		arg = arg->next;
 	}
 	if (line_flag)
-		sh_putstr("\n", all->info->out_fd);
+		sh_putstr("\n", STDOUT_FILENO);
 	return (all->return_val = 0, 0);
 }
 
