@@ -29,39 +29,48 @@
 // 	j++;
 // }
 
-int	get_fd(t_data *all, int proc, bool out, int *pipes)
+int	get_fd(t_data *all, int proc, bool out)
 {
 	t_proc	*current;
 	int		fd;
 
+  dprintf(2, "Starting get_fd\n");
+  dprintf(2, "current proc: [%d]\n", proc);
 	if (!all->info)
 		return (-1);
 	current = all->info;
 	while (current->process_nbr != proc)
+  {
+    dprintf(2, "current proc: [%d]\n", current->process_nbr);
 		current = current->next;
+  }
+  dprintf(2, "current [%d] -> proc [%d] \n", current->process_nbr, proc);
 	if (out == 0)
 		fd = current->in_fd;
-	else
+  else
 		fd = current->out_fd;
 	if (fd > 2 && !out)
 	{
 		dup2(fd, STDIN_FILENO);
-    close(pipes[0]);
-		close(fd);
+		//close(fd);
 	}
-	else if (fd > 2 && out)
+  else if (fd > 2 && out)
 	{
 		dup2(fd, STDOUT_FILENO);
-    close(pipes[1]);
-		close(fd);
+		//close(fd);
 	}
 	return (0);
 }
 
-int get_pipe(int *pipes)
+int get_pipe(int *pipes, int flag)
 {
-  dup2(pipes[0], STDIN_FILENO);
-  dup2(pipes[1], STDOUT_FILENO);
+  // dup2(pipes[0], STDIN_FILENO);
+  if (flag == 0)
+    dup2(pipes[flag], STDIN_FILENO);
+  if (flag == 1)
+    dup2(pipes[flag], STDOUT_FILENO);
+  close(pipes[0]);
+  close(pipes[1]);
 }
 
 int  executron(t_data *all, int i)
@@ -70,22 +79,15 @@ int  executron(t_data *all, int i)
   int first_fork_pid;
   int second_fork_pid;
 
-  if (i < (all->total_proc - 1))
-    pipe(pipe_fds);
+  pipe(pipe_fds);
   first_fork_pid = fork();
   if (first_fork_pid == 0)
   {
 	//fist child
-    if (all->info->in_fd != STDIN_FILENO)
-      get_fd(all, i, 0, pipe_fds);
-    else if (all->info->out_fd != STDOUT_FILENO)
-      get_fd(all, i, 1, pipe_fds);
-    else
-    {
-      get_pipe(pipe_fds);
-    }
-    execute_command(all, i);
-    return (0);
+    // {
+       get_pipe(pipe_fds, 1);
+    // }
+    execution(all, i, 1, 1);
   }
 	else
 	{
@@ -95,42 +97,37 @@ int  executron(t_data *all, int i)
     if (second_fork_pid == 0)
     {
       //child
-      if (all->info->in_fd != STDIN_FILENO)
-        get_fd(all, i, 0, pipe_fds);
-      if (all->info->in_fd != STDOUT_FILENO)
-        get_fd(all, i, 1, pipe_fds);
-      else
+      // if (all->info->in_fd != STDIN_FILENO)
+      //   get_fd(all, i, 0, pipe_fds);
+      // else if (all->info->in_fd != STDOUT_FILENO)
+      //   get_fd(all, i, 1, pipe_fds);
       {
-        get_pipe(pipe_fds);
+        get_pipe(pipe_fds, 0);
       }
-      int j = i + 1;
-      if (j < all->total_proc - 1)
-      {
-        dprintf(2, "jamon\n");
-        executron(all, j);
-      }
-      else
-      {
-        if (all->info->in_fd != STDIN_FILENO)
-          get_fd(all, j, 0, pipe_fds);
-        if (all->info->in_fd != STDOUT_FILENO)
-          get_fd(all, j, 1, pipe_fds);
-        else
-        {
-          get_pipe(pipe_fds);
-        }
-        execute_command(all, j);
-      }
+      // int j = i + 1;
+      // if (j < all->total_proc - 1)
+      // {
+        execution(all, i + 1, 1, 0);
+      //}
+      // else
+      // {
+      //   // if (all->info->in_fd != STDIN_FILENO)
+      //   //   get_fd(all, j, 0, pipe_fds);
+      //   // if (all->info->in_fd != STDOUT_FILENO)
+      //   //   get_fd(all, j, 1, pipe_fds);
+      //   execute_command(all, j);
+      // }
     }
     else
     {
       //parent
       close(pipe_fds[0]);
+      close(pipe_fds[1]);
     }
 	}
 	waitpid(first_fork_pid, NULL, 0);
-	if (i < all->total_proc - 1)
-		waitpid(-1, NULL, 0);
+	// if (i < all->total_proc - 1)
+  waitpid(second_fork_pid, NULL, 0);
 	return (0);
 }
 
@@ -154,7 +151,7 @@ int	one_command(t_data *all)
 			dup2(all->info->out_fd, STDOUT_FILENO);
 			close(all->info->out_fd);
 		}
-		execute_command(all, 0);
+		execute_command(all, 0, 0);
 	}
 	else if (all->info->pid > 0)
 		waitpid(all->info->pid, NULL, 0);
@@ -163,47 +160,47 @@ int	one_command(t_data *all)
 	return (0);
 }
 
-int	execution(t_data *all)
+int	execution(t_data *all, int i, int piped, bool run)
 {
 	//int	pipes[2];
 
   //all->info->in_fd = 0;
   //all->info->out_fd = 1;
-	ft_printf("\nStarting exec\n");
+	// ft_printf("\nStarting exec\n");
 	ft_printf("\n----------EXECUTION---------\n");
-///////////////////////////////////////////////////////////////////////////////
-	int		curr_proc;
-	t_token	*tail;
-	t_token	*current;
-	tail = all->tokens;
-	current = tail->next;
-	curr_proc = current->process_nbr;
-  dprintf(2, "fd_in -> [%d] -> fd_out ->[%d]\n", all->info->in_fd, all->info->out_fd);
-	while (1)
-	{
-		if (current->process_nbr != curr_proc)
-			curr_proc = current->next->process_nbr;
-		if (current->type == COMMAND || current->builtin)
-		{
-			ft_printf("[%d], command: %s   ", curr_proc, current->token);
-		}
-		else if (current->type == ARGUMENT)
-		{
-			ft_printf(" arg: %s ", current->token);
-		}
-		if (current == tail)
-			break ;
-		current = current->next;
-	}
-	ft_printf("\n\n");
 //////////////////////////////////////////////////////////////////////////////////
+///	int		curr_proc;
+///	t_token	*tail;
+///	t_token	*current;
+///	tail = all->tokens;
+///	current = tail->next;
+///	curr_proc = current->process_nbr;
+///  dprintf(2, "fd_in -> [%d] -> fd_out ->[%d]\n", all->info->in_fd, all->info->out_fd);
+///	while (1)
+///	{
+///		if (current->process_nbr != curr_proc)
+///			curr_proc = current->next->process_nbr;
+///		if (current->type == COMMAND || current->builtin)
+///		{
+///			ft_printf("[%d], command: %s   ", curr_proc, current->token);
+///		}
+///		else if (current->type == ARGUMENT)
+///		{
+///			ft_printf(" arg: %s ", current->token);
+///		}
+///		if (current == tail)
+///			break ;
+///		current = current->next;
+///	}
+///	ft_printf("\n\n");
+/////////////////////////////////////////////////////////////////////////////////////
   //dup2(all->info->in_fd, STDIN_FILENO);
   //dup2(all->info->out_fd, STDOUT_FILENO);
-	if (all->info->total_proc == 1)
-		one_command(all);
-	else if (all->info->total_proc > 1)
+	if (i + 1 == all->info->total_proc || run)
+		execute_command(all, i, piped);
+	else
 	{
-		executron(all, 0);
+		executron(all, i);
     //if (all->info->in_fd != 0)
     //  close(all->info->in_fd);
     //if (all->info->out_fd != 1)

@@ -52,7 +52,7 @@ int	main(int argc, char *argv[], char *envp[])
 		// 	print_env(&all);
 		else if (parsing(&all, input))
 			continue ;
-		 else if (execution(&all))
+		 else if (execution(&all, 0, 0, 0))
 		  	continue ;
 	}	
 	(rl_clear_history()), (free_double_char(all.c_envp)), (free_all(&all));

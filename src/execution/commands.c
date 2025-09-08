@@ -64,12 +64,16 @@ int	last_command(t_data *all, int *pipes)
 	return (0);
 }
 
-int	execute_command(t_data *all, int i)
+int	execute_command(t_data *all, int i, int piped)
 {
 	t_token *cmd;
 	char	  *path;
 	char    **cmd_arr;
 
+  //if (all->info->in_fd != STDIN_FILENO)
+  //  get_fd(all, i, 0);
+  //else if (all->info->out_fd != STDOUT_FILENO)
+  //  get_fd(all, i, 1);
 	cmd = get_process(all->tokens, i);
   dprintf(2, "the cmd [%d] found after get_process is [%s]\n", i, cmd->token);
 	if (!cmd)
@@ -80,7 +84,8 @@ int	execute_command(t_data *all, int i)
   if (is_builtin(cmd->token))
   {
     which_builtin(cmd->token, all, i);
-    exit (0);
+    if (piped)
+      exit (0);
     return (0);
   }
 	path = get_cmd_path(cmd->token, all->c_envp);
@@ -109,15 +114,44 @@ int	execute_command(t_data *all, int i)
   if (cmd_arr[j] == NULL)
     dprintf(2, " [NULL] ");
   write(2, "\n", 1);
-	if (execve(path, cmd_arr, all->c_envp) == -1)
-	{
-    ft_printf("exited after execve\n");
-		//perror(cmd_arr[0]);
-		free(path);
-		//free_split(all->tokens->next->token);
-    exit (1);
-	}
-	free(path);
-	//free_split(&all->tokens->next->token);
-	exit (0);
+  int pid;
+  if (!piped)
+  {
+    pid = fork();
+    if (pid == 0)
+    {
+      if (all->info->in_fd != STDIN_FILENO)
+        get_fd(all, i, 0);
+      if (all->info->out_fd != STDOUT_FILENO)
+        get_fd(all, i, 1);
+      if (execve(path, cmd_arr, all->c_envp) == -1)
+      {
+        ft_printf("exited after execve\n");
+        //perror(cmd_arr[0]);
+        free(path);
+        //free_split(all->tokens->next->token);
+        exit (1);
+      }
+    }
+    else
+      waitpid(pid, NULL, 0);
+  }
+  else
+  {
+    if (all->info->in_fd != STDIN_FILENO)
+      get_fd(all, i, 0);
+    if (all->info->out_fd != STDOUT_FILENO)
+      get_fd(all, i, 1);
+    if (execve(path, cmd_arr, all->c_envp) == -1)
+    {
+      ft_printf("exited after execve\n");
+      //perror(cmd_arr[0]);
+      free(path);
+      //free_split(all->tokens->next->token);
+      exit (1);
+    }
+  }
+  free(path);
+  //free_split(&all->tokens->next->token);
+  return(0);
 }

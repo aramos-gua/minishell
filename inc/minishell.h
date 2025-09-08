@@ -97,8 +97,9 @@ void	open_pipes(int *pipes, t_data *all);
 int		get_files(t_data *all);
 int		one_command(t_data *all);
 int		executron(t_data *all, int i);
-int		execution(t_data *all);
+int		execution(t_data *all, int i, int piped, bool run);
 void 	fill_exp(t_data *all);
+int		get_fd(t_data *all, int proc, bool out);
 
 //get_binaries.c
 char  	**array_builder(t_data *all, int proc);
@@ -114,7 +115,7 @@ void	sh_putstr(char *str, int fd);
 //commands.c
 int		first_command(t_data *all, int *pipes);
 int		last_command(t_data *all, int *pipes);
-int	execute_command(t_data *all, int i);
+int	execute_command(t_data *all, int i, int piped);
 
 //cleaner.c
 int		free_split(char **arr);
