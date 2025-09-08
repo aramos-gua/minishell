@@ -29,7 +29,7 @@
 // 	j++;
 // }
 
-int	get_fd(t_data *all, int proc, bool out, int pipe_fd)
+int	get_fd(t_data *all, int proc, bool out, int *pipes)
 {
 	t_proc	*current;
 	int		fd;
@@ -46,21 +46,22 @@ int	get_fd(t_data *all, int proc, bool out, int pipe_fd)
 	if (fd > 2 && !out)
 	{
 		dup2(fd, STDIN_FILENO);
+    close(pipes[0]);
 		close(fd);
 	}
 	else if (fd > 2 && out)
 	{
 		dup2(fd, STDOUT_FILENO);
+    close(pipes[1]);
 		close(fd);
 	}
-	else if (pipe_fd != -1)
-	{
-		if (!out)
-			dup2(pipe_fd, STDIN_FILENO);
-		else
-			dup2(pipe_fd, STDOUT_FILENO);
-	}
 	return (0);
+}
+
+int get_pipe(int *pipes)
+{
+  dup2(pipes[0], STDIN_FILENO);
+  dup2(pipes[1], STDOUT_FILENO);
 }
 
 int  executron(t_data *all, int i)
@@ -75,41 +76,57 @@ int  executron(t_data *all, int i)
   if (first_fork_pid == 0)
   {
 	//fist child
-	if (i < 0)
-		get_fd(all, i, 0, pipe_fds[0]);
-	get_fd(all, i, 1, pipe_fds[1]);
-	close(pipe_fds[0]);
-	close(pipe_fds[1]);
+    if (all->info->in_fd != STDIN_FILENO)
+      get_fd(all, i, 0, pipe_fds);
+    else if (all->info->out_fd != STDOUT_FILENO)
+      get_fd(all, i, 1, pipe_fds);
+    else
+    {
+      get_pipe(pipe_fds);
+    }
     execute_command(all, i);
     return (0);
   }
 	else
 	{
-	//parent
-	close(pipe_fds[1]);
+    //parent
+    //close(pipe_fds[1]);
     second_fork_pid = fork();
     if (second_fork_pid == 0)
     {
-	//child
-		get_fd(all, i + 1, 0, pipe_fds[0]);
-		get_fd(all, i + 1, 1, pipe_fds[1]);
-		close(pipe_fds[0]);
-		close(pipe_fds[1]);
-		int j = i + 1;
-		if (j < all->total_proc - 1)
-			executron(all, j);
-		else
-		{
-			get_fd(all, j, 0, pipe_fds[0]);
-			get_fd(all, j, 1, pipe_fds[1]);
-			execute_command(all, j);
-		}
+      //child
+      if (all->info->in_fd != STDIN_FILENO)
+        get_fd(all, i, 0, pipe_fds);
+      if (all->info->in_fd != STDOUT_FILENO)
+        get_fd(all, i, 1, pipe_fds);
+      else
+      {
+        get_pipe(pipe_fds);
+      }
+      int j = i + 1;
+      if (j < all->total_proc - 1)
+      {
+        dprintf(2, "jamon\n");
+        executron(all, j);
+      }
+      else
+      {
+        if (all->info->in_fd != STDIN_FILENO)
+          get_fd(all, j, 0, pipe_fds);
+        if (all->info->in_fd != STDOUT_FILENO)
+          get_fd(all, j, 1, pipe_fds);
+        else
+        {
+          get_pipe(pipe_fds);
+        }
+        execute_command(all, j);
+      }
     }
     else
     {
-	//parent
-		close(pipe_fds[0]);
-	}
+      //parent
+      close(pipe_fds[0]);
+    }
 	}
 	waitpid(first_fork_pid, NULL, 0);
 	if (i < all->total_proc - 1)
