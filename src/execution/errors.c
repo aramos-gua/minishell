@@ -1,26 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cleaner.c                                          :+:      :+:    :+:   */
+/*   errors.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Alejandro Ramos <alejandro.ramos.gua@gmai  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/10 15:32:17 by Alejandro Ram     #+#    #+#             */
-/*   Updated: 2025/08/10 15:32:56 by Alejandro Ram    ###   ########.fr       */
+/*   Created: 2025/09/09 18:38:57 by Alejandro Ram     #+#    #+#             */
+/*   Updated: 2025/09/09 20:33:42 by Alejandro Ram    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-int	free_split(char **arr)
+int	command_not_found(t_data *all, t_token *cmd)
 {
-	int	i;
-
-	i = 0;
-	if (!arr)
-		return (1);
-	while (arr[i])
-		free(arr[i++]);
-	free(arr);
-	return (0);
+    all->return_val = 127;
+    dprintf(STDERR_FILENO, "%s:command not found\n", cmd->token);
+		return (all->return_val);
 }

@@ -1,26 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cleaner.c                                          :+:      :+:    :+:   */
+/*   redirects.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Alejandro Ramos <alejandro.ramos.gua@gmai  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/10 15:32:17 by Alejandro Ram     #+#    #+#             */
-/*   Updated: 2025/08/10 15:32:56 by Alejandro Ram    ###   ########.fr       */
+/*   Created: 2025/09/09 18:17:57 by Alejandro Ram     #+#    #+#             */
+/*   Updated: 2025/09/09 18:19:47 by Alejandro Ram    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-int	free_split(char **arr)
+void	redirect_fds(t_data *all, int i)
 {
-	int	i;
-
-	i = 0;
-	if (!arr)
-		return (1);
-	while (arr[i])
-		free(arr[i++]);
-	free(arr);
-	return (0);
+    if (all->info->in_fd != STDIN_FILENO)
+      get_fd(all, i, 0);
+    if (all->info->out_fd != STDOUT_FILENO)
+      get_fd(all, i, 1);
 }

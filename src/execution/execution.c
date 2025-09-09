@@ -6,7 +6,7 @@
 /*   By: Alejandro Ramos <alejandro.ramos.gua@gmai  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 16:12:22 by Alejandro Ram     #+#    #+#             */
-/*   Updated: 2025/08/21 12:02:04 by Alejandro Ram    ###   ########.fr       */
+/*   Updated: 2025/09/09 20:17:40 by Alejandro Ram    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,11 @@ int	get_fd(t_data *all, int proc, bool out)
 	t_proc	*current;
 	int		fd;
 
-  dprintf(2, "Starting get_fd\n");
-  dprintf(2, "current proc: [%d]\n", proc);
 	if (!all->info)
 		return (-1);
 	current = all->info;
 	while (current->process_nbr != proc)
-  {
-    dprintf(2, "current proc: [%d]\n", current->process_nbr);
 		current = current->next;
-  }
-  dprintf(2, "current [%d] -> proc [%d] \n", current->process_nbr, proc);
 	if (out == 0)
 		fd = current->in_fd;
   else
@@ -43,36 +37,52 @@ int	get_fd(t_data *all, int proc, bool out)
 	return (0);
 }
 
-int get_pipe(int *pipes, int flag)
+ int get_pipe(int *pipes, int flag)
+ {
+   if (flag == 0)
+     dup2(pipes[flag], STDIN_FILENO);
+   if (flag == 1)
+     dup2(pipes[flag], STDOUT_FILENO);
+   close(pipes[0]);
+   close(pipes[1]);
+ }
+
+void  pipe_n_run(t_data *all, int i, int *pipes, int out)
 {
-  if (flag == 0)
-    dup2(pipes[flag], STDIN_FILENO);
-  if (flag == 1)
-    dup2(pipes[flag], STDOUT_FILENO);
-  close(pipes[0]);
-  close(pipes[1]);
+  if (out)
+  {
+    get_pipe(pipes, out),
+    execution(all, i, 1, 1);
+  }
+  else
+  {
+    get_pipe(pipes, out),
+    execution(all, i + 1, 1, 0);
+  }
 }
 
 int  executron(t_data *all, int i)
 {
   int pipe_fds[2];
   int first_fork_pid;
-  int second_fork_pid;
+  // int second_fork_pid;
 
   pipe(pipe_fds);
   first_fork_pid = fork();
   if (first_fork_pid == 0)
   {
-    get_pipe(pipe_fds, 1);
-    execution(all, i, 1, 1);
+     get_pipe(pipe_fds, 1);
+     execution(all, i, 1, 1);
+    // pipe_n_run(all, i, pipe_fds, 0);
   }
 	else
 	{
-    second_fork_pid = fork();
-    if (second_fork_pid == 0)
+    first_fork_pid = fork();
+    if (first_fork_pid == 0)
     {
-        get_pipe(pipe_fds, 0);
-        execution(all, i + 1, 1, 0);
+         get_pipe(pipe_fds, 0);
+         execution(all, i + 1, 1, 0);
+        // pipe_n_run(all, i, pipe_fds, 0);
     }
     else
     {
@@ -81,13 +91,14 @@ int  executron(t_data *all, int i)
     }
 	}
 	waitpid(first_fork_pid, NULL, 0);
-  waitpid(second_fork_pid, NULL, 0);
+  // waitpid(second_fork_pid, NULL, 0);
 	return (0);
 }
 
 int	execution(t_data *all, int i, int piped, bool run)
 {
-	ft_printf("\n----------EXECUTION---------\n");
+  if (i == 0)
+    dprintf(2, "----------EXECUTION-----------------\n");
 //////////////////////////////////////////////////////////////////////////////////
 ///	int		curr_proc;
 ///	t_token	*tail;
