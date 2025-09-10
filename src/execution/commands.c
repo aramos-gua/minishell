@@ -32,8 +32,20 @@ int	execute_command(t_data *all, int i, int piped)
   {
     redirect_fds(all, i);
     which_builtin(cmd->token, all, i);
-    if (piped)
-      exit (0);
+    return (0);
+  }
+  else if (is_builtin(cmd->token) && piped)
+  {
+    int pid;
+
+    pid = fork();
+    if (pid == 0)
+    {
+      redirect_fds(all, i);
+      which_builtin(cmd->token, all, i);
+    }
+    else
+    waitpid(pid, NULL, 0);
     return (0);
   }
 	path = get_cmd_path(cmd->token, all->c_envp);
