@@ -62,7 +62,8 @@ int	main(int argc, char *argv[], char *envp[])
 	}	
 	rl_clear_history();
 	free_double_char(all.c_envp);
-	free_double_char(all.c_exp);
+	if (all.c_exp)
+		free_double_char(all.c_exp);
 	free_all(&all);
 	return (all.return_val);
 }

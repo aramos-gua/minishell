@@ -83,7 +83,7 @@ int	ft_unset(t_data *all, int proc, t_token *cmd_node)
 	i = exist_in_arr(arg->token, all->c_exp, true);
 	if (i > -1)
 		all->c_exp[i][0] = '\0';
-	return (0);
+	return (all->return_val = 0,0);
 }
 
 int	ft_exit(t_data *all, int nodes, t_token *cmd_node)

@@ -98,7 +98,7 @@ int  executron(t_data *all, int i)
 int	execution(t_data *all, int i, int piped, bool run)
 {
   if (i == 0)
-    dprintf(2, "----------EXECUTION-----------------\n");
+    ft_dprintf(2, "----------EXECUTION-----------------\n");
 //////////////////////////////////////////////////////////////////////////////////
 ///	int		curr_proc;
 ///	t_token	*tail;

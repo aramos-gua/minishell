@@ -33,6 +33,7 @@ INCLUDE := inc
 
 LIBFT := my_libft/libft/libft.a
 FT_PRINTF := my_libft/ft_printf/ft_printf.a
+FT_DPRINTF := my_libft/ft_dprintf/libdprintf.a
 GNL := my_libft/gnl/gnl.a
 
 CC := cc
@@ -41,7 +42,7 @@ CFLAGS := -g3 -gdwarf-3 -I$(INCLUDE) #-fsanitize=address,undefined
 RM := rm -rf
 
 #Name has to be the first one to be checked and executed
-$(NAME): $(OBJ) $(LIBFT) $(FT_PRINTF) $(GNL)
+$(NAME): $(OBJ) $(LIBFT) $(FT_PRINTF) $(FT_DPRINTF) $(GNL)
 		@$(CC) $(CFLAGS) $^ -lreadline -o $(NAME)
 		
 $(OBJ): $(OBJ_DIR)%.o:$(SRC_DIR)%.c
@@ -56,6 +57,9 @@ $(LIBFT):
 		
 $(FT_PRINTF): 
 		@make -C my_libft/ft_printf
+
+$(FT_DPRINTF): 
+		@make -C my_libft/ft_dprintf
 
 $(GNL):
 		@make -C my_libft/gnl
