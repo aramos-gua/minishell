@@ -144,6 +144,7 @@ char	*do_expansion(t_data *all, char *token)
 	int		i;
 	char	*env_var;
 	char	*prev_env_var;
+	char	*temp;
 
 	i = 0;
 	env_var = NULL;
@@ -153,13 +154,14 @@ char	*do_expansion(t_data *all, char *token)
 		if (token[i] == '$' && token[i + 1] == '?' && ++i)
 			env_var = ft_itoa(all->return_val);
 		else if (token[i] == '$' && token[i + 1] == '\0')
-			env_var = "$";
+			env_var = ft_strdup("$");
 		else if (token[i] == '$')
 			env_var = valid_expansion(all, token, &i);
 		else
 			env_var = keep_expansion(token, &i);
-		env_var = ft_strjoin(prev_env_var, env_var);
-		free(prev_env_var);
+		temp = env_var;
+		env_var = ft_strjoin(prev_env_var, temp);
+		(free(prev_env_var)), (free(temp));
 		i++;
 	}
 	return (free(token), env_var);

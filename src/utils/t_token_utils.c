@@ -12,9 +12,13 @@
 
 #include "../../inc/minishell.h"
 
+//-----------------------------------------------------------------------------
+//creates a node for the t_token struct
+//initialises type and the builtin flag
 t_token	*create_t_token(void)
 {
 	t_token	*new;
+
 	new = ft_calloc(sizeof(t_token), 1);
 	if (!new)
 		return (NULL);
@@ -24,8 +28,10 @@ t_token	*create_t_token(void)
 	new->token = NULL;
 	new->prev = new;
 	return (new);
- }
+}
 
+//------------------------------------------------------------------------------
+//adds a node to the t_token struct
 t_token	*add_t_token(t_token *tail, char *token, int nbr)
 {
 	t_token	*new_node;
@@ -50,7 +56,10 @@ t_token	*add_t_token(t_token *tail, char *token, int nbr)
 	}
 }
 
-t_token *add_at_pos(t_token *tail, char *token, int nbr, int position)
+//-----------------------------------------------------------------------------
+//adds a node to the t_token struct at position
+//position is 0-indexed
+t_token	*add_at_pos(t_token *tail, char *token, int nbr, int position)
 {
 	t_token	*new_node;
 	t_token	*temp;
@@ -72,7 +81,8 @@ t_token *add_at_pos(t_token *tail, char *token, int nbr, int position)
 	return (tail);
 }
 
-//deletes a token
+//-----------------------------------------------------------------------------
+//deletes the node at position
 //position is 0-indexed
 t_token	*del_t_token(t_token **tail, int position)
 {
@@ -92,6 +102,8 @@ t_token	*del_t_token(t_token **tail, int position)
 	return (*tail);
 }
 
+//-----------------------------------------------------------------------------
+//prints the t_token struct in a human-readable format
 void	print_t_token(t_token *tokens)
 {
 	t_token	*temp;
@@ -115,21 +127,3 @@ void	print_t_token(t_token *tokens)
 		}
 	}
 }
-
-// int	main(int argc, char **argv)
-// {
-// 	t_token *tail = NULL;
-// 	int	i = 1;
-//
-// 	if (argc < 2)
-// 		return (printf("Argc must be bigger than 2!\n"), 1);
-// 	else
-// 	{
-// 		while (argv[i] != NULL)
-// 		{
-// 			tail = add_t_token(tail, argv[i], i);
-// 			i++;
-// 		}
-// 	};
-// }
-

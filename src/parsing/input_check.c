@@ -125,7 +125,8 @@ static int	syntax_multiple_pipes(char *input, int *i)
 				j++;
 			(*i)++;
 		}
-		if (input[*i] == '\0' || j == 2)
+		(*i)--;
+		if (input[*i + 1] == '\0' || j == 2)
 			return (ft_putstr_fd(SYNTAX, 2), ft_putendl_fd(" `|'", 2), 1);
 		else if (j > 2)
 			return (ft_putstr_fd(SYNTAX, 2), ft_putendl_fd(" `||'", 2), 1);
@@ -157,7 +158,6 @@ static int	syntax_quotes(char *input, int *i)
 	{
 		while (input[*i] != '"' && input[*i] != '\0')
 		{
-			printf("im here! \n");
 			if (input[*i] == '|')
 				input[*i] = 26;
 			(*i)++;
@@ -191,7 +191,8 @@ int	input_check(char *input)
 			return (1);
 		else if (input[i] == '>' && syntax_re_out(input, &i))
 			return (1);
-		i++;
+		if (input[i] != '\0')
+			i++;
 	}
 	return (0);
 }

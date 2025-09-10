@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
-#include <stdio.h>
 
 //-----------------------------------------------------------------------------
 //determines if a token is a redirection
@@ -46,15 +45,16 @@ void	assign_types(t_token *tokens)
 			temp->type = OPERATOR;
 		else if (is_redirect(temp->prev->token))
 			temp->type = is_redirect(temp->prev->token);
-		else if (temp->process_nbr == i)
+		else if (temp->type == UNDEFINED)
 		{
-			temp->type = COMMAND;
-			if (is_builtin(temp->token))
-				temp->builtin = 1;
-			i++;
-		}
-		else
 			temp->type = ARGUMENT;
+			if (temp->process_nbr == i && ++i)
+				temp->type = COMMAND;
+			if (temp->type == COMMAND && is_builtin(temp->token))
+				temp->builtin = 1;
+		}
+		if (i < temp->next->process_nbr)
+			i++;
 		temp = temp->next;
 	}
 }
@@ -71,16 +71,18 @@ void	delete_quotes(char *token)
 		if (token[i] == '"')
 		{
 			del_char(token, i);
-			if (token[i] != '"')
-				(skip_to(token, '"', &i, (int []){0})), i--;
-			del_char(token, i);
+			while (token[i] != '"' && token[i] != '\0')
+				i++;
+			if (token[i] == '"')
+				del_char(token, i);
 		}
 		else if (token[i] == '\'')
 		{
 			del_char(token, i);
-			if (token[i] != '\'')
-				(skip_to(token, '\'', &i, (int []){0})), i--;
-			del_char(token, --i);
+			while (token[i] != '\'' && token[i] != '\0')
+				i++;
+			if (token[i] == '\'')
+				del_char(token, i);
 		}
 		else
 			i++;
@@ -110,10 +112,7 @@ static void	reformat_tokens(t_data *all)
 			if (is_redirect(temp->prev->token) != HERE_DOC)
 				expansion(all, temp, &i);
 		}
-		if (ft_strchr(temp->token, 26))
-			sub_char(temp->token, 26, '|');
-		if (ft_strchr(temp->token, '"') || ft_strchr(temp->token, '\''))
-			delete_quotes(temp->token);
+		(sub_char(temp->token, 26, '|')), (delete_quotes(temp->token));
 		temp = temp->next;
 		if (i > prev)
 		{

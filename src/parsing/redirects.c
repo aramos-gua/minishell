@@ -11,9 +11,36 @@
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
+//TODO: check if path has been correctly freed
+static int	open_redir(int type, t_token *tkn_ptr, t_proc *info_ptr)
+{
+	char	*proc_nbr;
+	char	*path;
+
+	proc_nbr = ft_itoa(tkn_ptr->process_nbr);
+	path = ft_strjoin("/tmp/.heredoc_p", proc_nbr);
+	if ((type == RE_IN || type == HERE_DOC) && info_ptr->in_fd > 2)
+		close(info_ptr->in_fd);
+	else if ((type == RE_OUT || type == APPEND) && info_ptr->out_fd > 2)
+		close(info_ptr->out_fd);
+	if (type == RE_IN)
+		info_ptr->in_fd = open(tkn_ptr->token, O_RDONLY);
+	else if (type == HERE_DOC)
+		info_ptr->in_fd = open(path, O_RDONLY);
+	else if (type == RE_OUT)
+		info_ptr->out_fd
+			= open(tkn_ptr->token, O_CREAT | O_TRUNC | O_WRONLY, 0644);
+	else if (type == APPEND)
+		info_ptr->out_fd
+			= open(tkn_ptr->token, O_CREAT | O_WRONLY | O_APPEND, 0644);
+	(free(proc_nbr), free(path));
+	if (info_ptr->in_fd < 0 || info_ptr->out_fd < 0)
+		return (ft_putstr_fd("minishell: ", 2), perror(tkn_ptr->token), 1);
+	else
+		return (0);
+}
 
 //TODO: check permissions for executables
-
 int	redirects(t_data *all)
 {
 	t_token	*token_temp;
@@ -29,32 +56,8 @@ int	redirects(t_data *all)
 			token_temp = all->tokens->next;
 		if (token_temp->process_nbr != info_temp->process_nbr)
 			info_temp = info_temp->next;
-		if (token_temp->type == RE_IN)
-		{
-			if (info_temp->in_fd > 2)
-				close (info_temp->in_fd);
-			info_temp->in_fd = open(token_temp->token, O_RDONLY);
-		}
-		else if (token_temp->type == HERE_DOC)
-		{
-			if (info_temp->in_fd > 2)
-				close (info_temp->in_fd);
-			info_temp->in_fd = open(ft_strjoin("/tmp/.heredoc_p", ft_itoa(token_temp->process_nbr)), O_RDONLY);
-		}
-		else if (token_temp->type == RE_OUT)
-		{
-			if (info_temp->out_fd > 2)
-				close(info_temp->out_fd);
-			info_temp->out_fd = open(token_temp->token, O_CREAT | O_TRUNC | O_WRONLY, 0644);
-		}
-		else if (token_temp->type == APPEND)
-		{
-			if (info_temp->out_fd > 2)
-				close(info_temp->out_fd);
-			info_temp->out_fd = open(token_temp->token, O_CREAT | O_WRONLY | O_APPEND, 0644);
-		}
-		if (info_temp->out_fd < 0 || info_temp->in_fd < 0)
-			return (ft_putstr_fd("minishell: ", 2), perror(token_temp->token), 1);
+		if (open_redir(token_temp->type, token_temp, info_temp))
+			return (1);
 		token_temp = token_temp->next;
 	}
 	return (0);

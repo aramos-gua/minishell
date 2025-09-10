@@ -12,6 +12,8 @@
 
 #include "../../inc/minishell.h"
 
+//-----------------------------------------------------------------------------
+//frees a 2-dimensional array
 void	free_double_char(char **arr)
 {
 	int	j;
@@ -22,6 +24,8 @@ void	free_double_char(char **arr)
 	free(arr);
 }
 
+//-----------------------------------------------------------------------------
+//frees the t_proc struct
 void	free_t_proc(t_proc *info, int total_procs)
 {
 	int		len;
@@ -31,6 +35,8 @@ void	free_t_proc(t_proc *info, int total_procs)
 		del_t_proc(&info, 0);
 }
 
+//-----------------------------------------------------------------------------
+//frees the t_token struct
 void	free_t_token(t_token *tokens)
 {
 	t_token	*temp;
@@ -49,10 +55,13 @@ void	free_t_token(t_token *tokens)
 		i++;
 	}
 	while (i--)
+
 		del_t_token(&tokens, i);
 }
 
-void unlink_heredocs(int total_procs)
+//-----------------------------------------------------------------------------
+//unlinks heredocs, in case they exist
+void	unlink_heredocs(int total_procs)
 {
 	int		len;
 	char	*path;
@@ -63,16 +72,16 @@ void unlink_heredocs(int total_procs)
 	{
 		proc_nbr = ft_itoa(len);
 		path = ft_strjoin("/tmp/.heredoc_p", proc_nbr);
-		unlink(path);
-		free(proc_nbr);
-		free(path);
+		if (!access(path, F_OK))
+			unlink(path);
+		(free(proc_nbr)), (free(path));
 	}
 }
 
+//-----------------------------------------------------------------------------
+//frees all variables, if they exist
 void	free_all(t_data *all)
 {
-	if (all->c_exp)
-		free_double_char(all->c_exp);
 	if (all->procs)
 		free_double_char(all->procs);
 	if (all->info)

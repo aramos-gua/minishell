@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
-//all->c_envp and all->c_exp have been initialised in init_env(), envp.c
 static void	init_all(t_data *all)
 {
 	all->procs = NULL;
@@ -19,7 +18,7 @@ static void	init_all(t_data *all)
 	all->tokens = NULL;
 	all->total_proc = 0;
 }
-
+//TODO: when should c_exp be initialised?
 static void	first_init(t_data *all)
 {
 	all->return_val = 0;
@@ -35,15 +34,15 @@ int	main(int argc, char *argv[], char *envp[])
 	t_data	all;
 	char 	*input = NULL;
 
-	if (argc > 1 || argv[0] == NULL || argv[0][0] == '\0')
+	if (argc > 1)
 		return (1);
 	first_init(&all);
 	if (find_envp(&all, envp))
 		return (ft_putendl_fd("minishell: envp could not be found", 2), 1);
 	while (42)
 	{
-		free_all(&all);
-		init_all(&all);
+		(free_all(&all));
+		(init_all(&all));
 		if (!isatty(fileno(stdin)))
 			break;
 		input = readline("minishell> ");
@@ -58,9 +57,12 @@ int	main(int argc, char *argv[], char *envp[])
 		// 	print_env(&all);
 		else if (parsing(&all, input))
 			continue ;
-		// else if (execution(&all))
-		//   	continue ;
+		else if (execution(&all))
+			continue ;
 	}	
-	(rl_clear_history()), (free_double_char(all.c_envp)), (free_all(&all));
+	rl_clear_history();
+	free_double_char(all.c_envp);
+	free_double_char(all.c_exp);
+	free_all(&all);
 	return (all.return_val);
 }

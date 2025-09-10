@@ -19,9 +19,9 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	unsigned int	j;
 
 	if (s2 == NULL)
-		return ((char *)s1);
+		return (ft_strdup((char *)s1));
 	else if (s1 == NULL)
-		return ((char *)s2);
+		return (ft_strdup((char *)s2));
 	cat = (char *)malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
 	if (cat == NULL)
 		return (NULL);
