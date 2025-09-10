@@ -6,7 +6,7 @@
 /*   By: mtice <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 15:29:12 by mtice             #+#    #+#             */
-/*   Updated: 2025/08/26 20:26:15 by Alejandro Ram    ###   ########.fr       */
+/*   Updated: 2025/09/09 20:39:53 by Alejandro Ram    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,8 +97,9 @@ void	open_pipes(int *pipes, t_data *all);
 int		get_files(t_data *all);
 int		one_command(t_data *all);
 int		executron(t_data *all, int i);
-int		execution(t_data *all);
+int		execution(t_data *all, int i, int piped, bool run);
 void 	fill_exp(t_data *all);
+int		get_fd(t_data *all, int proc, bool out);
 
 //get_binaries.c
 char  	**array_builder(t_data *all, int proc);
@@ -109,21 +110,38 @@ char	*get_cmd_path(char *cmd, char **env);
 t_token *get_process(t_token *list, int i);
 t_token *get_cmd_node(t_token *list, int i);
 int 	ft_lstsize(t_token *list, int proc);
-void	sh_putstr(char *str, int fd);
+void	sh_putstr(char *arg, char *str, int fd);
 
 //commands.c
 int		first_command(t_data *all, int *pipes);
 int		last_command(t_data *all, int *pipes);
-int	execute_command(t_data *all, int i);
+int		execute_command(t_data *all, int i, int piped);
 
 //cleaner.c
 int		free_split(char **arr);
 int		close_pipes(t_data *all, int *pipes);
 
 //builtin.c
+int		ft_pwd(t_data *all);
+int		ft_cd(char *cmd, t_data *all);
+int		ft_echo(t_data *all, t_token *cmd_node);
+int		ft_unset(t_data *all, int proc, t_token *cmd_node);
+int		ft_exit(t_data *all, int nodes, t_token *cmd_node);
+
+//builtin_helpers.c
 int		which_builtin(char *cmd, t_data *all, int proc);
+int		only_n(char *arg);
+int		isnt_number(char *str);
+int		update_env_cd(t_data *all, char *search, char *path);
+int		get_env_index(char **arr, char *to_update, int len);
 
 //export.c
 int		ft_export(t_data *all, int proc, t_token *cmd_node);
 int		exist_in_arr(char *str, char **array, bool flag);
+
+//redirects.c
+void	redirect_fds(t_data *all, int i);
+
+//errors.c
+int		command_not_found(t_data *all, t_token *cmd);
 #endif

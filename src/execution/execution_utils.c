@@ -6,7 +6,7 @@
 /*   By: Alejandro Ramos <alejandro.ramos.gua@gmai  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 14:54:03 by Alejandro Ram     #+#    #+#             */
-/*   Updated: 2025/08/21 12:39:06 by Alejandro Ram    ###   ########.fr       */
+/*   Updated: 2025/09/09 20:10:33 by Alejandro Ram    ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,8 @@ int ft_lstsize(t_token *list, int proc)
   return (i);
 }
 
-void  sh_putstr(char *str, int fd)
-{
-  int i;
-
-  i = 0;
-  while (str[i])
-    write(fd, &str[i++], 1);
-}
+// void  sh_putstr(char *arg, char *str, int fd)
+// {
+//   write(fd, arg, ft_strlen(arg));
+//   write(fd, str, ft_strlen(str));
+// }
