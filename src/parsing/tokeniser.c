@@ -42,6 +42,7 @@ char	*find_token(char *process, int i, int len)
 //-----------------------------------------------------------------------------
 //used to help single out tokens
 //used within a while loop to skip until a certain delimiter char is found
+//(except if that char is '<' or '>')
 //used to bypass a condition in a while loop, if it should be ignored
 //(e.g. if quotes are found we want to iterate through whitespaces as well)
 void	skip_to(char *process, char skip_to, int *i, int *len)
@@ -69,6 +70,38 @@ void	skip_to(char *process, char skip_to, int *i, int *len)
 	}
 }
 
+// static void	split_tokens(t_data *all, t_proc *temp, int *i)
+// {
+// 	char	*token;
+// 	int 	len;
+//
+// 	while (temp->proc[*i] != '\0')
+// 	{
+// 		len = 0;
+// 		while (ft_isspace(temp->proc[*i]) && temp->proc[*i] != '\0')
+// 			(*i)++;
+// 		if (temp->proc[*i] == '<' || temp->proc[*i] == '>')
+// 			skip_to(temp->proc, temp->proc[*i], i, &len);
+// 		else if (!ft_isspace(temp->proc[*i]))
+// 		{
+// 			while (!ft_isspace(temp->proc[*i]) && temp->proc[*i] != '<'
+// 				&& temp->proc[*i] != '>' && temp->proc[*i] != '\0')
+// 			{
+// 				if (temp->proc[*i] == '"' || temp->proc[*i] == '\'' )
+// 					skip_to(temp->proc, temp->proc[*i], i, &len);
+// 				else
+// 				{
+// 					(*i)++;
+// 					len++;
+// 				}
+// 			}
+// 		}
+// 		token = find_token(temp->proc, (*i)--, len);
+// 		all->tokens = add_t_token(all->tokens, token, temp->process_nbr);
+// 		(*i)++;
+// 	}
+// }
+
 //-----------------------------------------------------------------------------
 //breaks down the processes stored in t_proc into tokens
 //stores the tokens into t_token *tokens struct stored in t_data *all
@@ -86,6 +119,7 @@ int	tokeniser(t_data *all)
 		if (i == -1)
 			temp = all->info->next;
 		i = 0;
+		//split_tokens(all, temp, &i);
 		while (temp->proc[i] != '\0')
 		{
 			len = 0;

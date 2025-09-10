@@ -141,9 +141,9 @@ static int	syntax_multiple_pipes(char *input, int *i)
 //with ascii 26 (SUB) and later added back during tokenisation
 static int	syntax_quotes(char *input, int *i)
 {
-	if (input[*i] == '\'')
+	(*i)++;
+	if (input[*i - 1] == '\'')
 	{
-		(*i)++;
 		while (input[*i] != '\'' && input[*i] != '\0')
 		{
 			if (input[*i] == '|')
@@ -153,11 +153,11 @@ static int	syntax_quotes(char *input, int *i)
 		if (input[*i] == '\0')
 			return (ft_putendl_fd(S_QUOTE, 2), 1);
 	}
-	else if (input[*i] == '"')
+	else if (input[*i - 1] == '"')
 	{
-		(*i)++;
 		while (input[*i] != '"' && input[*i] != '\0')
 		{
+			printf("im here! \n");
 			if (input[*i] == '|')
 				input[*i] = 26;
 			(*i)++;
@@ -165,6 +165,7 @@ static int	syntax_quotes(char *input, int *i)
 		if (input[*i] == '\0')
 			return (ft_putendl_fd(D_QUOTE, 2), 1);
 	}
+	(*i)++;
 	return (0);
 }
 

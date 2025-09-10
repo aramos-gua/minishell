@@ -18,12 +18,18 @@ static void	init_all(t_data *all)
 	all->info = NULL;
 	all->tokens = NULL;
 	all->total_proc = 0;
+}
+
+static void	first_init(t_data *all)
+{
 	all->return_val = 0;
+	all->c_envp = NULL;
+	all->c_exp = NULL;
+	init_all(all);
 }
 
 //TODO: correct implementations of exit and env
-//TODO: free after break from while loop
-//TODO: implement history so that when "$?" is called the correct status can be displayed
+//TODO: allow execution to handle exit, and remember to free_all when exit is called
 int	main(int argc, char *argv[], char *envp[])
 {
 	t_data	all;
@@ -31,9 +37,9 @@ int	main(int argc, char *argv[], char *envp[])
 
 	if (argc > 1 || argv[0] == NULL || argv[0][0] == '\0')
 		return (1);
+	first_init(&all);
 	if (find_envp(&all, envp))
 		return (ft_putendl_fd("minishell: envp could not be found", 2), 1);
-	init_all(&all);
 	while (42)
 	{
 		free_all(&all);
@@ -52,8 +58,8 @@ int	main(int argc, char *argv[], char *envp[])
 		// 	print_env(&all);
 		else if (parsing(&all, input))
 			continue ;
-		 else if (execution(&all))
-		  	continue ;
+		// else if (execution(&all))
+		//   	continue ;
 	}	
 	(rl_clear_history()), (free_double_char(all.c_envp)), (free_all(&all));
 	return (all.return_val);

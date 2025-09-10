@@ -12,12 +12,6 @@
 
 #include "../../inc/minishell.h"
 
-static void	init_env(t_data *all)
-{
-	all->c_envp = NULL;
-	all->c_exp = NULL;
-}
-
 void	print_env(t_data *all)
 {
 	int	j;
@@ -31,7 +25,6 @@ int	find_envp(t_data *all, char *envp[])
 {
 	int	j;
 
-	init_env(all);
 	j = 0;
 	while (envp[j] != NULL)
 		j++;
