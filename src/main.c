@@ -57,12 +57,13 @@ int	main(int argc, char *argv[], char *envp[])
 		// 	print_env(&all);
 		else if (parsing(&all, input))
 			continue ;
-		 else if (execution(&all, 0, 0, 0))
-		  	continue ;
+		else if (execution(&all, 0, 0, 0))
+			continue ;
 	}	
 	rl_clear_history();
 	free_double_char(all.c_envp);
-	free_double_char(all.c_exp);
+	if (all.c_exp)
+		free_double_char(all.c_exp);
 	free_all(&all);
 	return (all.return_val);
 }
