@@ -78,17 +78,4 @@ typedef	enum e_type
 	APPEND
 }			t_type;
 
-typedef	enum e_builtin
-{
-	NOT_BUILTIN,
-	ECHO,
-	CD,
-	PWD,
-	EXPORT,
-	UNSET,
-	ENV,
-	EXIT
-	
-}			t_builtin;
-
 #endif

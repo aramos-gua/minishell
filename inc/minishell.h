@@ -33,8 +33,8 @@
 # include <sys/ioctl.h> //ioctl
 # include <termios.h> //tcsetattr//tgetattr
 # include <term.h> //tgetent//tgetflag//tgetnum//tgetstr//tgoto//tputs
-# include <readline/readline.h>
-# include <readline/history.h>
+# include <readline/readline.h> //readline //rl_on_new_line
+# include <readline/history.h> //add_history //rl_clear_history
 
 //envp.c
 void	print_env(t_data *all);
@@ -80,7 +80,6 @@ void	print_t_token(t_token *tokens);
 
 //utils
 int		is_builtin(char *s);
-int		is_shell_var(char *s);
 
 //free_utils
 void	free_double_char(char **arr);
