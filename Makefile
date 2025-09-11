@@ -73,12 +73,14 @@ v: $(NAME)
 clean:
 		@make clean -C my_libft/libft
 		@make clean -C my_libft/ft_printf
+		@make clean -C my_libft/ft_dprintf
 		@make clean -C my_libft/gnl
 		@$(RM) $(OBJ) $(OBJ_DIR)
 
 fclean: clean
 		@make fclean -C my_libft/libft
 		@make fclean -C my_libft/ft_printf
+		@make fclean -C my_libft/ft_dprintf
 		@make fclean -C my_libft/gnl
 		@$(RM) $(NAME)
 
