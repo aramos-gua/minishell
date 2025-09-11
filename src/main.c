@@ -11,6 +11,9 @@
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+
+pid_t	g_signal_pid;
+
 static void	init_all(t_data *all)
 {
 	all->procs = NULL;
@@ -18,9 +21,9 @@ static void	init_all(t_data *all)
 	all->tokens = NULL;
 	all->total_proc = 0;
 }
-//TODO: when should c_exp be initialised?
 static void	first_init(t_data *all)
 {
+	g_signal_pid = 0;
 	all->return_val = 0;
 	all->c_envp = NULL;
 	all->c_exp = NULL;
@@ -41,29 +44,26 @@ int	main(int argc, char *argv[], char *envp[])
 		return (ft_putendl_fd("minishell: envp could not be found", 2), 1);
 	while (42)
 	{
-		(free_all(&all));
-		(init_all(&all));
+		(free_all(&all), init_all(&all));
 		if (!isatty(fileno(stdin)))
 			break;
 		input = readline("minishell> ");
 		if (!input || input[0] == '\0' || rl_on_new_line())
 			continue ;
 		add_history(input);
-		if (!ft_strncmp("exit\0", input, 5)) //TODO: remove because it causes mem leaks
-			break ;
+		// if (!ft_strncmp("exit\0", input, 5)) //TODO: remove because it causes mem leaks
+		// 	break ;
 		// else if (!ft_strncmp("$?\0", input, 3))
 		// 	printf("%d: command not found\n", all.return_val); //TODO: return the correct exit code
 		// else if (!ft_strncmp("env\0", input, 4))
 		// 	print_env(&all);
-		else if (parsing(&all, input))
+		if (parsing(&all, input))
 			continue ;
-		 else if (execution(&all, 0, 0, 0))
-		  	continue ;
+		else if (execution(&all, 0, 0, 0))
+			continue ;
 	}	
-	rl_clear_history();
-	free_double_char(all.c_envp);
+	(rl_clear_history(), free_double_char(all.c_envp), free_all(&all));
 	if (all.c_exp)
 		free_double_char(all.c_exp);
-	free_all(&all);
 	return (all.return_val);
 }
