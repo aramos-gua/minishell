@@ -49,34 +49,65 @@ int	get_fd(t_data *all, int proc, bool out)
    close(pipes[1]);
  }
 
-int  executron(t_data *all, int i)
+// int  executron(t_data *all, int i)
+// {
+//   int pipe_fds[2];
+//   int first_fork_pid;
+//
+//   pipe(pipe_fds);
+//   first_fork_pid = fork();
+//   if (first_fork_pid == 0)
+//   {
+//      get_pipe(pipe_fds, 1);
+//      execution(all, i, 1, 1);
+//   }
+// 	else
+// 	{
+//     first_fork_pid = fork();
+//     if (first_fork_pid == 0)
+//     {
+//          get_pipe(pipe_fds, 0);
+//          execution(all, i + 1, 1, 0);
+//     }
+//     else
+//     {
+//       close(pipe_fds[0]);
+//       close(pipe_fds[1]);
+//     }
+// 	}
+// 	waitpid(first_fork_pid, NULL, 0);
+// 	return (0);
+// }
+
+int executron(t_data *all, int i)
 {
   int pipe_fds[2];
-  int first_fork_pid;
+  int pid;
 
-  pipe(pipe_fds);
-  first_fork_pid = fork();
-  if (first_fork_pid == 0)
+  if (i < all->info->total_proc)
+    return (0);
+  if (i + 1 < all->info->total_proc)
+    pipe(pipe_fds);
+  pid = fork();
+  if (pid == 0)
   {
-     get_pipe(pipe_fds, 1);
-     execution(all, i, 1, 1);
+    if (i > 0)
+      get_fd(all, i, 0);
+    if (i + 1 < all->info->total_proc)
+      get_pipe(pipe_fds, 1);
+    execution(all, i, 1, 1);
+    exit (0);
   }
-	else
-	{
-    first_fork_pid = fork();
-    if (first_fork_pid == 0)
-    {
-         get_pipe(pipe_fds, 0);
-         execution(all, i + 1, 1, 0);
-    }
-    else
-    {
-      close(pipe_fds[0]);
+  else
+  {
+    if (i + 1 < all->info->total_proc)
       close(pipe_fds[1]);
-    }
-	}
-	waitpid(first_fork_pid, NULL, 0);
-	return (0);
+    if (i > 0)
+      close(pipe_fds[0]);
+    executron(all, i + 1);
+    waitpid(pid, NULL, 0);
+  }
+  return (0);
 }
 
 int	execution(t_data *all, int i, int piped, bool run)
