@@ -28,25 +28,37 @@ int	execute_command(t_data *all, int i, int piped)
   {
     write(2, "exited after cmd\n", 17);
   }
-  if (is_builtin(cmd->token) && !piped)
+  if (is_builtin(cmd->token))
   {
-    redirect_fds(all, i);
-    which_builtin(cmd->token, all, i);
-    return (0);
-  }
-  else if (is_builtin(cmd->token) && piped)
-  {
-    int pid;
-
-    pid = fork();
-    if (pid == 0)
+    if (!piped)
     {
+      int fds_bak[2];
+
+      fds_bak[0] = dup(STDIN_FILENO);//3
+      fds_bak[1] = dup(STDOUT_FILENO);//4
       redirect_fds(all, i);
       which_builtin(cmd->token, all, i);
+      dup2(fds_bak[0], STDIN_FILENO);
+      dup2(fds_bak[1], STDOUT_FILENO);
+      close(fds_bak[0]);
+      close(fds_bak[1]);
+      ft_dprintf(2, "reverting fds\n");
+      return (0);
     }
-    else
-    waitpid(pid, NULL, 0);
-    return (0);
+    // else if (piped)
+    // {
+    //   // int pid;
+    //   //
+    //   // pid = fork();
+    //   // if (pid == 0)
+    //   {
+    //     // redirect_fds(all, i);
+    //     which_builtin(cmd->token, all, i);
+    //   }
+    //   // else
+    //   // waitpid(pid, NULL, 0);
+    //   return (0);
+    // }
   }
 	path = get_cmd_path(cmd->token, all->c_envp);
 	if (!path)

@@ -47,19 +47,19 @@ int	get_fd(t_data *all, int proc, bool out)
    close(pipes[1]);
  }
 
-void  pipe_n_run(t_data *all, int i, int *pipes, int out)
-{
-  if (out)
-  {
-    get_pipe(pipes, out),
-    execution(all, i, 1, 1);
-  }
-  else
-  {
-    get_pipe(pipes, out),
-    execution(all, i + 1, 1, 0);
-  }
-}
+// void  pipe_n_run(t_data *all, int i, int *pipes, int out)
+// {
+//   if (out)
+//   {
+//     get_pipe(pipes, out),
+//     execution(all, i, 1, 1);
+//   }
+//   else
+//   {
+//     get_pipe(pipes, out),
+//     execution(all, i + 1, 1, 0);
+//   }
+// }
 
 int  executron(t_data *all, int i)
 {
