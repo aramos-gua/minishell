@@ -12,21 +12,46 @@
 
 #include "../../inc/minishell.h"
 
-// static void	handle_sigint(int signum)
+// static void	ignore_sigquit(void)
 // {
-// 	sigaction(SIGINT, &sa, NULL);
-// 	printf("SIGINT handled!\n");
-// 	fflush(stdout); //TODO: remove forbidden function
-// }
-
-// static void	handle_sigquit(int signum)
-// {
-// 	printf("SIGQUIT handled!\n");
+// 	struct sigaction	sa;
+//
+// 	ft_memset(&sa, 0, sizeof(sa));
+// 	sa.sa_handler = SIG_IGN;
+// 	sigaction(SIGQUIT, &sa, NULL);
 // }
 //
-// void	signals(void)
+// static void	signal_print_newline(int signal)
 // {
-// 	//struct sigaction	sa;
-// 	sa.sa_handler = &handle_sigint;
-// 	sa.sa_flags = SA_RESTART;
-//}
+// 	(void)signal;
+// 	rl_on_new_line();
+// }
+//
+// static void	signal_reset_prompt(int signal)
+// {
+// 	(void)signal;
+// 	ft_putstr_fd("\n", 1);
+// 	rl_on_new_line();
+// 	rl_replace_line("", 0);
+// 	rl_redisplay();
+// }
+//
+// void	set_signals_interactive(void)
+// {
+// 	struct sigaction sa;
+//
+// 	ignore_sigquit();
+// 	ft_memset(&sa, 0, sizeof(sa));
+// 	sa.sa_handler = &signal_reset_prompt;
+// 	sigaction(SIGINT, &sa, NULL);
+// }
+//
+// void	set_signals_noninteractive(void)
+// {
+// 	struct sigaction sa;
+//
+// 	ft_memset(&sa, 0, sizeof(sa));
+// 	sa.sa_handler = &signal_print_newline;
+// 	sigaction(SIGINT, &sa, NULL);
+// 	sigaction(SIGQUIT, &sa, NULL);
+// }
