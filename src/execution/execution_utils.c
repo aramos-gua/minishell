@@ -16,9 +16,7 @@ t_token *get_process(t_token *list, int i)
 {
   t_token *current;
   t_token *cmd;
-  //char    *i_str;
 
-  //i_str = ft_itoa(i);
   if (!list)
     return (NULL);
   current = list;
@@ -35,7 +33,6 @@ t_token *get_cmd_node(t_token *list, int i)
   if (!list)
     return (NULL);
   current = list;
-  //dprintf(2, "the type is: %d\n", current->type);
   while ((current->type != COMMAND && current->builtin != 1) || current->process_nbr != i)
     current = current->next;
   return(current);
@@ -60,9 +57,3 @@ int ft_lstsize(t_token *list, int proc)
   }
   return (i);
 }
-
-// void  sh_putstr(char *arg, char *str, int fd)
-// {
-//   write(fd, arg, ft_strlen(arg));
-//   write(fd, str, ft_strlen(str));
-// }

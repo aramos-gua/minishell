@@ -49,7 +49,6 @@ char *nullify(char *cmd)
   char  *cmd_cut;
 
   len = var_len(cmd);
-  dprintf(1, "var_len of [%s] is [%d]\n", cmd, len);
   cmd_cut = ft_substr(cmd, 0, len);
   return (cmd_cut);
 }
@@ -60,7 +59,6 @@ void fill_exp(t_data *all)
 
     i = 0;
 
-    dprintf(2, "fill_exp STARTING\n");
     while (all->c_envp[i])
       i++;
     all->c_exp = ft_calloc((i + 1), sizeof(char *));
@@ -84,11 +82,9 @@ char  **update_exp(t_data *all, char *new_element, t_token *arg_node)
   int   len;
 
   len = ft_strlen(new_element);
-  dprintf(2, "len of[%s] is [%d]\n", new_element, len);
   i = exist_in_arr(new_element, all->c_exp, true);
   if (i != -1 && new_element[len - 1] == '=')
   {
-    dprintf(2, "replacing [%d]\n", i);
     free(all->c_exp[i]);
     all->c_exp[i] = malloc(ft_strlen(arg_node->token) * sizeof(char));
     all->c_exp[i] = arg_node->token;
@@ -119,7 +115,6 @@ char  **update_envp(t_data *all, char *new_element, t_token *arg_node)
   i = exist_in_arr(new_element, all->c_envp, false);
   if (i != -1)
   {
-    dprintf(2, "replacing [%d]\n", i);
     free(all->c_envp[i]);
     all->c_envp[i] = malloc(1 * sizeof(char *));
     all->c_envp[i] = arg_node->token;
@@ -128,7 +123,6 @@ char  **update_envp(t_data *all, char *new_element, t_token *arg_node)
   i = 0;
   while (all->c_envp[i])
     i++;
-  dprintf(2, "array len is [%d]\n", i);
   array = malloc((i + 2) * sizeof(char *));
   if (!array)
     return (NULL);
@@ -190,22 +184,19 @@ int	ft_export(t_data *all, int proc, t_token *cmd_node)
   arg = cmd_node->next;
   while (arg->type == ARGUMENT && arg->process_nbr == proc)
   {
-    dprintf(2, "token[0] is [%c]\n", arg->token[0]);
     if (arg->token && (!ft_isalpha(arg->token[0]) && arg->token[0] != '_'))
     {
-      ft_printf("bash: export: \'%s\': not a valid identifier\n", arg->token);
+      ft_dprintf(2, "bash: export: \'%s\': not a valid identifier\n", arg->token);
       arg = arg->next;
       continue ;
     }
     cmd_cpy = nullify(arg->token);
     if (cmd_cpy[ft_strlen(cmd_cpy) - 1] != '=')
     {
-      dprintf(2,"array is c_exp\n");
       all->c_exp = update_exp(all, cmd_cpy, arg);
     }
     else
     {
-      dprintf(2,"array is c_envp\n");
       all->c_envp = update_envp(all, cmd_cpy, arg);
       all->c_exp = update_exp(all, cmd_cpy, arg);
     }

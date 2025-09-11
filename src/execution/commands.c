@@ -18,10 +18,6 @@ int	execute_command(t_data *all, int i, int piped)
 	char	  *path;
 	char    **cmd_arr;
 
-  //if (all->info->in_fd != STDIN_FILENO)
-  //  get_fd(all, i, 0);
-  //else if (all->info->out_fd != STDOUT_FILENO)
-  //  get_fd(all, i, 1);
 	cmd = get_process(all->tokens, i);
   dprintf(2, "the cmd [%d] found after get_process is [%s]\n", i, cmd->token);
 	if (!cmd)
@@ -45,20 +41,6 @@ int	execute_command(t_data *all, int i, int piped)
       ft_dprintf(2, "reverting fds\n");
       return (0);
     }
-    // else if (piped)
-    // {
-    //   // int pid;
-    //   //
-    //   // pid = fork();
-    //   // if (pid == 0)
-    //   {
-    //     // redirect_fds(all, i);
-    //     which_builtin(cmd->token, all, i);
-    //   }
-    //   // else
-    //   // waitpid(pid, NULL, 0);
-    //   return (0);
-    // }
   }
 	path = get_cmd_path(cmd->token, all->c_envp);
 	if (!path)
@@ -74,9 +56,7 @@ int	execute_command(t_data *all, int i, int piped)
       if (execve(path, cmd_arr, all->c_envp) == -1)
       {
         ft_printf("exited after execve\n");
-        //perror(cmd_arr[0]);
         free(path);
-        //free_split(all->tokens->next->token);
         exit (1);
       }
     }
@@ -89,13 +69,10 @@ int	execute_command(t_data *all, int i, int piped)
     if (execve(path, cmd_arr, all->c_envp) == -1)
     {
       ft_printf("exited after execve\n");
-      //perror(cmd_arr[0]);
       free(path);
-      //free_split(all->tokens->next->token);
       exit (1);
     }
   }
   free(path);
-  //free_split(&all->tokens->next->token);
   return(0);
 }
