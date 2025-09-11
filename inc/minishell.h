@@ -37,7 +37,7 @@
 # include <readline/readline.h> //readline //rl_on_new_line
 # include <readline/history.h> //add_history //rl_clear_history
 
-extern pid_t	g_signal_pid;
+extern volatile int	g_unblock_sigquit;
 
 //envp.c
 void	print_env(t_data *all);
@@ -85,8 +85,7 @@ void	print_t_token(t_token *tokens);
 int		is_builtin(char *s);
 
 //signals.c
-void	set_signals_interactive(void);
-void	set_signals_noninteractive(void);
+void	set_signal_action(void);
 
 //free_utils
 void	free_double_char(char **arr);

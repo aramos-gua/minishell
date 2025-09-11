@@ -12,10 +12,9 @@
 
 #include "../inc/minishell.h"
 
-pid_t	g_signal_pid;
-
 static void	init_all(t_data *all)
 {
+	g_unblock_sigquit = 0;
 	all->procs = NULL;
 	all->info = NULL;
 	all->tokens = NULL;
@@ -23,7 +22,6 @@ static void	init_all(t_data *all)
 }
 static void	first_init(t_data *all)
 {
-	g_signal_pid = 0;
 	all->return_val = 0;
 	all->c_envp = NULL;
 	all->c_exp = NULL;
@@ -34,6 +32,7 @@ static void	first_init(t_data *all)
 //TODO: allow execution to handle exit, and remember to free_all when exit is called
 int	main(int argc, char *argv[], char *envp[])
 {
+	(void)argv;
 	t_data	all;
 	char 	*input = NULL;
 
@@ -44,7 +43,7 @@ int	main(int argc, char *argv[], char *envp[])
 		return (ft_putendl_fd("minishell: envp could not be found", 2), 1);
 	while (42)
 	{
-		(free_all(&all), init_all(&all));
+		(free_all(&all), init_all(&all), set_signal_action());
 		if (!isatty(fileno(stdin)))
 			break;
 		input = readline("minishell> ");
@@ -60,7 +59,10 @@ int	main(int argc, char *argv[], char *envp[])
 		if (parsing(&all, input))
 			continue ;
 		else if (execution(&all, 0, 0, 0))
+		{
+			g_unblock_sigquit = 0;
 			continue ;
+		}
 	}	
 	(rl_clear_history(), free_double_char(all.c_envp), free_all(&all));
 	if (all.c_exp)

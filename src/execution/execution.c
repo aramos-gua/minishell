@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../inc/minishell.h"
 
 int	get_fd(t_data *all, int proc, bool out)
 {
@@ -37,7 +37,7 @@ int	get_fd(t_data *all, int proc, bool out)
 	return (0);
 }
 
- int get_pipe(int *pipes, int flag)
+ void get_pipe(int *pipes, int flag)
  {
    if (flag == 0)
      dup2(pipes[flag], STDIN_FILENO);
@@ -79,6 +79,7 @@ int  executron(t_data *all, int i)
 
 int	execution(t_data *all, int i, int piped, bool run)
 {
+	g_unblock_sigquit = 1;
   if (i == 0)
     ft_dprintf(2, "----------EXECUTION-----------------\n");
 	if (i + 1 == all->info->total_proc || run)
