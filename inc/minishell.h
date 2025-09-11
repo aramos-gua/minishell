@@ -126,16 +126,17 @@ int		execute_command(t_data *all, int i, int piped);
 //cleaner.c
 int		free_split(char **arr);
 int		close_pipes(t_data *all, int *pipes);
+void	restore(t_data *all, int backup[2]);
 
 //builtin.c
 int		ft_pwd(t_data *all);
 int		ft_cd(char *cmd, t_data *all);
 int		ft_echo(t_data *all, t_token *cmd_node);
 int		ft_unset(t_data *all, int proc, t_token *cmd_node);
-int		ft_exit(t_data *all, int nodes, t_token *cmd_node);
+int		ft_exit(t_data *all, int nodes, t_token *cmd_node, int fds_bak[2]);
 
 //builtin_helpers.c
-int		which_builtin(char *cmd, t_data *all, int proc);
+int		which_builtin(char *cmd, t_data *all, int proc, int fds_bak[2]);
 int		only_n(char *arg);
 int		isnt_number(char *str);
 int		update_env_cd(t_data *all, char *search, char *path);

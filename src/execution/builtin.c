@@ -19,7 +19,7 @@ int	ft_pwd(t_data *all)
 	pwd = getcwd(NULL, 0);
 	if (!pwd)
 		ft_dprintf(STDERR_FILENO, "Error with pwd\n");
-	ft_dprintf(STDOUT_FILENO, "%s", pwd);
+	ft_dprintf(STDOUT_FILENO, "%s\n", pwd);
 	free(pwd);
 	return (all->return_val = 0, 0);
 }
@@ -79,8 +79,9 @@ int	ft_unset(t_data *all, int proc, t_token *cmd_node)
 	return (all->return_val = 0,0);
 }
 
-int	ft_exit(t_data *all, int nodes, t_token *cmd_node)
+int	ft_exit(t_data *all, int nodes, t_token *cmd_node, int fds_bak[2])
 {
+	ft_dprintf(2, "total proc: [%d]\n", all->info->total_proc);
 	if (all->info->total_proc == 1)
 	{
 		if (nodes == 1)
@@ -106,5 +107,5 @@ int	ft_exit(t_data *all, int nodes, t_token *cmd_node)
 			return (1);
 		}
 	}
-	return (1);
+	// restore(all, fds_bak);
 }

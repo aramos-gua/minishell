@@ -24,3 +24,15 @@ int	free_split(char **arr)
 	free(arr);
 	return (0);
 }
+
+void  restore(t_data *all, int backup[2])
+{
+  // if (all->info->rev_fds)
+  // {
+    dup2(backup[0], STDIN_FILENO);
+    dup2(backup[1], STDOUT_FILENO);
+  // }
+  close(backup[0]);
+  close(backup[1]);
+  exit (0);
+}

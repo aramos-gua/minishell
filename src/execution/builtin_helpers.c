@@ -64,12 +64,13 @@ int	only_n(char *arg)
 	return (0);
 }
 
-int	which_builtin(char *cmd, t_data *all, int proc)
+int	which_builtin(char *cmd, t_data *all, int proc, int fds_bak[2])
 {
 	int	len;
 	int	nodes;
 	t_token	*cmd_node;
 
+  dprintf(2, "my builtins\n");
 	len = ft_strlen(cmd);
 	nodes = ft_lstsize(all->tokens, proc);
 	cmd_node = get_cmd_node(all->tokens->next, 0);
@@ -86,6 +87,6 @@ int	which_builtin(char *cmd, t_data *all, int proc)
 	else if (!ft_strncmp(cmd, "env\0", len))
 		return (print_env(all), 1);
 	else if (!ft_strncmp(cmd, "exit\0", len))
-		return (ft_exit(all, nodes, cmd_node), 1);
+		return (ft_exit(all, nodes, cmd_node, fds_bak), 1);
 	return (0);
 }

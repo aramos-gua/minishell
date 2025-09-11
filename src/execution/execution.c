@@ -24,15 +24,17 @@ int	get_fd(t_data *all, int proc, bool out)
 		current = current->next;
 	if (out == 0)
 		fd = current->in_fd;
-  else
+	else
 		fd = current->out_fd;
 	if (fd > 2 && !out)
 	{
 		dup2(fd, STDIN_FILENO);
+    all->info->rev_fds = 1;
 	}
-  else if (fd > 2 && out)
+	else if (fd > 2 && out)
 	{
 		dup2(fd, STDOUT_FILENO);
+    all->info->rev_fds = 1;
 	}
 	return (0);
 }

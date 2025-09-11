@@ -19,28 +19,27 @@ int	execute_command(t_data *all, int i, int piped)
 	char    **cmd_arr;
 
 	cmd = get_process(all->tokens, i);
-  dprintf(2, "the cmd [%d] found after get_process is [%s]\n", i, cmd->token);
 	if (!cmd)
-  {
     write(2, "exited after cmd\n", 17);
-  }
   if (is_builtin(cmd->token))
   {
+    int fds_bak[2];
+
+    fds_bak[0] = dup(STDIN_FILENO);//3
+    fds_bak[1] = dup(STDOUT_FILENO);//4
     if (!piped)
     {
-      int fds_bak[2];
 
-      fds_bak[0] = dup(STDIN_FILENO);//3
-      fds_bak[1] = dup(STDOUT_FILENO);//4
       redirect_fds(all, i);
-      which_builtin(cmd->token, all, i);
+      which_builtin(cmd->token, all, i, fds_bak);
       dup2(fds_bak[0], STDIN_FILENO);
       dup2(fds_bak[1], STDOUT_FILENO);
       close(fds_bak[0]);
       close(fds_bak[1]);
-      ft_dprintf(2, "reverting fds\n");
       return (0);
     }
+    if (!ft_strncmp(cmd->token, "exit\0", 5))
+      restore(all, fds_bak);
   }
 	path = get_cmd_path(cmd->token, all->c_envp);
 	if (!path)
@@ -49,6 +48,7 @@ int	execute_command(t_data *all, int i, int piped)
   int pid;
   if (!piped)
   {
+    dprintf(2, "inside !piped for some reason\n");
     pid = fork();
     if (pid == 0)
     {
@@ -65,6 +65,7 @@ int	execute_command(t_data *all, int i, int piped)
   }
   else
   {
+    dprintf(2, "inside piped. All makes sense\n");
     redirect_fds(all, i);
     if (execve(path, cmd_arr, all->c_envp) == -1)
     {

@@ -27,6 +27,7 @@ typedef	struct	s_proc
 	int				last_pid;
 	int				in_fd;
 	int				out_fd;
+	int				rev_fds;
 	int				total_proc;
 	struct	s_proc	*prev;
 }				t_proc;
