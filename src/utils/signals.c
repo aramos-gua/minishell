@@ -29,35 +29,24 @@ static void	signal_non_interactive(int signal)
 	(void)signal;
 	rl_replace_line("", 0);
 	rl_on_new_line();
-	//rl_redisplay();
 }
 
-// static void	signal_heredoc(int signal)
-// {
-// 	(void)signal;
-// 	ft_putstr_fd("\n", 1);
-// 	rl_replace_line("", 0);
-// 	rl_on_new_line();
-// 	rl_redisplay();
-// }
+static void	signal_heredoc(int signal)
+{
+	(void)signal;
+	ft_putstr_fd("\n", 1);
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_redisplay();
+}
 
 void	set_signal_action(void)
 {
-	g_unblock_sigquit = 2; //TODO: make this better
+	g_unblock_sigquit = 0; //TODO: make this better
 	struct sigaction	act;
 
 	ft_bzero(&act, sizeof(act));
-	act.sa_handler = SIG_IGN;
-	sigaction(SIGQUIT, &act, NULL);
-	// if (g_unblock_sigquit == 2)
-	// {
-	// 	act.sa_handler = SIG_DFL;
-	// 	sigaction(SIGQUIT, &act, NULL);
-	// 	act.sa_handler = &signal_heredoc;
-	// 	sigaction(SIGINT, &act, NULL);
-	// 	sigaction(SIGQUIT, &act, NULL);
-	// }
-	if (g_unblock_sigquit) //unblocks SIGQUIT when non-interactive mode
+	if (g_unblock_sigquit == 1) //unblocks SIGQUIT when non-interactive mode
 	{
 		act.sa_handler = SIG_DFL;
 		sigaction(SIGQUIT, &act, NULL);
@@ -65,8 +54,18 @@ void	set_signal_action(void)
 		sigaction(SIGINT, &act, NULL);
 		sigaction(SIGQUIT, &act, NULL);
 	}
+	else if (g_unblock_sigquit == 2)
+	{
+		act.sa_handler = SIG_DFL;
+		sigaction(SIGQUIT, &act, NULL);
+		act.sa_handler = &signal_heredoc;
+		sigaction(SIGINT, &act, NULL);
+		sigaction(SIGQUIT, &act, NULL);
+	}
 	else if (!g_unblock_sigquit) //blocks when in interactive mode
 	{
+		act.sa_handler = SIG_IGN;
+		sigaction(SIGQUIT, &act, NULL);
 		act.sa_handler = &signal_interactive;
 		sigaction(SIGINT, &act, NULL);
 	}

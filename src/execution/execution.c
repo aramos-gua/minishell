@@ -79,7 +79,6 @@ int  executron(t_data *all, int i)
 
 int	execution(t_data *all, int i, int piped, bool run)
 {
-	g_unblock_sigquit = 1;
   if (i == 0)
     ft_dprintf(2, "----------EXECUTION-----------------\n");
 	if (i + 1 == all->info->total_proc || run)
