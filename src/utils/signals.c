@@ -43,7 +43,7 @@ static void	signal_non_interactive(int signal)
 
 void	set_signal_action(void)
 {
-	g_unblock_sigquit = 2;
+	g_unblock_sigquit = 2; //TODO: make this better
 	struct sigaction	act;
 
 	ft_bzero(&act, sizeof(act));
