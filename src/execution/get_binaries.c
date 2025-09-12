@@ -12,30 +12,13 @@
 
 #include "../inc/minishell.h"
 
-char  **array_builder(t_data *all, int proc)
+char	**array_builder(t_data *all, int proc)
 {
-  t_token *tmp;
-  char    **arr;
-  int     i;
+	t_token	*tmp;
+	char	**arr;
+	int		i;
 
-  i = 0;
-  arr = malloc ((ft_lstsize(all->tokens, proc) + 1) * sizeof(char *));
-  if (!arr)
-    return (NULL);
-  tmp = all->tokens;
-  while ((tmp->type != COMMAND || tmp->process_nbr != proc))
-    tmp = tmp->next;
-  arr[i++] = tmp->token;
-  tmp = tmp->next;
-  while (tmp->type == ARGUMENT && tmp->process_nbr == proc)
-  {
-    arr[i++] = tmp->token;
-    tmp = tmp->next;
-  }
-  arr[i] = NULL;
-  return (arr);
 	i = 0;
-	//ft_printf("array builder\n");
 	arr = malloc ((ft_lstsize(all->tokens, proc) + 1) * sizeof(char *));
 	if (!arr)
 		return (NULL);
@@ -44,15 +27,28 @@ char  **array_builder(t_data *all, int proc)
 		tmp = tmp->next;
 	arr[i++] = tmp->token;
 	tmp = tmp->next;
-	//ft_printf("[%d][%s]  ", i - 1, arr[i - 1]);
 	while (tmp->type == ARGUMENT && tmp->process_nbr == proc)
 	{
 		arr[i++] = tmp->token;
 		tmp = tmp->next;
-		//ft_printf("[%d][%s]  ", i - 1, arr[i - 1]);
 	}
 	arr[i] = NULL;
-	//ft_printf("[%d][%s]\n\n\n", i, "NULL");
+	return (arr);
+	i = 0;
+	arr = malloc ((ft_lstsize(all->tokens, proc) + 1) * sizeof(char *));
+	if (!arr)
+		return (NULL);
+	tmp = all->tokens;
+	while ((tmp->type != COMMAND || tmp->process_nbr != proc))
+		tmp = tmp->next;
+	arr[i++] = tmp->token;
+	tmp = tmp->next;
+	while (tmp->type == ARGUMENT && tmp->process_nbr == proc)
+	{
+		arr[i++] = tmp->token;
+		tmp = tmp->next;
+	}
+	arr[i] = NULL;
 	return (arr);
 }
 
@@ -98,10 +94,10 @@ char	*get_cmd_path(char *cmd, char **env)
 		if (access(cmd, X_OK) == 0)
 			return (ft_strdup(cmd));
 		else
-    {
-      perror(cmd);
+		{
+			perror(cmd);
 			return (NULL);
-    }
+		}
 	}
 	while (env[++i])
 		if (ft_strncmp(env[i], "PATH=", 5) == 0)
@@ -110,10 +106,9 @@ char	*get_cmd_path(char *cmd, char **env)
 		return (NULL);
 	paths = (ft_split(path_env, ':'));
 	if (!paths)
-  {
-    //perror(cmd);
+	{
 		return (NULL);
-  }
+	}
 	full_path = build_path(cmd, paths);
 	if (!full_path)
 		return (free_split(paths), NULL);

@@ -31,7 +31,6 @@ int	update_env_cd(t_data *all, char *search, char *path)
 	if (!updated_path)
 		return (1);
 	i = get_env_index(all->c_envp, search, ft_strlen(search));
-
 	all->c_envp[i] = updated_path;
 	return (all->return_val = 0, 0);
 }
@@ -66,11 +65,11 @@ int	only_n(char *arg)
 
 int	which_builtin(char *cmd, t_data *all, int proc, int fds_bak[2])
 {
-	int	len;
-	int	nodes;
+	int		len;
+	int		nodes;
 	t_token	*cmd_node;
 
-  dprintf(2, "my builtins\n");
+	dprintf(2, "my builtins\n");
 	len = ft_strlen(cmd);
 	nodes = ft_lstsize(all->tokens, proc);
 	cmd_node = get_cmd_node(all->tokens->next, proc);

@@ -14,64 +14,63 @@
 
 int	execute_command(t_data *all, int i, int piped)
 {
-	t_token *cmd;
-	char	  *path;
-	char    **cmd_arr;
+	t_token	*cmd;
+	char	*path;
+	char	**cmd_arr;
+	int		fds_bak[2];
+	int		pid;
 
 	cmd = get_process(all->tokens, i);
 	if (!cmd)
-    write(2, "exited after cmd\n", 17);
-  if (is_builtin(cmd->token))
-  {
-    int fds_bak[2];
-
-    fds_bak[0] = dup(STDIN_FILENO);//3
-    fds_bak[1] = dup(STDOUT_FILENO);//4
-    if (!ft_strncmp(cmd->token, "exit\0", 5))
-      restore(all, fds_bak);
-    redirect_fds(all, i);
-    which_builtin(cmd->token, all, i, fds_bak);
-    dup2(fds_bak[0], STDIN_FILENO);
-    dup2(fds_bak[1], STDOUT_FILENO);
-    close(fds_bak[0]);
-    close(fds_bak[1]);
-    if (piped)
-      exit(0);
-    return (0);
-  }
+		write(2, "exited after cmd\n", 17);
+	if (is_builtin(cmd->token))
+	{
+		fds_bak[0] = dup(STDIN_FILENO);
+		fds_bak[1] = dup(STDOUT_FILENO);
+		if (!ft_strncmp(cmd->token, "exit\0", 5))
+			restore(all, fds_bak);
+		redirect_fds(all, i);
+		which_builtin(cmd->token, all, i, fds_bak);
+		dup2(fds_bak[0], STDIN_FILENO);
+		dup2(fds_bak[1], STDOUT_FILENO);
+		close(fds_bak[0]);
+		close(fds_bak[1]);
+		if (piped)
+			exit(0);
+		return (0);
+	}
 	path = get_cmd_path(cmd->token, all->c_envp);
 	if (!path)
-    return (command_not_found(all, cmd));
+		return (command_not_found(all, cmd));
 	cmd_arr = array_builder(all, i);
-  int pid;
-  if (!piped)
-  {
-    dprintf(2, "inside !piped for some reason\n");
-    pid = fork();
-    if (pid == 0)
-    {
-      redirect_fds(all, i);
-      if (execve(path, cmd_arr, all->c_envp) == -1)
-      {
-        ft_printf("exited after execve\n");
-        free(path);
-        exit (1);
-      }
-    }
-    else
-      waitpid(pid, NULL, 0);
-  }
-  else
-  {
-    dprintf(2, "inside piped. All makes sense\n");
-    redirect_fds(all, i);
-    if (execve(path, cmd_arr, all->c_envp) == -1)
-    {
-      ft_printf("exited after execve\n");
-      free(path);
-      exit (1);
-    }
-  }
-  free(path);
-  return(0);
+	if (!piped)
+	{
+		dprintf(2, "inside !piped for some reason\n");
+		pid = fork();
+		if (pid == 0)
+		{
+			redirect_fds(all, i);
+			if (execve(path, cmd_arr, all->c_envp) == -1)
+			{
+				ft_printf("exited after execve\n");
+				free(path);
+				exit (1);
+			}
+		}
+		else
+			waitpid(pid, NULL, 0);
+	}
+	else
+	{
+		dprintf(2, "inside piped. All makes sense\n");
+		redirect_fds(all, i);
+		if (execve(path, cmd_arr, all->c_envp) == -1)
+		{
+			ft_printf("exited after execve\n");
+			free(path);
+			exit (1);
+		}
+	}
+	free(path);
+	return (0);
 }

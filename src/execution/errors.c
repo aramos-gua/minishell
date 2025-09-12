@@ -14,7 +14,7 @@
 
 int	command_not_found(t_data *all, t_token *cmd)
 {
-    all->return_val = 127;
-    ft_dprintf(STDERR_FILENO, "%s:command not found. Jamoncito\n", cmd->token);
-		return (all->return_val);
+	all->return_val = 127;
+	ft_dprintf(STDERR_FILENO, "%s:command not found. Jamoncito\n", cmd->token);
+	return (all->return_val);
 }
