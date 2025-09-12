@@ -105,8 +105,6 @@ static void	split_tokens(t_data *all, t_proc *temp, int *i)
 int	tokeniser(t_data *all)
 {
 	int		i;
-	int		len;
-	char	*token;
 	t_proc	*temp;
 
 	i = -1;

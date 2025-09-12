@@ -38,7 +38,7 @@ FT_DPRINTF := my_libft/ft_dprintf/libdprintf.a
 GNL := my_libft/gnl/gnl.a
 
 CC := cc
-CFLAGS := -g3 -gdwarf-3 -I$(INCLUDE) #-fsanitize=address,undefined
+CFLAGS := -Wall -Wextra -Werror -g3 -gdwarf-3 -I$(INCLUDE) #-fsanitize=address,undefined
 
 RM := rm -rf
 

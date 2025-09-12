@@ -11,47 +11,62 @@
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
+//TODO: understand what kind of global variable to use
+//TODO: implement for heredoc
+volatile int			g_unblock_sigquit;
 
-// static void	ignore_sigquit(void)
-// {
-// 	struct sigaction	sa;
-//
-// 	ft_memset(&sa, 0, sizeof(sa));
-// 	sa.sa_handler = SIG_IGN;
-// 	sigaction(SIGQUIT, &sa, NULL);
-// }
-//
-// static void	signal_print_newline(int signal)
-// {
-// 	(void)signal;
-// 	rl_on_new_line();
-// }
-//
-// static void	signal_reset_prompt(int signal)
-// {
-// 	(void)signal;
-// 	ft_putstr_fd("\n", 1);
-// 	rl_on_new_line();
-// 	rl_replace_line("", 0);
-// 	rl_redisplay();
-// }
-//
-// void	set_signals_interactive(void)
-// {
-// 	struct sigaction sa;
-//
-// 	ignore_sigquit();
-// 	ft_memset(&sa, 0, sizeof(sa));
-// 	sa.sa_handler = &signal_reset_prompt;
-// 	sigaction(SIGINT, &sa, NULL);
-// }
-//
-// void	set_signals_noninteractive(void)
-// {
-// 	struct sigaction sa;
-//
-// 	ft_memset(&sa, 0, sizeof(sa));
-// 	sa.sa_handler = &signal_print_newline;
-// 	sigaction(SIGINT, &sa, NULL);
-// 	sigaction(SIGQUIT, &sa, NULL);
-// }
+static void	signal_interactive(int signal)
+{
+	(void)signal;
+	ft_putstr_fd("\n", 1);
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_redisplay();
+}
+
+static void	signal_non_interactive(int signal)
+{
+	(void)signal;
+	rl_replace_line("", 0);
+	rl_on_new_line();
+}
+
+static void	signal_heredoc(int signal)
+{
+	(void)signal;
+	ft_putstr_fd("\n", 1);
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_redisplay();
+}
+
+void	set_signal_action(void)
+{
+	g_unblock_sigquit = 0; //TODO: make this better
+	struct sigaction	act;
+
+	ft_bzero(&act, sizeof(act));
+	if (g_unblock_sigquit == 1) //unblocks SIGQUIT when non-interactive mode
+	{
+		act.sa_handler = SIG_DFL;
+		sigaction(SIGQUIT, &act, NULL);
+		act.sa_handler = &signal_non_interactive;
+		sigaction(SIGINT, &act, NULL);
+		sigaction(SIGQUIT, &act, NULL);
+	}
+	else if (g_unblock_sigquit == 2)
+	{
+		act.sa_handler = SIG_DFL;
+		sigaction(SIGQUIT, &act, NULL);
+		act.sa_handler = &signal_heredoc;
+		sigaction(SIGINT, &act, NULL);
+		sigaction(SIGQUIT, &act, NULL);
+	}
+	else if (!g_unblock_sigquit) //blocks when in interactive mode
+	{
+		act.sa_handler = SIG_IGN;
+		sigaction(SIGQUIT, &act, NULL);
+		act.sa_handler = &signal_interactive;
+		sigaction(SIGINT, &act, NULL);
+	}
+}
