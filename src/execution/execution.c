@@ -44,12 +44,12 @@ int	get_pipe(int *pipes, int flag)
 	if (flag == 0)
 	{
 		if (dup2(pipes[flag], STDIN_FILENO) == -1)
-			dprintf(2, "error get_pipe\n");
+			ft_dprintf(2, "error get_pipe\n");
 	}
 	else if (flag == 1)
 	{
 		if (dup2(pipes[flag], STDOUT_FILENO) == -1)
-			dprintf(2, "error get_pipe\n");
+			ft_dprintf(2, "error get_pipe\n");
 	}
 	close(pipes[0]);
 	close(pipes[1]);

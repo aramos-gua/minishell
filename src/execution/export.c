@@ -63,7 +63,7 @@ void	fill_exp(t_data *all)
 	all->c_exp = ft_calloc((i + 1), sizeof(char *));
 	if (!all->c_exp)
 	{
-		dprintf(2, "not posibile to aloc for c_exp\n");
+		ft_dprintf(2, "not posibile to aloc for c_exp\n");
 	}
 	i = 0;
 	while (all->c_envp[i])

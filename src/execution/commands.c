@@ -45,7 +45,7 @@ int	execute_command(t_data *all, int i, int piped)
 	cmd_arr = array_builder(all, i);
 	if (!piped)
 	{
-		dprintf(2, "inside !piped for some reason\n");
+		ft_dprintf(2, "inside !piped for some reason\n");
 		pid = fork();
 		if (pid == 0)
 		{
@@ -62,7 +62,7 @@ int	execute_command(t_data *all, int i, int piped)
 	}
 	else
 	{
-		dprintf(2, "inside piped. All makes sense\n");
+		ft_dprintf(2, "inside piped. All makes sense\n");
 		redirect_fds(all, i);
 		if (execve(path, cmd_arr, all->c_envp) == -1)
 		{

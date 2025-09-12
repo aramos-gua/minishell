@@ -128,8 +128,8 @@ int		close_pipes(t_data *all, int *pipes);
 void	restore(t_data *all, int backup[2]);
 
 //builtin.c
-int		ft_pwd(t_data *all);
-int		ft_cd(char *cmd, t_data *all);
+int		ft_pwd(t_data *all, t_token *cmd);
+int		ft_cd(t_token *cmd, t_data *all, int nodes);
 int		ft_echo(t_data *all, t_token *cmd_node);
 int		ft_unset(t_data *all, int proc, t_token *cmd_node);
 int		ft_exit(t_data *all, int nodes, t_token *cmd_node, int fds_bak[2]);
