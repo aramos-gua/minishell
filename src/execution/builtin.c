@@ -26,6 +26,7 @@ int	ft_pwd(t_data *all)
 
 int	ft_cd(char *cmd, t_data *all)
 {
+	(void)cmd;
 	t_token	*cd_node;
 
 	update_env_cd(all, "OLDPWD=", getcwd(NULL, 0));
@@ -63,6 +64,7 @@ int	ft_echo(t_data *all, t_token *cmd_node)
 
 int	ft_unset(t_data *all, int proc, t_token *cmd_node)
 {
+	(void)proc;
 	int		i;
 	t_token	*arg;
 
