@@ -85,6 +85,7 @@ int	ft_unset(t_data *all, int proc, t_token *cmd_node)
 
 int	ft_exit(t_data *all, int nodes, t_token *cmd_node, int fds_bak[2])
 {
+	(void)fds_bak;
 	ft_dprintf(2, "total proc: [%d]\n", all->info->total_proc);
 	if (all->info->total_proc == 1)
 	{
@@ -111,4 +112,5 @@ int	ft_exit(t_data *all, int nodes, t_token *cmd_node, int fds_bak[2])
 			return (1);
 		}
 	}
+	return (0);
 }

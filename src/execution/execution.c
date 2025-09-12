@@ -53,6 +53,7 @@ int	get_pipe(int *pipes, int flag)
 	}
 	close(pipes[0]);
 	close(pipes[1]);
+	return (0);
 }
 
 int	executron(t_data *all, int i)

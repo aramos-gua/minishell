@@ -27,6 +27,7 @@ int	free_split(char **arr)
 
 void	restore(t_data *all, int backup[2])
 {
+	(void)all;
 	dup2(backup[0], STDIN_FILENO);
 	dup2(backup[1], STDOUT_FILENO);
 	close(backup[0]);
