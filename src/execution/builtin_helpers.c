@@ -73,7 +73,7 @@ int	which_builtin(char *cmd, t_data *all, int proc, int fds_bak[2])
   dprintf(2, "my builtins\n");
 	len = ft_strlen(cmd);
 	nodes = ft_lstsize(all->tokens, proc);
-	cmd_node = get_cmd_node(all->tokens->next, 0);
+	cmd_node = get_cmd_node(all->tokens->next, proc);
 	if (!ft_strncmp(cmd, "echo\0", len))
 		return (ft_echo(all, cmd_node), 1);
 	else if (!ft_strncmp(cmd, "cd\0", len))

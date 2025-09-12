@@ -44,6 +44,8 @@ int	ft_echo(t_data *all, t_token *cmd_node)
 
 	line_flag = 1;
 	arg = cmd_node->next;
+	dprintf(2, "echo will print [%s]\n", arg->token);
+	dprintf(2, "echo will print next[%s]\n", arg->next->token);
 	while (arg->token && only_n(arg->token))
 	{
 		line_flag = 0;
@@ -51,13 +53,13 @@ int	ft_echo(t_data *all, t_token *cmd_node)
 	}
 	while (arg->type == ARGUMENT)
 	{
-		ft_dprintf(STDOUT_FILENO, "%s", arg->token);
+		ft_printf("%s", arg->token);
 		if (arg->next->type == ARGUMENT)
-			ft_dprintf(STDOUT_FILENO, " ");
+			ft_printf(" ");
 		arg = arg->next;
 	}
 	if (line_flag)
-		ft_dprintf(STDOUT_FILENO, "\n");
+		ft_printf("\n");
 	return (all->return_val = 0, 0);
 }
 

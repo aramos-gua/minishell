@@ -27,19 +27,17 @@ int	execute_command(t_data *all, int i, int piped)
 
     fds_bak[0] = dup(STDIN_FILENO);//3
     fds_bak[1] = dup(STDOUT_FILENO);//4
-    if (!piped)
-    {
-
-      redirect_fds(all, i);
-      which_builtin(cmd->token, all, i, fds_bak);
-      dup2(fds_bak[0], STDIN_FILENO);
-      dup2(fds_bak[1], STDOUT_FILENO);
-      close(fds_bak[0]);
-      close(fds_bak[1]);
-      return (0);
-    }
     if (!ft_strncmp(cmd->token, "exit\0", 5))
       restore(all, fds_bak);
+    redirect_fds(all, i);
+    which_builtin(cmd->token, all, i, fds_bak);
+    dup2(fds_bak[0], STDIN_FILENO);
+    dup2(fds_bak[1], STDOUT_FILENO);
+    close(fds_bak[0]);
+    close(fds_bak[1]);
+    if (piped)
+      exit(0);
+    return (0);
   }
 	path = get_cmd_path(cmd->token, all->c_envp);
 	if (!path)
