@@ -6,7 +6,7 @@
 /*   By: mtice <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 15:29:12 by mtice             #+#    #+#             */
-/*   Updated: 2025/09/13 17:01:30 by aramos           ###   ########.fr       */
+/*   Updated: 2025/09/13 20:11:08 by aramos           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,7 @@ t_token *get_process(t_token *list, int i);
 t_token *get_cmd_node(t_token *list, int i);
 int 	ft_lstsize(t_token *list, int proc);
 void	sh_putstr(char *arg, char *str, int fd);
+int		exist_in_arr(char *str, char **array, bool flag);
 
 //commands.c
 int		first_command(t_data *all, int *pipes);
@@ -147,7 +148,6 @@ int		ft_pwd(t_data *all, t_token *cmd);
 
 //export.c
 int		ft_export(t_data *all, int proc, t_token *cmd_node);
-int		exist_in_arr(char *str, char **array, bool flag);
 
 //redirects.c
 void	redirect_fds(t_data *all, int i);

@@ -6,7 +6,7 @@
 /*   By: mtice <mtice@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 17:15:16 by mtice             #+#    #+#             */
-/*   Updated: 2025/09/03 17:17:00 by mtice            ###   ########.fr       */
+/*   Updated: 2025/09/13 21:40:54 by aramos           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # define NO_PERM "Permission denied"
 # define INV_OPT "invalid option"
 # define TOO_ARGS "too many arguments"
+# define INV_ARG "not a valid identifier"
 
 
 #endif
