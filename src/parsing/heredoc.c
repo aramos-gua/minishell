@@ -12,12 +12,25 @@
 
 #include "../../inc/minishell.h"
 
+static void	heredoc_error(t_token *tkn_ptr, int line_n)
+{
+	char	*num;
+
+	ft_putstr_fd("minishell: warning: here-document at line ", 2);
+	num = ft_itoa(line_n);
+	ft_putstr_fd(num, 2);
+	ft_putstr_fd(" delimited by end-of-file (wanted `", 2);
+	ft_putstr_fd(tkn_ptr->token, 2);
+	ft_putendl_fd("')", 2);
+}
+
 static int	write_heredoc(t_data *all, t_token *tkn_ptr, int to_expand)
 {
-	char	*proc_nbr;
-	char	*path;
-	int		here_fd;
-	char	*line;
+	char		*proc_nbr;
+	char		*path;
+	int			here_fd;
+	char		*line;
+	int			line_n = 0;
 
 	proc_nbr = ft_itoa(tkn_ptr->process_nbr);
 	path = ft_strjoin("/tmp/.heredoc_p", proc_nbr);
@@ -28,12 +41,23 @@ static int	write_heredoc(t_data *all, t_token *tkn_ptr, int to_expand)
 		return (1);
 	}
 	line = readline("> ");
-	while (ft_strncmp(line, tkn_ptr->token, ft_strlen(tkn_ptr->token) + 1))
+	while (ft_strncmp(line, tkn_ptr->token, ft_strlen(tkn_ptr->token) + 1) && ++line_n
+			&& g_last_signal != SIGINT)
 	{
+		if (!line)
+		{
+			heredoc_error(tkn_ptr, line_n - 1);
+			break;
+		}
 		if (!to_expand)
 			ft_putendl_fd(line, here_fd);
 		else
-			ft_putendl_fd(do_expansion(all, line), here_fd);
+		{
+			char *expanded;
+			expanded = do_expansion(all, line);
+			ft_putendl_fd(expanded, here_fd);
+			free(expanded);
+		}
 		line = readline("> ");
 	}
 	(free(proc_nbr), free(path), close(here_fd));
@@ -51,6 +75,7 @@ int	heredoc(t_data *all)
 
 	i = -1;
 	temp = NULL;
+	all->mode= H_DOC;
 	while (temp != all->tokens->next)
 	{
 		to_expand = 0;
@@ -67,5 +92,6 @@ int	heredoc(t_data *all)
 		}
 		temp = temp->next;
 	}
+	all->mode = INTERACTIVE;
 	return (0);
 }

@@ -37,8 +37,8 @@
 # include <readline/readline.h> //readline //rl_on_new_line
 # include <readline/history.h> //add_history //rl_clear_history
 
-extern volatile int	g_unblock_sigquit;
-
+extern volatile sig_atomic_t	g_mode;
+extern volatile sig_atomic_t	g_last_signal;
 //envp.c
 void	print_env(t_data *all);
 int		find_envp(t_data *all, char *envp[]);
@@ -85,7 +85,7 @@ void	print_t_token(t_token *tokens);
 int		is_builtin(char *s);
 
 //signals.c
-void	set_signal_action(void);
+int	set_signal_action(t_data *all);
 
 //free_utils
 void	free_double_char(char **arr);
