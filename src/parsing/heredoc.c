@@ -61,6 +61,8 @@ static int	write_heredoc(t_data *all, t_token *tkn_ptr, int to_expand)
 		line = readline("> ");
 	}
 	(free(proc_nbr), free(path), close(here_fd));
+	if (g_last_signal == SIGINT)
+		return (1);
 	return (0);
 }
 
@@ -92,6 +94,5 @@ int	heredoc(t_data *all)
 		}
 		temp = temp->next;
 	}
-	all->mode = INTERACTIVE;
 	return (0);
 }

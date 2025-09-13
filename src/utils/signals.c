@@ -39,6 +39,9 @@ static void	handler(int sig_num, siginfo_t *info, void *context)
 	else if (g_last_signal == SIGINT && g_interactive == H_DOC)
 	{
 		//exit(1);
+		rl_replace_line("", 0);
+		rl_on_new_line();
+		ft_putstr_fd("\n", 1);
 	}
 }
 
@@ -59,26 +62,27 @@ static void	setup_signal_handler(int sig_num)
 int	set_signal_action(t_data *all)
 {
 	g_interactive = all->mode;
-	g_interactive = H_DOC;
+	//g_interactive = H_DOC;
 	dprintf(2, "mode:%d\n", g_interactive);
 	struct sigaction	act;
-	
+
 	ft_bzero(&act, sizeof(act));
 	act.sa_handler = SIG_IGN;
 	if (sigaction(SIGQUIT, &act, NULL) == -1)
 		return (1);
 	setup_signal_handler(SIGINT);
-	if (g_last_signal == SIGINT && g_interactive == H_DOC)
-		return (1);
-	//g_last_signal = SA_RESTART;
+	// if (g_last_signal == SIGINT && g_interactive == H_DOC)
+	// 	return (1);
+	g_last_signal = SA_RESTART;
+	all->mode = INTERACTIVE;
 	return (0);
 }
-
+//
 // static void	signal_interactive(int signal)
 // {
 // 	(void)signal;
-// 	printf("interactive\n");
-// 	fflush(stdout);
+// 	// printf("interactive\n");
+// 	// fflush(stdout);
 // 	ft_putstr_fd("\n", 1);
 // 	rl_replace_line("", 0);
 // 	rl_on_new_line();
@@ -88,8 +92,8 @@ int	set_signal_action(t_data *all)
 // static void	signal_non_interactive(int signal)
 // {
 // 	(void)signal;
-// 	printf("non_interactive\n");
-// 	fflush(stdout);
+// 	// printf("non_interactive\n");
+// 	// fflush(stdout);
 // 	rl_replace_line("", 0);
 // 	rl_on_new_line();
 // }
@@ -99,30 +103,35 @@ int	set_signal_action(t_data *all)
 // 	(void)signal;
 // 	//ft_putstr_fd("heredoc signals", 1);
 // 	// ft_putstr_fd("\n", 0);
-// 	// rl_replace_line("", 0);
-// 	// rl_on_new_line();
-// 	g_unblock_sigquit = 3;
+// 	rl_replace_line("", 0);
+// 	rl_on_new_line();
+// 	ft_putstr_fd("\n", 1);
+// 	g_interactive = 3;
 // }
 //
-// int	set_signal_action(void)
+// int	set_signal_action(t_data *all)
 // {
 // 	struct sigaction	act;
 //
-// 	printf("sig_quit:%d\n", g_unblock_sigquit);
+// 	g_interactive = H_DOC;
+// 	printf("mode:%d\n", g_interactive);
 // 	ft_bzero(&act, sizeof(act));
-// 	if (g_unblock_sigquit == 1) //unblocks SIGQUIT when non-interactive mode
+// 	if (g_interactive == NON_INTERACTIVE) //unblocks SIGQUIT when non-interactive mode
 // 	{
 // 		act.sa_handler = &signal_non_interactive;
 // 		sigaction(SIGINT, &act, NULL);
 // 		sigaction(SIGQUIT, &act, NULL);
 // 	}
-// 	else if (g_unblock_sigquit == 2)
+// 	else if (g_interactive == H_DOC)
 // 	{
+// 		act.sa_handler = SIG_IGN;
+// 		sigaction(SIGQUIT, &act, NULL);
 // 		act.sa_handler = &signal_heredoc;
 // 		sigaction(SIGINT, &act, NULL);
-// 		//sigaction(SIGQUIT, &act, NULL);
+// 		if (g_interactive == 3)
+// 			all->mode = EXIT;
 // 	}
-// 	else if (!g_unblock_sigquit) //blocks when in interactive mode
+// 	else if (g_interactive == INTERACTIVE) //blocks when in interactive mode
 // 	{
 // 		act.sa_handler = SIG_IGN; //blocks ctrl backslash
 // 		sigaction(SIGQUIT, &act, NULL);

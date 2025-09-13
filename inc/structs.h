@@ -33,6 +33,7 @@ typedef	enum e_mode
 	NON_INTERACTIVE,
 	INTERACTIVE,
 	H_DOC,
+	EXIT,
 }			t_mode;
 
 //-----------------------------------------------------------------------------
