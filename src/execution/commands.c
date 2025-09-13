@@ -6,7 +6,7 @@
 /*   By: Alejandro Ramos <alejandro.ramos.gua@gmai  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 19:05:11 by Alejandro Ram     #+#    #+#             */
-/*   Updated: 2025/09/09 20:33:25 by Alejandro Ram    ###   ########.fr       */
+/*   Updated: 2025/09/13 18:32:38 by aramos           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ int	execute_command(t_data *all, int i, int piped)
 	cmd_arr = array_builder(all, i);
 	if (!piped)
 	{
-		ft_dprintf(2, "inside !piped for some reason\n");
 		pid = fork();
 		if (pid == 0)
 		{
@@ -58,7 +57,9 @@ int	execute_command(t_data *all, int i, int piped)
 			}
 		}
 		else
-			waitpid(pid, NULL, 0);
+		{
+			waitpid(all->info[i].pid, NULL, 0);
+		}
 	}
 	else
 	{

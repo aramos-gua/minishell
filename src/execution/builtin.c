@@ -6,66 +6,11 @@
 /*   By: Alejandro Ramos <alejandro.ramos.gua@gmai  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 11:42:22 by Alejandro Ram     #+#    #+#             */
-/*   Updated: 2025/09/09 20:31:52 by Alejandro Ram    ###   ########.fr       */
+/*   Updated: 2025/09/13 17:00:51 by aramos           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
-
-int	ft_pwd(t_data *all, t_token *cmd)
-{
-	char	*pwd;
-
-	pwd = getcwd(NULL, 0);
-	if (!pwd)
-		return (all->return_val = 1);
-	if (cmd->next != cmd && (cmd->next->token[2] != 'L' && cmd->next->token[2] != 'P'))
-	{
-		ft_dprintf(2, "minishell: pwd %s: %s\n", cmd->next->token, INV_OPT);
-		ft_dprintf(2, "pwd: usage: pwd [-LP]\n");
-		return (all->return_val = 2);
-	}
-	ft_dprintf(STDOUT_FILENO, "%s\n", pwd);
-	free(pwd);
-	return (all->return_val = 0, 0);
-}
-
-int	ft_cd(t_token *cmd, t_data *all, int nodes)
-{
-	t_token	*cd_node;
-	char	*old_dir;
-
-	ft_dprintf(2, "nodes [%d]\n", nodes);
-	if (nodes != 1 && nodes != 2)
-	{
-		ft_dprintf(2, "minishell: %s: %s\n", cmd->token, TOO_ARGS);
-		return (all->return_val = 1);
-	}
-	old_dir = getcwd(NULL, 0);
-	if (!old_dir)
-		return (all->return_val = 1);
-	if (nodes == 1 && !ft_strncmp(cmd->token, "cd\0", 3))
-	{
-		chdir("~/");
-		update_env_cd(all, "PWD=", getcwd(NULL, 0));
-		update_env_cd(all, "OLDPWD=", old_dir);
-		return (all->return_val = 0);
-	}
-	cd_node = cmd->next;
-	while (ft_strncmp(cd_node->token, "cd\0", 3))
-		cd_node = cd_node->next;
-	if (chdir((const char *)cd_node->next->token) == -1)
-	{
-		all->return_val = 1;
-		perror("minishell");
-		return (1);
-	}
-	update_env_cd(all, "OLDPWD=", old_dir);
-	chdir(cd_node->token);
-	update_env_cd(all, "PWD=", getcwd(NULL, 0));
-	free(old_dir);
-	return (all->return_val = 0);
-}
 
 int	ft_echo(t_data *all, t_token *cmd_node)
 {
@@ -74,8 +19,6 @@ int	ft_echo(t_data *all, t_token *cmd_node)
 
 	line_flag = 1;
 	arg = cmd_node->next;
-	ft_dprintf(2, "echo will print [%s]\n", arg->token);
-	ft_dprintf(2, "echo will print next[%s]\n", arg->next->token);
 	while (arg->token && only_n(arg->token))
 	{
 		line_flag = 0;

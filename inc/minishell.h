@@ -6,7 +6,7 @@
 /*   By: mtice <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 15:29:12 by mtice             #+#    #+#             */
-/*   Updated: 2025/09/09 20:39:53 by Alejandro Ram    ###   ########.fr       */
+/*   Updated: 2025/09/13 17:01:30 by aramos           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,8 +128,6 @@ int		close_pipes(t_data *all, int *pipes);
 void	restore(t_data *all, int backup[2]);
 
 //builtin.c
-int		ft_pwd(t_data *all, t_token *cmd);
-int		ft_cd(t_token *cmd, t_data *all, int nodes);
 int		ft_echo(t_data *all, t_token *cmd_node);
 int		ft_unset(t_data *all, int proc, t_token *cmd_node);
 int		ft_exit(t_data *all, int nodes, t_token *cmd_node, int fds_bak[2]);
@@ -140,6 +138,12 @@ int		only_n(char *arg);
 int		isnt_number(char *str);
 int		update_env_cd(t_data *all, char *search, char *path);
 int		get_env_index(char **arr, char *to_update, int len);
+
+//cd_builtin.c
+int		ft_cd(t_token *cmd, t_data *all, int nodes);
+
+//pwd_builtin.c
+int		ft_pwd(t_data *all, t_token *cmd);
 
 //export.c
 int		ft_export(t_data *all, int proc, t_token *cmd_node);

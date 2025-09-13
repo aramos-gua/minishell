@@ -6,7 +6,7 @@
 /*   By: Alejandro Ramos <alejandro.ramos.gua@gmai  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 16:12:22 by Alejandro Ram     #+#    #+#             */
-/*   Updated: 2025/09/09 20:17:40 by Alejandro Ram    ###   ########.fr       */
+/*   Updated: 2025/09/13 18:35:01 by aramos           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,8 @@ int	executron(t_data *all, int i)
 
 int	execution(t_data *all, int i, int piped, bool run)
 {
-	ft_dprintf(2, "----------EXECUTION-----------------\n");
+	if (i == 1)
+		write(2, "----------EXECUTION-----------------\n", 37);
 	if (i + 1 == all->info->total_proc || run)
 		execute_command(all, i, piped);
 	else
