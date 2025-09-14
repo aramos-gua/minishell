@@ -14,24 +14,33 @@
 
 //checks if a string exist in an array index, flag is true when last char is a 
 //delimiter (Eg. HOME= Vs norminette)
-int	exist_in_arr(char *str, char **array, bool flag)
+int	exist_in_arr(char *str, char **array, bool exp)
 {
 	int	len;
 	int	i;
+	int	str_equal;
 
 	i = 0;
-	// if (flag == true)
-	// 	len = ft_strlen(str) - 1;
-	// else
+	str_equal = 0;
 	len = ft_strlen(str);
+	if (exp == true)
+	{
+		if (ft_strchr(str, '='))
+		{
+			len -= 1;
+			str_equal = 1;
+		}
+	}
 	while (array[i])
 	{
 		if (ft_strncmp(str, array[i], len) == 0)
 		{
-			if (!flag)
+			if (!exp)
 				return (i);
-			else if (array[i][len] && array[i][len] == '=')
+			else if (exp && str_equal && array[i][len == '='])
 				return (i);
+			else
+				return (-2);
 		}
 		i++;
 	}
@@ -51,7 +60,7 @@ static int	var_len(char *str)
 	return (-1);
 }
 
-//returns a substring of a string up to '=' char
+//returns a substring of a string up to '=' char or \0
 static char	*nullify(char *cmd)
 {
 	int		len;
@@ -92,11 +101,11 @@ static char	**update_exp(t_data *all, char *new_element, t_token *arg_node)
 
 	len = ft_strlen(new_element);
 	i = exist_in_arr(new_element, all->c_exp, true);
+	if (i == -2)
+		return (0);
 	if (i != -1 && new_element[len - 1] == '=')
 	{
-		free(all->c_exp[i]);
-		all->c_exp[i] = malloc(ft_strlen(arg_node->token) * sizeof(char));
-		all->c_exp[i] = arg_node->token;
+		ft_strlcpy(all->c_exp[i], arg_node->token, ft_strlen(arg_node->token) + 1);
 		return (all->c_exp);
 	}
 	i = 0;
@@ -125,9 +134,7 @@ static char	**update_envp(t_data *all, char *new_element, t_token *arg_node)
 	i = exist_in_arr(new_element, all->c_envp, false);
 	if (i != -1)
 	{
-		free(all->c_envp[i]);
-		all->c_envp[i] = malloc(1 * sizeof(char *));
-		all->c_envp[i] = arg_node->token;
+		ft_strlcpy(all->c_envp[i], arg_node->token, ft_strlen(arg_node->token) + 1);
 		return (all->c_envp);
 	}
 	i = 0;
@@ -210,6 +217,7 @@ int	ft_export(t_data *all, int proc, t_token *cmd_node)
 			continue ;
 		}
 		key_val = nullify(arg->token);
+		dprintf(2, "key_val is: [%s]\n", key_val);
 		if (key_val[ft_strlen(key_val) - 1] != '=')
 			all->c_exp = update_exp(all, key_val, arg);
 		else
@@ -219,5 +227,5 @@ int	ft_export(t_data *all, int proc, t_token *cmd_node)
 		}
 		arg = arg->next;
 	}
-	return (all->return_val = 0, 1);
+	return (1);
 }
