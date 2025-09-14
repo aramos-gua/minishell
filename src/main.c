@@ -28,6 +28,7 @@ static void	first_init(t_data *all)
 	all->return_val = 0;
 	all->c_envp = NULL;
 	all->c_exp = NULL;
+	all->arr = NULL;
 	init_all(all);
 }
 

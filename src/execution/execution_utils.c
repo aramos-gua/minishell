@@ -6,7 +6,7 @@
 /*   By: Alejandro Ramos <alejandro.ramos.gua@gmai  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 14:54:03 by Alejandro Ram     #+#    #+#             */
-/*   Updated: 2025/09/09 20:10:33 by Alejandro Ram    ###   ########.fr       */
+/*   Updated: 2025/09/13 20:17:18 by aramos           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ t_token	*get_cmd_node(t_token *list, int i)
 	if (!list)
 		return (NULL);
 	current = list;
-	while ((current->type != COMMAND && current->builtin != 1) || current->process_nbr != i)
+	while ((current->type != COMMAND && current->builtin != 1) \
+		|| current->process_nbr != i)
 		current = current->next;
 	return (current);
 }
