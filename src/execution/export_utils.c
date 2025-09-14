@@ -65,8 +65,13 @@ int	ft_print_exp(t_data *all)
 	int	i;
 
 	i = 0;
-	while (all->c_exp[i] && all->c_exp[i][0] != '\0')
+	while (all->c_exp[i])
 	{
+		if (all->c_exp[i][0] == '\0')
+		{
+			i++;
+			continue ;
+		}
 		ft_dprintf(STDOUT_FILENO, "declare -x ");
 		if (ft_strchr(all->c_exp[i], '='))
 			ft_putexp(all->c_exp[i]);

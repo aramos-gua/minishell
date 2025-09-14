@@ -30,7 +30,7 @@ int	exist_in_arr(char *str, char **array, bool exp)
 		{
 			if (!exp)
 				return (i);
-			else if (exp && ft_strchr(str, '=') && array[i][len] == '=')
+			else if (exp && ft_strchr(str, '='))
 				return (i);
 			else
 				return (-2);
@@ -123,6 +123,8 @@ int	ft_export(t_data *all, int proc, t_token *cmd_node)
 	t_token	*arg;
 	char	*key_val;
 
+	if (all->total_proc > 1)
+		return (1);
 	if (all->c_exp == NULL)
 		fill_exp(all);
 	if ((ft_lstsize(all->tokens, proc)) == 1)
@@ -131,16 +133,14 @@ int	ft_export(t_data *all, int proc, t_token *cmd_node)
 	while (arg->type == ARGUMENT && arg->process_nbr == proc)
 	{
 		if (arg->token && (!ft_isalpha(arg->token[0]) && arg->token[0] != '_'))
-			export_error(all, arg);
-		key_val = nullify(arg->token);
-		dprintf(2, "key_val is: [%s]\n", key_val);
-		if (key_val[ft_strlen(key_val) - 1] != '=')
-			all->c_exp = update_exp(all, key_val, arg);
-		else
 		{
-			all->c_envp = update_envp(all, key_val, arg);
-			all->c_exp = update_exp(all, key_val, arg);
+			export_error(all, arg);
+			break ;
 		}
+		key_val = nullify(arg->token);
+		if (key_val[ft_strlen(key_val) - 1] == '=')
+			all->c_envp = update_envp(all, key_val, arg);
+		all->c_exp = update_exp(all, key_val, arg);
 		arg = arg->next;
 	}
 	return (1);

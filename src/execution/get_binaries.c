@@ -67,6 +67,14 @@ char	*build_path(char *cmd, char **paths)
 	return (NULL);
 }
 
+static char	*full_path_given(char *cmd)
+{
+	if (access(cmd, X_OK) == 0)
+		return (ft_strdup(cmd));
+	else
+		return (NULL);
+}
+
 char	*get_cmd_path(char *cmd, char **env)
 {
 	char	**paths;
@@ -77,12 +85,7 @@ char	*get_cmd_path(char *cmd, char **env)
 	i = -1;
 	path_env = NULL;
 	if (ft_strchr(cmd, '/'))
-	{
-		if (access(cmd, X_OK) == 0)
-			return (ft_strdup(cmd));
-		else
-			return (NULL);
-	}
+		return (full_path_given(cmd));
 	while (env[++i])
 		if (ft_strncmp(env[i], "PATH=", 5) == 0)
 			path_env = env[i] + 5;

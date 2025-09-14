@@ -95,16 +95,8 @@ void	unlink_heredocs(int total_procs);
 void	free_all(t_data *all);
 
 //execution.c
-int		child_process(int i, t_data *all, int *pipes);
-int		pipes_init(int **pipes, t_data *all);
-int		fork_init(t_data *all, int *pipes);
-void	open_pipes(int *pipes, t_data *all);
-int		get_files(t_data *all);
-int		one_command(t_data *all);
-int		executron(t_data *all, int i);
 int		execution(t_data *all, int i, int piped, bool run);
-void 	fill_exp(t_data *all);
-int		get_fd(t_data *all, int proc, bool out);
+int		get_fd(t_data *all, int proc);
 
 //get_binaries.c
 char  	**array_builder(t_data *all, int proc);
@@ -130,11 +122,11 @@ void	restore(t_data *all, int backup[2]);
 
 //builtin.c
 int		ft_echo(t_data *all, t_token *cmd_node);
-int		ft_unset(t_data *all, int proc, t_token *cmd_node);
-int		ft_exit(t_data *all, int nodes, t_token *cmd_node, int fds_bak[2]);
+int		ft_unset(t_data *all, t_token *cmd_node);
+int		ft_exit(t_data *all, int nodes, t_token *cmd_node);
 
 //builtin_helpers.c
-int		which_builtin(char *cmd, t_data *all, int proc, int fds_bak[2]);
+int		which_builtin(char *cmd, t_data *all, int proc);
 int		only_n(char *arg);
 int		isnt_number(char *str);
 int		update_env_cd(t_data *all, char *search, char *path);
@@ -148,6 +140,7 @@ int		ft_pwd(t_data *all, t_token *cmd);
 
 //export.c
 int		ft_export(t_data *all, int proc, t_token *cmd_node);
+void	fill_exp(t_data *all);
 
 //export_utils.c
 void	export_error(t_data *all, t_token *arg);
@@ -155,9 +148,6 @@ int		ft_print_exp(t_data *all);
 void	ft_putexp(char *str);
 char	*nullify(char *cmd);
 int		var_len(char *str);
-
-//redirects.c
-void	redirect_fds(t_data *all, int i);
 
 //errors.c
 int		command_not_found(t_data *all, t_token *cmd);
