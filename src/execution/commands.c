@@ -29,8 +29,8 @@ int	execute_command(t_data *all, int i, int piped)
 		fds_bak[1] = dup(STDOUT_FILENO);
 		if (!ft_strncmp(cmd->token, "exit\0", 5))
 		{
-			which_builtin(cmd->token, all, i);
 			restore(all, fds_bak);
+			which_builtin(cmd->token, all, i);
 		}
 		dprintf(2, "redirecting FDs\n");
 		get_fd(all, i);
