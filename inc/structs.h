@@ -83,6 +83,7 @@ typedef struct s_data
 	char			**envp;
 	char			**c_envp;
 	char			**c_exp;
+	char			**arr;
 	char			**procs;
 	t_proc			*info;
 	t_token			*tokens;
