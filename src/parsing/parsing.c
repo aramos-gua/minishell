@@ -26,9 +26,9 @@ int	parsing(t_data *all, char *input)
 		return (1);
 	else if (redirects(all))
 		return (all->return_val = 1, all->return_val);
-	printf("-----------INFO LIST----------------\n");
-	print_t_proc(all->info);
-	printf("----------TOKEN LIST----------------\n");
-	print_t_token(all->tokens);
+	// printf("-----------INFO LIST----------------\n");
+	// print_t_proc(all->info);
+	// printf("----------TOKEN LIST----------------\n");
+	// print_t_token(all->tokens);
 	return (all->return_val = 0, all->return_val);
 }

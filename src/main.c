@@ -35,7 +35,6 @@ static void	first_init(t_data *all)
 void subtract_shlvl(t_data *all)
 {
 	all->shlvl--;
-	printf("SHELLLEVEL:%d\n", all->shlvl);
 	if (all->shlvl > 2)
 	{
 		rl_clear_history();
@@ -114,7 +113,6 @@ int	main(int argc, char *argv[], char *envp[])
 	}	
 	rl_clear_history();
   	free_double_char(all.c_envp);
-	//free_double_char(all.envp);
 	free_all(&all);
 	if (all.c_exp)
 		free_double_char(all.c_exp);
