@@ -92,7 +92,7 @@ static int	executron(t_data *all, int i)
 int	execution(t_data *all, int i, int piped, bool run)
 {
 	set_signals_noninteractive();
-	ft_dprintf(2, "----------EXECUTION-----------------\n");
+	// ft_dprintf(2, "----------EXECUTION-----------------\n");
 	if (i + 1 == all->info->total_proc || run)
 		execute_command(all, i, piped);
 	else
