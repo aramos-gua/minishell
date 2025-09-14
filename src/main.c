@@ -43,7 +43,6 @@ void subtract_shlvl(t_data *all)
 		if (all->c_exp)
 			free_double_char(all->c_exp);
 		find_envp(all, all->envp);
-		fill_exp(all);
 	}
 }
 
@@ -101,8 +100,8 @@ int	main(int argc, char *argv[], char *envp[])
 				break;
 		}
 		add_history(input);
-		if (!ft_strncmp("exit\0", input, 5)) //TODO: remove because it causes mem leaks
-			break ;
+		// if (!ft_strncmp("exit\0", input, 5)) //TODO: remove because it causes mem leaks
+		// 	break ;
 		if (is_minishell(input))
 		{
 			add_shlvl(&all);

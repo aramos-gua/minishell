@@ -10,10 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../inc/minishell.h"
 
 int	ft_echo(t_data *all, t_token *cmd_node)
 {
+	(void)all;
 	int		line_flag;
 	t_token	*arg;
 
@@ -26,19 +27,14 @@ int	ft_echo(t_data *all, t_token *cmd_node)
 	}
 	while (arg->type == ARGUMENT)
 	{
-		close(STDOUT_FILENO);
-		if (printf("%s", arg->token) < 0)
-		{
-			dprintf(2, "jamoncito in echo");
-			return (all->return_val = 1, perror("minishell"), 1);
-		}
+		ft_printf("%s", arg->token);
 		if (arg->next->type == ARGUMENT)
 			ft_printf(" ");
 		arg = arg->next;
 	}
 	if (line_flag)
 		ft_printf("\n");
-	return (all->return_val = 0, 0);
+	return (0);
 }
 
 static void	delete_element(t_token *arg, char **arr)
@@ -72,35 +68,52 @@ int	ft_unset(t_data *all, t_token *cmd_node)
 	return (1);
 }
 
-int	exit_helper(t_data *all)
+int	exit_helper(t_data *all, int *bak)
 {
-	(rl_clear_history(), free_double_char(all->c_envp), free_all(all));
+	rl_clear_history();
+	free_double_char(all->c_envp);
 	if (all->c_exp)
 		free_double_char(all->c_exp);
-	//find_envp()//TODO:revuild envp and exp
-	// if (all->shlvl > 1)
-	// 	return (1);
-	// else
-		exit (all->return_val);
+	all->shlvl -= 1;
+	if (all->shlvl >= 0)
+	{
+		if (bak)
+			restore(all, bak);
+		find_envp(all, all->envp);
+		return (1);
+	}
+	else
+	{
+		if (bak)
+			restore(all, bak);
+		// free_double_char(all->c_exp);
+		// free_double_char(all->c_envp);
+	 	free_all(all);
+	 	exit(all->return_val);
+	}
 	return (0);
 }
 
-int	ft_exit(t_data *all, int nodes, t_token *cmd_node)
+int	ft_exit(t_data *all, int nodes, t_token *cmd_node, int *bak)
 {
+	dprintf(2, "shlvl[%d]\n", all->shlvl);
+	dprintf(2, "exit with args\n");
 	if (all->info->total_proc == 1)
 	{
 		if (nodes == 1)
-			return (all->return_val = 0, exit_helper(all), 1);
+			return (all->return_val = 0, exit_helper(all, bak), 1);
 		else if (nodes == 2 && !(isnt_number(all->tokens->token)))
 		{
 			all->return_val = ft_atoi(all->tokens->token);
-			exit_helper(all);
+			if (exit_helper(all, bak))
+				return(1);
 		}
 		else if (nodes >= 2 && isnt_number(cmd_node->next->token))
 		{
 			all->return_val = 255;
 			ft_dprintf(2, "%sexit: %s%s", PROG, all->tokens->token, INV_EXIT);
-			exit_helper(all);
+			if (exit_helper(all, bak))
+				return(1);
 		}
 		else if (nodes > 2 && !(isnt_number(cmd_node->next->token)))
 		{

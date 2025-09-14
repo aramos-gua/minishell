@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../inc/minishell.h"
 
 int	get_env_index(char **arr, char *to_update, int len)
 {
@@ -86,6 +86,6 @@ int	which_builtin(char *cmd, t_data *all, int proc)
 	else if (!ft_strncmp(cmd, "env\0", len))
 		return (print_env(all), 1);
 	else if (!ft_strncmp(cmd, "exit\0", len))
-		return (ft_exit(all, nodes, cmd_node), 1);
+		return (ft_exit(all, nodes, cmd_node, NULL), 1);
 	return (0);
 }

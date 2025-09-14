@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../inc/minishell.h"
 
 //gets previos directory by searching last slash occurrence and trimming it
 static char	*get_prev_dir(t_data *all)

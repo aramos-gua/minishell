@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../inc/minishell.h"
 
 //checks if a string exist in an array index, flag is true when last char is a 
 //delimiter (Eg. HOME= Vs norminette)
