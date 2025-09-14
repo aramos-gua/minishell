@@ -27,6 +27,7 @@ SRC :=	$(SRC_DIR)/main.c \
 		$(SRC_DIR)/execution/cd_builtin.c \
 		$(SRC_DIR)/execution/pwd_builtin.c \
 		$(SRC_DIR)/execution/export.c \
+		$(SRC_DIR)/execution/export_utils.c \
 		$(SRC_DIR)/execution/errors.c \
 		$(SRC_DIR)/execution/cleaner.c
 

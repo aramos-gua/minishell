@@ -6,7 +6,7 @@
 /*   By: Alejandro Ramos <alejandro.ramos.gua@gmai  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 19:25:02 by Alejandro Ram     #+#    #+#             */
-/*   Updated: 2025/09/13 21:46:32 by aramos           ###   ########.fr       */
+/*   Updated: 2025/09/14 13:10:09 by aramos           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,26 +18,19 @@ int	exist_in_arr(char *str, char **array, bool exp)
 {
 	int	len;
 	int	i;
-	int	str_equal;
 
 	i = 0;
-	str_equal = 0;
 	len = ft_strlen(str);
 	if (exp == true)
-	{
 		if (ft_strchr(str, '='))
-		{
 			len -= 1;
-			str_equal = 1;
-		}
-	}
 	while (array[i])
 	{
 		if (ft_strncmp(str, array[i], len) == 0)
 		{
 			if (!exp)
 				return (i);
-			else if (exp && str_equal && array[i][len == '='])
+			else if (exp && ft_strchr(str, '=') && array[i][len] == '=')
 				return (i);
 			else
 				return (-2);
@@ -45,30 +38,6 @@ int	exist_in_arr(char *str, char **array, bool exp)
 		i++;
 	}
 	return (-1);
-}
-
-//returns and int corresponding to the index of the occurrence of '='. Inclusive
-static int	var_len(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] && str[i] != '=')
-		i++;
-	if (str[i] == '=')
-		return (i + 1);
-	return (-1);
-}
-
-//returns a substring of a string up to '=' char or \0
-static char	*nullify(char *cmd)
-{
-	int		len;
-	char	*cmd_cut;
-
-	len = var_len(cmd);
-	cmd_cut = ft_substr(cmd, 0, len);
-	return (cmd_cut);
 }
 
 //creates a duplicate two2d array of env
@@ -91,8 +60,8 @@ void	fill_exp(t_data *all)
 	all->c_exp[i] = NULL;
 }
 
-//appends a new entry at the end of c_exp array for export of strings that do or not
-//contain a '=' character
+//appends a new entry at the end of c_exp array for export of strings 
+//that do or not contain a '=' character
 static char	**update_exp(t_data *all, char *new_element, t_token *arg_node)
 {
 	char	**array;
@@ -102,24 +71,19 @@ static char	**update_exp(t_data *all, char *new_element, t_token *arg_node)
 	len = ft_strlen(new_element);
 	i = exist_in_arr(new_element, all->c_exp, true);
 	if (i == -2)
-		return (0);
-	if (i != -1 && new_element[len - 1] == '=')
-	{
-		ft_strlcpy(all->c_exp[i], arg_node->token, ft_strlen(arg_node->token) + 1);
 		return (all->c_exp);
-	}
+	if (i != -1 && new_element[len - 1] == '=')
+		return (ft_strlcpy(all->c_exp[i], \
+		arg_node->token, ft_strlen(arg_node->token) + 1), all->c_exp);
 	i = 0;
 	while (all->c_exp[i])
 		i++;
 	array = malloc((i + 2) * sizeof(char *));
 	if (!array)
 		return (all->return_val = 1, NULL);
-	i = 0;
-	while (all->c_exp[i])
-	{
+	i = -1;
+	while (all->c_exp[++i])
 		array[i] = all->c_exp[i];
-		i++;
-	}
 	array[i++] = ft_strdup(arg_node->token);
 	array[i] = NULL;
 	return (array);
@@ -133,10 +97,8 @@ static char	**update_envp(t_data *all, char *new_element, t_token *arg_node)
 
 	i = exist_in_arr(new_element, all->c_envp, false);
 	if (i != -1)
-	{
-		ft_strlcpy(all->c_envp[i], arg_node->token, ft_strlen(arg_node->token) + 1);
-		return (all->c_envp);
-	}
+		return (ft_strlcpy(all->c_envp[i], arg_node->token, \
+		ft_strlen(arg_node->token) + 1), all->c_envp);
 	i = 0;
 	while (all->c_envp[i])
 		i++;
@@ -154,47 +116,6 @@ static char	**update_envp(t_data *all, char *new_element, t_token *arg_node)
 	return (array);
 }
 
-//handles the addition of "" to the value portion of the export entries
-static void	ft_putexp(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] && str[i] != '=')
-	{
-		write(STDOUT_FILENO, &str[i], 1);
-		i++;
-	}
-	write(STDOUT_FILENO, &str[i++], 1);
-	write(STDOUT_FILENO, "\"", 2);
-	while (str[i])
-	{
-		if (str[i] == '\"')
-			i++;
-		write(STDOUT_FILENO, &str[i], 1);
-		i++;
-	}
-	ft_putendl_fd("\"", STDOUT_FILENO);
-}
-
-//prints the keys and values to STDOUT prepending and handling ""
-static int	ft_print_exp(t_data *all)
-{
-	int	i;
-
-	i = 0;
-	while (all->c_exp[i] && all->c_exp[i][0] != '\0')
-	{
-		ft_dprintf(STDOUT_FILENO, "declare -x ");
-		if (ft_strchr(all->c_exp[i], '='))
-			ft_putexp(all->c_exp[i]);
-		else
-			ft_dprintf(STDOUT_FILENO, "%s\n", all->c_exp[i]);
-		i++;
-	}
-	return (1);
-}
-
 //recreates the export builtin function, handling keys not containing
 //'=' char, and prepending information on export
 int	ft_export(t_data *all, int proc, t_token *cmd_node)
@@ -210,12 +131,7 @@ int	ft_export(t_data *all, int proc, t_token *cmd_node)
 	while (arg->type == ARGUMENT && arg->process_nbr == proc)
 	{
 		if (arg->token && (!ft_isalpha(arg->token[0]) && arg->token[0] != '_'))
-		{
-			ft_dprintf(2, "minishell: export: \'%s\': %s\n", arg->token, INV_ARG);
-			all->return_val = 1;
-			arg = arg->next;
-			continue ;
-		}
+			export_error(all, arg);
 		key_val = nullify(arg->token);
 		dprintf(2, "key_val is: [%s]\n", key_val);
 		if (key_val[ft_strlen(key_val) - 1] != '=')

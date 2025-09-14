@@ -6,7 +6,7 @@
 /*   By: mtice <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 15:29:12 by mtice             #+#    #+#             */
-/*   Updated: 2025/09/13 20:11:08 by aramos           ###   ########.fr       */
+/*   Updated: 2025/09/14 13:14:25 by aramos           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,6 +148,13 @@ int		ft_pwd(t_data *all, t_token *cmd);
 
 //export.c
 int		ft_export(t_data *all, int proc, t_token *cmd_node);
+
+//export_utils.c
+void	export_error(t_data *all, t_token *arg);
+int		ft_print_exp(t_data *all);
+void	ft_putexp(char *str);
+char	*nullify(char *cmd);
+int		var_len(char *str);
 
 //redirects.c
 void	redirect_fds(t_data *all, int i);
