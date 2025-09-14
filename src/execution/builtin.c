@@ -86,18 +86,14 @@ int	exit_helper(t_data *all, int *bak)
 	{
 		if (bak)
 			restore(all, bak);
-		// free_double_char(all->c_exp);
-		// free_double_char(all->c_envp);
-	 	free_all(all);
-	 	exit(all->return_val);
+		free_all(all);
+		exit(all->return_val);
 	}
 	return (0);
 }
 
 int	ft_exit(t_data *all, int nodes, t_token *cmd_node, int *bak)
 {
-	dprintf(2, "shlvl[%d]\n", all->shlvl);
-	dprintf(2, "exit with args\n");
 	if (all->info->total_proc == 1)
 	{
 		if (nodes == 1)

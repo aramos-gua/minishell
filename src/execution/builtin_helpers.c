@@ -69,7 +69,6 @@ int	which_builtin(char *cmd, t_data *all, int proc)
 	int		nodes;
 	t_token	*cmd_node;
 
-	ft_dprintf(2, "------------- my builtins\n\n");
 	len = ft_strlen(cmd);
 	nodes = ft_lstsize(all->tokens, proc);
 	cmd_node = get_cmd_node(all->tokens->next, proc);
