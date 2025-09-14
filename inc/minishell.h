@@ -6,7 +6,7 @@
 /*   By: mtice <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 15:29:12 by mtice             #+#    #+#             */
-/*   Updated: 2025/09/09 20:39:53 by Alejandro Ram    ###   ########.fr       */
+/*   Updated: 2025/09/14 21:20:33 by mtice            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@
 # include <stdio.h> //readline //printf
 # include <stdbool.h> //bool for flags ft_export
 # include <stdlib.h> //malloc //free //exit //getenv
-# include <unistd.h> //write //access//read//close//getcwd//chdir//execve//dup//dup2//pipe//isatty//ttyname//ttyslot
+# include <unistd.h> //write //access//read//close
+//getcwd//chdir//execve//dup//dup2//pipe//isatty//ttyname//ttyslot
 # include <fcntl.h> //open //unlink
 # include <sys/wait.h> //wait //waitpid //wait3 //wait4
 # include <signal.h> //signal //sigaction //sigemptyset //sigaddset //kill
@@ -37,8 +38,12 @@
 # include <readline/readline.h> //readline //rl_on_new_line
 # include <readline/history.h> //add_history //rl_clear_history
 
-extern volatile sig_atomic_t	g_mode;
-extern volatile sig_atomic_t	g_last_signal;
+extern volatile sig_atomic_t	g_signal;
+
+//main.c
+void	subtract_shlvl(t_data *all);
+void	add_shlvl(t_data *all);
+
 //envp.c
 void	print_env(t_data *all);
 int		find_envp(t_data *all, char *envp[]);
@@ -85,8 +90,11 @@ void	print_t_token(t_token *tokens);
 int		is_builtin(char *s);
 
 //signals.c
-int	set_signal_action(t_data *all);
-
+// void	signal_action(int mode);
+// int	set_signal_action(t_data *all);
+void	set_signals_interactive(void);
+void	set_signals_noninteractive(void);
+//
 //free_utils
 void	free_double_char(char **arr);
 void	free_t_proc(t_proc *info, int total_procs);
@@ -103,18 +111,18 @@ int		get_files(t_data *all);
 int		one_command(t_data *all);
 int		executron(t_data *all, int i);
 int		execution(t_data *all, int i, int piped, bool run);
-void 	fill_exp(t_data *all);
+void	fill_exp(t_data *all);
 int		get_fd(t_data *all, int proc, bool out);
 
 //get_binaries.c
-char  	**array_builder(t_data *all, int proc);
+char	**array_builder(t_data *all, int proc);
 char	*build_path(char *cmd, char **paths);
 char	*get_cmd_path(char *cmd, char **env);
 
 //execution_utils.
-t_token *get_process(t_token *list, int i);
-t_token *get_cmd_node(t_token *list, int i);
-int 	ft_lstsize(t_token *list, int proc);
+t_token	*get_process(t_token *list, int i);
+t_token	*get_cmd_node(t_token *list, int i);
+int		ft_lstsize(t_token *list, int proc);
 void	sh_putstr(char *arg, char *str, int fd);
 
 //commands.c

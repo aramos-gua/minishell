@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../inc/minishell.h"
 
 char	**array_builder(t_data *all, int proc)
 {
@@ -34,22 +34,22 @@ char	**array_builder(t_data *all, int proc)
 	}
 	arr[i] = NULL;
 	return (arr);
-	i = 0;
-	arr = malloc ((ft_lstsize(all->tokens, proc) + 1) * sizeof(char *));
-	if (!arr)
-		return (NULL);
-	tmp = all->tokens;
-	while ((tmp->type != COMMAND || tmp->process_nbr != proc))
-		tmp = tmp->next;
-	arr[i++] = tmp->token;
-	tmp = tmp->next;
-	while (tmp->type == ARGUMENT && tmp->process_nbr == proc)
-	{
-		arr[i++] = tmp->token;
-		tmp = tmp->next;
-	}
-	arr[i] = NULL;
-	return (arr);
+	// i = 0;
+	// arr = malloc ((ft_lstsize(all->tokens, proc) + 1) * sizeof(char *));
+	// if (!arr)
+	// 	return (NULL);
+	// tmp = all->tokens;
+	// while ((tmp->type != COMMAND || tmp->process_nbr != proc))
+	// 	tmp = tmp->next;
+	// arr[i++] = tmp->token;
+	// tmp = tmp->next;
+	// while (tmp->type == ARGUMENT && tmp->process_nbr == proc)
+	// {
+	// 	arr[i++] = tmp->token;
+	// 	tmp = tmp->next;
+	// }
+	// arr[i] = NULL;
+	// return (arr);
 }
 
 char	*build_path(char *cmd, char **paths)

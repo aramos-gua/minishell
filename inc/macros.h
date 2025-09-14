@@ -20,5 +20,4 @@
 # define NO_FILE_OR_D "No such file or directory"
 # define NO_PERM "Permission denied"
 
-
 #endif
