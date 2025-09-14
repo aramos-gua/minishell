@@ -25,6 +25,7 @@ static void	first_init(t_data *all)
 	all->return_val = 0;
 	all->c_envp = NULL;
 	all->c_exp = NULL;
+	all->arr = NULL;
 	init_all(all);
 }
 
@@ -43,7 +44,7 @@ int	main(int argc, char *argv[], char *envp[])
 		return (ft_putendl_fd("minishell: envp could not be found", 2), 1);
 	while (42)
 	{
-		(free_all(&all), init_all(&all), set_signal_action());
+		(free_all(&all), init_all(&all));//, set_signal_action());
 		if (!isatty(fileno(stdin)))
 			break;
 		input = readline("minishell> ");
@@ -60,7 +61,7 @@ int	main(int argc, char *argv[], char *envp[])
 			continue ;
 		else if (execution(&all, 0, 0, 0))
 		{
-			g_unblock_sigquit = 0;
+			// g_unblock_sigquit = 0;
 			continue ;
 		}
 	}	

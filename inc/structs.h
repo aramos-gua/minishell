@@ -59,6 +59,7 @@ typedef	struct s_data
 	char	**c_exp;
 	char	**procs;
 	t_proc	*info;
+	char	**arr;
 	t_token	*tokens;
 	int		total_proc;//think this doesnt work well
 	unsigned char	return_val;

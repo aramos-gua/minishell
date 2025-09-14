@@ -22,20 +22,24 @@ int	get_fd(t_data *all, int proc, bool out)
 	current = all->info;
 	while (current->process_nbr != proc)
 		current = current->next;
+	dprintf(2, "proc in node to redirect[%d], in[%d] out[%d]\n", proc, current->in_fd, current->out_fd);
 	if (out == 0)
 		fd = current->in_fd;
 	else
 		fd = current->out_fd;
-	if (fd > 2 && !out)
+	if (!out && fd != STDIN_FILENO)
 	{
 		dup2(fd, STDIN_FILENO);
+		close(fd);
 		all->info->rev_fds = 1;
 	}
-	else if (fd > 2 && out)
+	else if (out && fd != STDOUT_FILENO)
 	{
 		dup2(fd, STDOUT_FILENO);
+		close(fd);
 		all->info->rev_fds = 1;
 	}
+	dprintf(2, "end of get_fd\n");
 	return (0);
 }
 
@@ -90,7 +94,7 @@ int	executron(t_data *all, int i)
 
 int	execution(t_data *all, int i, int piped, bool run)
 {
-	if (i == 1)
+	if (i == 0)
 		write(2, "----------EXECUTION-----------------\n", 37);
 	if (i + 1 == all->info->total_proc || run)
 		execute_command(all, i, piped);

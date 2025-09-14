@@ -15,41 +15,28 @@
 char	**array_builder(t_data *all, int proc)
 {
 	t_token	*tmp;
-	char	**arr;
 	int		i;
 
 	i = 0;
-	arr = malloc ((ft_lstsize(all->tokens, proc) + 1) * sizeof(char *));
-	if (!arr)
+	all->arr = malloc ((ft_lstsize(all->tokens, proc) + 1) * sizeof(char *));
+	if (!all->arr)
 		return (NULL);
 	tmp = all->tokens;
 	while ((tmp->type != COMMAND || tmp->process_nbr != proc))
 		tmp = tmp->next;
-	arr[i++] = tmp->token;
+	all->arr[i] = malloc((ft_strlen(tmp->token) + 1) * sizeof(char));
+	ft_strlcpy(all->arr[i], tmp->token, ft_strlen(tmp->token) + 1);
+	i++;
 	tmp = tmp->next;
 	while (tmp->type == ARGUMENT && tmp->process_nbr == proc)
 	{
-		arr[i++] = tmp->token;
+		all->arr[i] = malloc((ft_strlen(tmp->token) + 1) * sizeof(char));
+		ft_strlcpy(all->arr[i], tmp->token, ft_strlen(tmp->token) + 1);
+		i++;
 		tmp = tmp->next;
 	}
-	arr[i] = NULL;
-	return (arr);
-	i = 0;
-	arr = malloc ((ft_lstsize(all->tokens, proc) + 1) * sizeof(char *));
-	if (!arr)
-		return (NULL);
-	tmp = all->tokens;
-	while ((tmp->type != COMMAND || tmp->process_nbr != proc))
-		tmp = tmp->next;
-	arr[i++] = tmp->token;
-	tmp = tmp->next;
-	while (tmp->type == ARGUMENT && tmp->process_nbr == proc)
-	{
-		arr[i++] = tmp->token;
-		tmp = tmp->next;
-	}
-	arr[i] = NULL;
-	return (arr);
+	all->arr[i] = NULL;
+	return (all->arr);
 }
 
 char	*build_path(char *cmd, char **paths)
@@ -94,10 +81,7 @@ char	*get_cmd_path(char *cmd, char **env)
 		if (access(cmd, X_OK) == 0)
 			return (ft_strdup(cmd));
 		else
-		{
-			perror(cmd);
 			return (NULL);
-		}
 	}
 	while (env[++i])
 		if (ft_strncmp(env[i], "PATH=", 5) == 0)
@@ -106,9 +90,7 @@ char	*get_cmd_path(char *cmd, char **env)
 		return (NULL);
 	paths = (ft_split(path_env, ':'));
 	if (!paths)
-	{
 		return (NULL);
-	}
 	full_path = build_path(cmd, paths);
 	if (!full_path)
 		return (free_split(paths), NULL);

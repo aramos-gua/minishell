@@ -32,5 +32,9 @@ void	restore(t_data *all, int backup[2])
 	dup2(backup[1], STDOUT_FILENO);
 	close(backup[0]);
 	close(backup[1]);
+	if (all->info->in_fd != STDIN_FILENO)
+		close(all->info->in_fd);
+	if (all->info->out_fd != STDOUT_FILENO)
+		close(all->info->out_fd);
 	exit (0);
 }

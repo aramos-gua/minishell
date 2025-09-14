@@ -64,17 +64,26 @@ int	ft_exit(t_data *all, int nodes, t_token *cmd_node, int fds_bak[2])
 		if (nodes == 1)
 		{
 			all->return_val = 0;
+			(rl_clear_history(), free_double_char(all->c_envp), free_all(all));
+			if (all->c_exp)
+				free_double_char(all->c_exp);
 			exit ((int)all->return_val);
 		}
 		else if (nodes == 2 && !(isnt_number(all->tokens->token)))
 		{
 			all->return_val = ft_atoi(all->tokens->token);
+			(rl_clear_history(), free_double_char(all->c_envp), free_all(all));
+			if (all->c_exp)
+				free_double_char(all->c_exp);
 			exit (all->return_val);
 		}
 		else if (nodes >= 2 && isnt_number(cmd_node->next->token))
 		{
 			all->return_val = 255;
 			ft_dprintf(2, "minishell: exit: %s: numeric argument required.", all->tokens->token);
+			(rl_clear_history(), free_double_char(all->c_envp), free_all(all));
+			if (all->c_exp)
+				free_double_char(all->c_exp);
 			exit (all->return_val);
 		}
 		else if (nodes > 2 && !(isnt_number(cmd_node->next->token)))
