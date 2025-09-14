@@ -23,7 +23,8 @@
 # include <stdio.h> //readline //printf
 # include <stdbool.h> //bool for flags ft_export
 # include <stdlib.h> //malloc //free //exit //getenv
-# include <unistd.h> //write //access//read//close//getcwd//chdir//execve//dup//dup2//pipe//isatty//ttyname//ttyslot
+# include <unistd.h> //write //access//read//close
+//getcwd//chdir//execve//dup//dup2//pipe//isatty//ttyname//ttyslot
 # include <fcntl.h> //open //unlink
 # include <sys/wait.h> //wait //waitpid //wait3 //wait4
 # include <signal.h> //signal //sigaction //sigemptyset //sigaddset //kill
@@ -37,7 +38,11 @@
 # include <readline/readline.h> //readline //rl_on_new_line
 # include <readline/history.h> //add_history //rl_clear_history
 
-extern volatile int	g_unblock_sigquit;
+extern volatile sig_atomic_t	g_signal;
+
+//main.c
+void	subtract_shlvl(t_data *all);
+void	add_shlvl(t_data *all);
 
 //envp.c
 void	print_env(t_data *all);
@@ -85,8 +90,11 @@ void	print_t_token(t_token *tokens);
 int		is_builtin(char *s);
 
 //signals.c
-void	set_signal_action(void);
-
+// void	signal_action(int mode);
+// int	set_signal_action(t_data *all);
+void	set_signals_interactive(void);
+void	set_signals_noninteractive(void);
+//
 //free_utils
 void	free_double_char(char **arr);
 void	free_t_proc(t_proc *info, int total_procs);
@@ -99,14 +107,14 @@ int		execution(t_data *all, int i, int piped, bool run);
 int		get_fd(t_data *all, int proc);
 
 //get_binaries.c
-char  	**array_builder(t_data *all, int proc);
+char	**array_builder(t_data *all, int proc);
 char	*build_path(char *cmd, char **paths);
 char	*get_cmd_path(char *cmd, char **env);
 
 //execution_utils.
-t_token *get_process(t_token *list, int i);
-t_token *get_cmd_node(t_token *list, int i);
-int 	ft_lstsize(t_token *list, int proc);
+t_token	*get_process(t_token *list, int i);
+t_token	*get_cmd_node(t_token *list, int i);
+int		ft_lstsize(t_token *list, int proc);
 void	sh_putstr(char *arg, char *str, int fd);
 int		exist_in_arr(char *str, char **array, bool flag);
 
@@ -123,7 +131,7 @@ void	restore(t_data *all, int backup[2]);
 //builtin.c
 int		ft_echo(t_data *all, t_token *cmd_node);
 int		ft_unset(t_data *all, t_token *cmd_node);
-int		ft_exit(t_data *all, int nodes, t_token *cmd_node);
+int		ft_exit(t_data *all, int nodes, t_token *cmd_node, int *bak);
 
 //builtin_helpers.c
 int		which_builtin(char *cmd, t_data *all, int proc);

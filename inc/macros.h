@@ -25,5 +25,4 @@
 # define INV_ARG "not a valid identifier"
 # define INV_EXIT ": numeric argument required"
 
-
 #endif

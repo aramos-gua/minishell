@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../inc/minishell.h"
 
 char	**array_builder(t_data *all, int proc)
 {
@@ -18,19 +18,19 @@ char	**array_builder(t_data *all, int proc)
 	int		i;
 
 	i = 0;
-	all->arr = malloc ((ft_lstsize(all->tokens, proc) + 1) * sizeof(char *));
+	all->arr = ft_calloc ((ft_lstsize(all->tokens, proc) + 1), sizeof(char *));
 	if (!all->arr)
 		return (NULL);
 	tmp = all->tokens;
 	while ((tmp->type != COMMAND || tmp->process_nbr != proc))
 		tmp = tmp->next;
-	all->arr[i] = malloc((ft_strlen(tmp->token) + 1) * sizeof(char));
+	all->arr[i] = ft_calloc((ft_strlen(tmp->token) + 1), sizeof(char));
 	ft_strlcpy(all->arr[i], tmp->token, ft_strlen(tmp->token) + 1);
 	i++;
 	tmp = tmp->next;
 	while (tmp->type == ARGUMENT && tmp->process_nbr == proc)
 	{
-		all->arr[i] = malloc((ft_strlen(tmp->token) + 1) * sizeof(char));
+		all->arr[i] = ft_calloc((ft_strlen(tmp->token) + 1), sizeof(char));
 		ft_strlcpy(all->arr[i], tmp->token, ft_strlen(tmp->token) + 1);
 		i++;
 		tmp = tmp->next;

@@ -6,15 +6,17 @@
 /*   By: mtice <mtice@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 14:40:36 by mtice             #+#    #+#             */
-/*   Updated: 2025/08/21 21:00:59 by mtice            ###   ########.fr       */
+/*   Updated: 2025/09/14 22:06:52 by mtice            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
+volatile sig_atomic_t	g_signal = SA_RESTART;
+
 static void	init_all(t_data *all)
 {
-	g_unblock_sigquit = 0;
+	g_signal = SA_RESTART;
 	all->procs = NULL;
 	all->info = NULL;
 	all->tokens = NULL;
@@ -22,11 +24,51 @@ static void	init_all(t_data *all)
 }
 static void	first_init(t_data *all)
 {
+	all->shlvl = 1;
 	all->return_val = 0;
 	all->c_envp = NULL;
 	all->c_exp = NULL;
 	all->arr = NULL;
 	init_all(all);
+}
+
+void subtract_shlvl(t_data *all)
+{
+	all->shlvl--;
+	printf("SHELLLEVEL:%d\n", all->shlvl);
+	if (all->shlvl > 2)
+	{
+		rl_clear_history();
+		free_double_char(all->c_envp);
+		if (all->c_exp)
+			free_double_char(all->c_exp);
+		find_envp(all, all->envp);
+	}
+}
+
+void	add_shlvl(t_data *all)
+{
+	all->shlvl++;
+	rl_clear_history();
+}
+
+static int	is_minishell(char *input)
+{
+	int	i;
+
+	if (!ft_strncmp("./minishell\0", input, 12))
+		return (1);
+	else if (!ft_strncmp("./minishell", input, 11))
+	{
+		i = 11;
+		while(ft_isspace(input[i]))
+			i++;
+		if (input[i] == '\0')
+			return (1);
+		else
+			return (0);
+	}
+	return (0);
 }
 
 //TODO: correct implementations of exit and env
@@ -38,34 +80,42 @@ int	main(int argc, char *argv[], char *envp[])
 	char 	*input = NULL;
 
 	if (argc > 1)
-		return (1);
+		return (126);
 	first_init(&all);
 	if (find_envp(&all, envp))
 		return (ft_putendl_fd("minishell: envp could not be found", 2), 1);
 	while (42)
 	{
-		(free_all(&all), init_all(&all));//, set_signal_action());
+		set_signals_interactive();
+		(free_all(&all), init_all(&all));
 		if (!isatty(fileno(stdin)))
 			break;
 		input = readline("minishell> ");
-		if (!input || input[0] == '\0' || rl_on_new_line())
-			continue ;
+		if (!input || rl_on_new_line())//if (!input || input[0] == '\0' || rl_on_new_line())
+		{
+			subtract_shlvl(&all);
+			if (all.shlvl)
+				continue ;
+			else
+				break;
+		}
 		add_history(input);
 		// if (!ft_strncmp("exit\0", input, 5)) //TODO: remove because it causes mem leaks
 		// 	break ;
-		// else if (!ft_strncmp("$?\0", input, 3))
-		// 	printf("%d: command not found\n", all.return_val); //TODO: return the correct exit code
-		// else if (!ft_strncmp("env\0", input, 4))
-		// 	print_env(&all);
+		if (is_minishell(input))
+		{
+			add_shlvl(&all);
+			continue;
+		}
 		if (parsing(&all, input))
 			continue ;
-		else if (execution(&all, 0, 0, 0))
-		{
-			// g_unblock_sigquit = 0;
+		if (execution(&all, 0, 0, 0))
 			continue ;
-		}
 	}	
-	(rl_clear_history(), free_double_char(all.c_envp), free_all(&all));
+	rl_clear_history();
+  	free_double_char(all.c_envp);
+	//free_double_char(all.envp);
+	free_all(&all);
 	if (all.c_exp)
 		free_double_char(all.c_exp);
 	return (all.return_val);

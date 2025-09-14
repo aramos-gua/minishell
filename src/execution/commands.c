@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../inc/minishell.h"
 
 int	execute_command(t_data *all, int i, int piped)
 {
@@ -18,7 +18,9 @@ int	execute_command(t_data *all, int i, int piped)
 	char	*path;
 	int		fds_bak[2];
 	int		pid;
+	int		nodes;
 
+	nodes = ft_lstsize(all->tokens, i);
 	cmd = get_process(all->tokens, i);
 	dprintf(2, "cmd for proc[%d] is [%s]\n", i, cmd->token);
 	if (!cmd)
@@ -27,10 +29,12 @@ int	execute_command(t_data *all, int i, int piped)
 	{
 		fds_bak[0] = dup(STDIN_FILENO);
 		fds_bak[1] = dup(STDOUT_FILENO);
-		if (!ft_strncmp(cmd->token, "exit\0", 5))
+		if (!ft_strncmp(cmd->token, "exit\0", 5) && cmd->next == cmd)
 		{
-			restore(all, fds_bak);
-			which_builtin(cmd->token, all, i);
+			dprintf(2, "exit no args\n");
+			ft_exit(all, nodes, cmd, fds_bak);
+			// restore(all, fds_bak);
+			// which_builtin(cmd->token, all, i);
 		}
 		dprintf(2, "redirecting FDs\n");
 		get_fd(all, i);

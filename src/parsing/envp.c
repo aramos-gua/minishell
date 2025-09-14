@@ -6,7 +6,7 @@
 /*   By: mtice <mtice@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 20:05:41 by mtice             #+#    #+#             */
-/*   Updated: 2025/07/25 21:14:38 by mtice            ###   ########.fr       */
+/*   Updated: 2025/09/14 21:11:44 by mtice            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ int	find_envp(t_data *all, char *envp[])
 		j++;
 	}
 	all->c_envp[j] = NULL;
+	all->envp = envp;
 	fill_exp(all);
 	return (0);
 }

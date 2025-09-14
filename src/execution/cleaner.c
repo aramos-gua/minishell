@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../inc/minishell.h"
 
 int	free_split(char **arr)
 {
@@ -36,5 +36,4 @@ void	restore(t_data *all, int backup[2])
 		close(all->info->in_fd);
 	if (all->info->out_fd != STDOUT_FILENO)
 		close(all->info->out_fd);
-	exit (0);
 }

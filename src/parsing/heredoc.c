@@ -6,18 +6,39 @@
 /*   By: mtice <mtice@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 14:37:21 by mtice             #+#    #+#             */
-/*   Updated: 2025/08/28 21:01:38 by mtice            ###   ########.fr       */
+/*   Updated: 2025/09/14 20:41:31 by mtice            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
+static void	heredoc_error(t_data *all, t_token *tkn_ptr, int line_n)
+{
+	(void)all;
+	static int		count = 0;
+	char			*num;
+
+	printf("count: %d\n", count);
+	if (g_signal == SA_RESTART)
+	{
+		ft_putstr_fd("minishell: warning: here-document at line ", 2);
+		num = ft_itoa(count + 1);
+		ft_putstr_fd(num, 2);
+		ft_putstr_fd(" delimited by end-of-file (wanted `", 2);
+		ft_putstr_fd(tkn_ptr->token, 2);
+		ft_putendl_fd("')", 2);
+	}
+	count += (line_n - count);
+	printf("count: %d line_n: %d\n" , count, line_n);
+}
+
 static int	write_heredoc(t_data *all, t_token *tkn_ptr, int to_expand)
 {
-	char	*proc_nbr;
-	char	*path;
-	int		here_fd;
-	char	*line;
+	char		*proc_nbr;
+	char		*path;
+	int			here_fd;
+	char		*line;
+	static int	line_n = 0;
 
 	proc_nbr = ft_itoa(tkn_ptr->process_nbr);
 	path = ft_strjoin("/tmp/.heredoc_p", proc_nbr);
@@ -27,16 +48,57 @@ static int	write_heredoc(t_data *all, t_token *tkn_ptr, int to_expand)
 		perror(ft_strjoin("minishell: ", path));
 		return (1);
 	}
-	line = readline("> ");
-	while (ft_strncmp(line, tkn_ptr->token, ft_strlen(tkn_ptr->token) + 1))
+	while (42)
 	{
-		if (!to_expand)
-			ft_putendl_fd(line, here_fd);
-		else
-			ft_putendl_fd(do_expansion(all, line), here_fd);
+		set_signals_interactive();
+		if (g_signal != SA_RESTART)
+			return (1);
 		line = readline("> ");
+		set_signals_noninteractive();
+		if (!line)
+		{
+			heredoc_error(all, tkn_ptr, line_n);
+			break;
+		}
+		else if (!ft_strncmp(line, tkn_ptr->token, ft_strlen(tkn_ptr->token) + 1))
+			break;
+		else if (!to_expand)
+			ft_putendl_fd(line, here_fd);
+		else if (to_expand)
+		{
+			char *expanded;
+			expanded = do_expansion(all, line);
+			ft_putendl_fd(expanded, here_fd);
+			free(expanded);
+		}
 	}
+	// line = readline("> ");
+	// while (ft_strncmp(line, tkn_ptr->token, ft_strlen(tkn_ptr->token) + 1)
+	// 	&& ++line_n)
+	// {
+	// 	if (!line || g_signal != SA_RESTART)
+	// 	{
+	// 		if (g_signal != SA_RESTART)
+	// 			++line_n;
+	// 		heredoc_error(all, tkn_ptr, line_n);
+	// 		break;
+	// 	}
+	// 	if (!to_expand)
+	// 		ft_putendl_fd(line, here_fd);
+	// 	else
+	// 	{
+	// 		char *expanded;
+	// 		expanded = do_expansion(all, line);
+	// 		ft_putendl_fd(expanded, here_fd);
+	// 		free(expanded);
+	// 	}
+	// 	// set_signals_interactive();
+	// 	line = readline("> ");
+	// 	// set_signals_noninteractive();
+	// }
 	(free(proc_nbr), free(path), close(here_fd));
+	// if (g_signal != SA_RESTART)
+	// 	return (1);
 	return (0);
 }
 
@@ -51,6 +113,7 @@ int	heredoc(t_data *all)
 
 	i = -1;
 	temp = NULL;
+	// all->mode = H_DOC;
 	while (temp != all->tokens->next)
 	{
 		to_expand = 0;

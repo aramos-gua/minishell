@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../inc/minishell.h"
 
 //checks if argument contains something other than L or P when arg[0] == '-'
 static	int	not_only_lps(char *str)
