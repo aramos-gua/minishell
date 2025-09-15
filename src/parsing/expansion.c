@@ -32,11 +32,8 @@ static void	word_split(t_token *tkn_ptr, char **env_var, int *pos)
 		len = 0;
 		while (ft_isspace((*env_var)[i]) && (*env_var)[i] != '\0')
 			i++;
-		while (!ft_isspace((*env_var)[i]) && (*env_var)[i] != '\0')
-		{
+		while (!ft_isspace((*env_var)[i]) && (*env_var)[i] != '\0' && ++len)
 			i++;
-			len++;
-		}
 		new_var = find_token(*env_var, i--, len);
 		tkn_ptr->prev
 			= add_t_token(tkn_ptr->prev, new_var, tkn_ptr->process_nbr);
@@ -155,7 +152,7 @@ char	*do_expansion(t_data *all, char *token)
 			env_var = ft_itoa(all->return_val);
 		else if (token[i] == '$' && token[i + 1] == '\0')
 			env_var = ft_strdup("$");
-		else if (token[i] == '$')
+		else if (token[i] == '$' && token[i + 1] != '\'' && token[i + 1] != '"')
 			env_var = valid_expansion(all, token, &i);
 		else
 			env_var = keep_expansion(token, &i);
@@ -177,8 +174,10 @@ void	expansion(t_data *all, t_token *tkn_ptr, int *position)
 
 	expanded = do_expansion(all, tkn_ptr->token);
 	tkn_ptr->token = expanded;
-	if (ft_strchr(expanded, ' ') || ft_strchr(expanded, '\t')
+	printf("tkn_ptr->exp:%d\n", tkn_ptr->exp);
+	if ((ft_strchr(expanded, ' ') || ft_strchr(expanded, '\t')
 		|| ft_strchr(expanded, '\n') || ft_strchr(expanded, '\v')
 		|| ft_strchr(expanded, '\f') || ft_strchr(expanded, '\r'))
+		&& !tkn_ptr->exp)
 		word_split(tkn_ptr, &expanded, position);
 }

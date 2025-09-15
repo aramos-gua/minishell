@@ -12,12 +12,12 @@
 
 #include "get_next_line_bonus.h"
 
-void		*ft_memmove(void *dest, const void *src, size_t n);
+void		*ft_memmove2(void *dest, const void *src, size_t n);
 char		*ft_trim(const char *s, char set);
 static char	*find_cat(char const *s1, char const *s2, char *cat);
-char		*ft_strjoin(char const *s1, char const *s2);
+char		*ft_strjoin2(char const *s1, char const *s2);
 
-void	*ft_memmove(void *dest, const void *src, size_t n)
+void	*ft_memmove2(void *dest, const void *src, size_t n)
 {
 	char	*s;
 	char	*d;
@@ -108,7 +108,7 @@ static char	*find_cat(char const *s1, char const *s2, char *cat)
 	return (cat);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin2(char const *s1, char const *s2)
 {
 	char			*cat;
 

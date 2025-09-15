@@ -13,7 +13,7 @@
 #include "get_next_line_bonus.h"
 
 size_t			ft_stringlen(const char *s);
-char			*ft_strchr(const char *s, int c);
+char			*ft_strchr2(const char *s, int c);
 static void		theloop(int fd, char *buf, char **line, int eof);
 static void		moreloop(int fd, char *buf, int *p, int *eof);
 char			*get_next_line(int fd);
@@ -28,7 +28,7 @@ size_t	ft_stringlen(const char *s)
 	return (n);
 }
 
-char	*ft_strchr(const char *s, int c)
+char	*ft_strchr2(const char *s, int c)
 {
 	int		i;
 	char	*p;
@@ -63,23 +63,23 @@ static void	theloop(int fd, char *buf, char **line, int eof)
 	p = 0;
 	while (42)
 	{
-		if (ft_strchr(buf, '\n') != NULL)
+		if (ft_strchr2(buf, '\n') != NULL)
 		{
 			temp = ft_trim(buf, '\n');
-			*line = ft_strjoin(*line, temp);
+			*line = ft_strjoin2(*line, temp);
 			p = ft_stringlen(temp);
-			ft_memmove(buf, buf + p, BUFFER_SIZE - p);
+			ft_memmove2(buf, buf + p, BUFFER_SIZE - p);
 			while (p > 0)
 				buf[BUFFER_SIZE - p--] = '\0';
 			return (free(temp));
 		}
-		else if (ft_strchr(buf, '\n') == NULL && eof == 1)
+		else if (ft_strchr2(buf, '\n') == NULL && eof == 1)
 		{
-			*line = ft_strjoin(*line, buf);
+			*line = ft_strjoin2(*line, buf);
 			buf[0] = 4;
 			return ;
 		}
-		*line = ft_strjoin(*line, buf);
+		*line = ft_strjoin2(*line, buf);
 		moreloop(fd, buf, &p, &eof);
 	}
 }

@@ -106,6 +106,9 @@ static void	reformat_tokens(t_data *all)
 	{
 		if (i++ == -1)
 			temp = all->tokens->next;
+		if ((temp->type == COMMAND && !ft_strncmp("export\0", temp->token, 7))
+			|| (temp->prev->exp == 1 && temp->prev->process_nbr == temp->process_nbr))
+			temp->exp = 1;
 		prev = i;
 		if (ft_strchr(temp->token, '$'))
 		{
@@ -130,6 +133,7 @@ static void	reformat_tokens(t_data *all)
 //e.g. export a="cho hello", e$a
 int	lexing(t_data *all)
 {
+	assign_types(all->tokens);
 	reformat_tokens(all);
 	assign_types(all->tokens);
 	return (0);

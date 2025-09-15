@@ -109,15 +109,21 @@ static int	syntax_expansion(char *input, int *i)
 static int	syntax_multiple_pipes(char *input, int *i)
 {
 	int		j;
+	int		w;
 	int		r;
 
 	j = 0;
-	r = *i - 1;
+	w = *i - 1;
+	r = 0;
 	if (input[*i] == '|')
 	{
-		while (r > 0 && ft_isspace(input[r]))
-			r--;
-		if (r == 0 || r == -1)
+		while (w > 0 && (ft_isspace(input[w]) || input[w] == '<' || input[w] == '>'))
+		{
+			if (input[w] == '<' || input[w] == '>')
+				r++;
+			w--;
+		}
+		if (w == 0 || w == -1)
 			j += 1;
 		while ((input[*i] == '|' || ft_isspace(input[*i])) && input[*i] != '\0')
 		{
@@ -126,7 +132,7 @@ static int	syntax_multiple_pipes(char *input, int *i)
 			(*i)++;
 		}
 		(*i)--;
-		if (input[*i + 1] == '\0' || j == 2)
+		if (input[*i + 1] == '\0' || j == 2 || r >= 1)
 			return (ft_putstr_fd(SYNTAX, 2), ft_putendl_fd(" `|'", 2), 1);
 		else if (j > 2)
 			return (ft_putstr_fd(SYNTAX, 2), ft_putendl_fd(" `||'", 2), 1);

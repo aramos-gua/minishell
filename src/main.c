@@ -14,7 +14,7 @@
 
 volatile sig_atomic_t	g_signal = SA_RESTART;
 
-static void	init_all(t_data *all)
+void	init_all(t_data *all)
 {
 	g_signal = SA_RESTART;
 	all->procs = NULL;
@@ -87,9 +87,16 @@ int	main(int argc, char *argv[], char *envp[])
 	{
 		set_signals_interactive();
 		(free_all(&all), init_all(&all));
-		if (!isatty(fileno(stdin)))
-			break;
-		input = readline("minishell> ");
+		if (!isatty(fileno(stdin))) //TODO: change back
+		{
+			break ;
+			// char *temp;
+			// temp = get_next_line(fileno(stdin));
+			// input = ft_strtrim(temp, "\n");
+			// free(temp);
+		}
+		else
+			input = readline("minishell> ");
 		if (!input || rl_on_new_line())//if (!input || input[0] == '\0' || rl_on_new_line())
 		{
 			subtract_shlvl(&all);
@@ -110,6 +117,8 @@ int	main(int argc, char *argv[], char *envp[])
 			continue ;
 		if (execution(&all, 0, 0, 0))
 			continue ;
+		if (g_signal == SIGQUIT)
+			all.return_val = 131;
 	}	
 	rl_clear_history();
   	free_double_char(all.c_envp);

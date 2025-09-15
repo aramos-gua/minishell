@@ -24,12 +24,12 @@
 # include <fcntl.h>
 
 size_t	ft_stringlen(const char *s);
-char	*ft_strchr(const char *s, int c);
+char	*ft_strchr2(const char *s, int c);
 char	*get_next_line(int fd);
 
 //utils
-void	*ft_memmove(void *dest, const void *src, size_t n);
+void	*ft_memmove2(void *dest, const void *src, size_t n);
 char	*ft_trim(const char *s, char set);
-char	*ft_strjoin(const char *s1, const char *s2);
+char	*ft_strjoin2(const char *s1, const char *s2);
 
 #endif

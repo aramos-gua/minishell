@@ -41,6 +41,7 @@
 extern volatile sig_atomic_t	g_signal;
 
 //main.c
+void	init_all(t_data *all);
 void	subtract_shlvl(t_data *all);
 void	add_shlvl(t_data *all);
 
@@ -77,7 +78,7 @@ void	expansion(t_data *all, t_token *tkn_ptr, int *position);
 int		redirects(t_data *all);
 
 //heredoc.c
-int		heredoc(t_data *all);
+char	*heredoc(t_data *all);
 
 //parsing_utils.c
 t_token	*create_t_token(void);
@@ -90,10 +91,9 @@ void	print_t_token(t_token *tokens);
 int		is_builtin(char *s);
 
 //signals.c
-// void	signal_action(int mode);
-// int	set_signal_action(t_data *all);
 void	set_signals_interactive(void);
-void	set_signals_noninteractive(void);
+void	set_signals_noninteractive();
+void	set_signals_heredoc(void);
 //
 //free_utils
 void	free_double_char(char **arr);
