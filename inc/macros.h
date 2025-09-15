@@ -14,15 +14,15 @@
 # define MACROS_H
 
 //Syntax errors
-# define PROG "minishell: "
+# define PROG "minishell:"
 # define SYNTAX "minishell: syntax error near unexpected token"
 # define S_QUOTE "minishell: syntax error unclosed single quote"
 # define D_QUOTE "minishell: syntax error unclosed double quote"
 # define NO_FILE_OR_D "No such file or directory"
 # define NO_PERM "Permission denied"
 # define INV_OPT "invalid option"
-# define TOO_ARGS "too many arguments"
+# define TOO_ARGS "too many arguments\n"
 # define INV_ARG "not a valid identifier"
-# define INV_EXIT ": numeric argument required"
+# define INV_EXIT ": numeric argument required\n"
 
 #endif

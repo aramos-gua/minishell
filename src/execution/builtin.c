@@ -75,7 +75,7 @@ int	exit_helper(t_data *all, int *bak)
 	if (all->c_exp)
 		free_double_char(all->c_exp);
 	all->shlvl -= 1;
-	if (all->shlvl >= 0)
+	if (all->shlvl >= 1)
 	{
 		if (bak)
 			restore(all, bak);
@@ -97,7 +97,7 @@ int	ft_exit(t_data *all, int nodes, t_token *cmd_node, int *bak)
 	if (all->info->total_proc == 1)
 	{
 		if (nodes == 1)
-			return (all->return_val = 0, exit_helper(all, bak), 1);
+			return (exit_helper(all, bak));
 		else if (nodes == 2 && !(isnt_number(all->tokens->token)))
 		{
 			all->return_val = ft_atoi(all->tokens->token);
@@ -107,15 +107,15 @@ int	ft_exit(t_data *all, int nodes, t_token *cmd_node, int *bak)
 		else if (nodes >= 2 && isnt_number(cmd_node->next->token))
 		{
 			all->return_val = 255;
-			ft_dprintf(2, "%sexit: %s%s", PROG, all->tokens->token, INV_EXIT);
+			ft_dprintf(2, "%s exit: %s%s", PROG, \
+			  cmd_node->next->token, INV_EXIT);
 			if (exit_helper(all, bak))
 				return(1);
 		}
 		else if (nodes > 2 && !(isnt_number(cmd_node->next->token)))
 		{
-			all->return_val = 255;
-			ft_dprintf(2, "exit\nminishell: exit: too many arguments.");
-			return (1);
+			ft_dprintf(2, "exit\nminishell: %s", TOO_ARGS);
+			return (all->return_val = 255, 1);
 		}
 	}
 	return (0);
