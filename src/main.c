@@ -88,8 +88,15 @@ int	main(int argc, char *argv[], char *envp[])
 		set_signals_interactive();
 		(free_all(&all), init_all(&all));
 		if (!isatty(fileno(stdin)))
+		{
 			break;
-		input = readline("minishell> ");
+			// char *temp;
+			// temp = get_next_line(fileno(stdin));
+			// input = ft_strtrim(temp, "\n");
+			// free(temp);
+		}
+		else
+			input = readline("minishell> ");
 		if (!input || rl_on_new_line())//if (!input || input[0] == '\0' || rl_on_new_line())
 		{
 			subtract_shlvl(&all);

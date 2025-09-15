@@ -87,12 +87,40 @@ static int	executron(t_data *all, int i)
 	return (0);
 }
 
+int	no_command(t_data *all, int proc)
+{
+	t_token	*list_tail;
+	t_token	*list_head;
+	int		command_flag;
+
+	command_flag = 1;
+	list_tail = all->tokens;
+	list_head = list_tail->next;
+	if (list_head == list_tail)
+	{
+		if (list_head->type == COMMAND)
+			return (0);
+		else
+			return (1);
+	}
+	while (list_head->process_nbr != proc)
+		list_head = list_head->next;
+	while (list_head->process_nbr == proc && list_head != list_tail)
+	{
+		if (list_head->type == COMMAND)
+			return (command_flag = 0, 0);
+		list_head = list_head->next;
+	}
+	return (command_flag);
+}
+
 //starts the execution of commands by recursively forking, redirecting
 //and calling execve or builtins accordingly
 int	execution(t_data *all, int i, int piped, bool run)
 {
+	if (no_command(all, i))
+		return (1);
 	set_signals_noninteractive();
-	// ft_dprintf(2, "----------EXECUTION-----------------\n");
 	if (i + 1 == all->info->total_proc || run)
 		execute_command(all, i, piped);
 	else

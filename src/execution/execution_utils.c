@@ -32,7 +32,7 @@ t_token	*get_cmd_node(t_token *list, int i)
 
 	if (!list)
 		return (NULL);
-	current = list;
+	current = list->next;
 	while ((current->type != COMMAND && current->builtin != 1) \
 		|| current->process_nbr != i)
 		current = current->next;
