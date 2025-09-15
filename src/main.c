@@ -48,7 +48,6 @@ void subtract_shlvl(t_data *all)
 void	add_shlvl(t_data *all)
 {
 	all->shlvl++;
-	rl_clear_history();
 }
 
 static int	is_minishell(char *input)
