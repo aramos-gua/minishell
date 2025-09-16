@@ -12,7 +12,7 @@
 
 #include "../../inc/minishell.h"
 
-//returns and int corresponding to the index of the occurrence of '='. Inclusive
+//returns an int corresponding to the index of the occurrence of '='. Inclusive
 int	var_len(char *str)
 {
 	int	i;

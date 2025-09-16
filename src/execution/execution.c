@@ -123,6 +123,7 @@ int	execution(t_data *all, int i, int piped, bool run)
 	set_signals_noninteractive();
 	if (i + 1 == all->info->total_proc || run)
 	{
+		dprintf(2, "executing now\n");
 		if (all->info->which_hangs == i)
 		{
 			if (i == 0 && all->total_proc == 1)
