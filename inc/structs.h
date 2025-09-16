@@ -54,6 +54,7 @@ typedef struct s_proc
 	int				out_fd;
 	int				rev_fds;
 	int				total_proc;
+	int				which_hangs;
 	struct s_proc	*prev;
 }				t_proc;
 
