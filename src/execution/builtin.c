@@ -70,6 +70,7 @@ int	ft_unset(t_data *all, t_token *cmd_node)
 
 int	exit_helper(t_data *all, int *bak)
 {
+	dprintf(2, "exit helper\n");
 	rl_clear_history();
 	free_double_char(all->c_envp);
 	if (all->c_exp)
