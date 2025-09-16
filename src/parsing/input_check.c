@@ -181,12 +181,19 @@ static int	syntax_quotes(char *input, int *i)
 int	input_check(char *input)
 {
 	int		i;
+	char	prev_c;
 
 	i = 0;
+	prev_c = '\0';
 	while (input[i] != '\0')
 	{
 		while (ft_isspace(input[i]))
 			i++;
+		if (prev_c == '<' && input[i] == '>')
+			return (ft_putstr_fd(SYNTAX, 2), ft_putendl_fd(" `>'", 2), 1);
+		else if (prev_c == '>' && input[i] == '<')
+			return (ft_putstr_fd(SYNTAX, 2), ft_putendl_fd(" `>'", 2), 1);
+		prev_c = input[i];
 		if ((input[i] == '\'' || input[i] == '"') && syntax_quotes(input, &i))
 			return (1);
 		else if (input[i] == '|' && syntax_multiple_pipes(input, &i))
