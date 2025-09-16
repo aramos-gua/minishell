@@ -91,6 +91,7 @@ void	print_t_token(t_token *tokens);
 int		is_builtin(char *s);
 
 //signals.c
+void	default_sigquit(void);
 void	set_signals_interactive(void);
 void	set_signals_noninteractive();
 void	set_signals_heredoc(void);

@@ -50,6 +50,7 @@ int	execute_command(t_data *all, int i, int piped)
 		if (pid == 0)
 		{
 			get_fd(all, i);
+			default_sigquit();
 			if (execve(path, all->arr, all->c_envp) == -1)
 			{
 				ft_printf("exited after execve\n");
@@ -63,6 +64,7 @@ int	execute_command(t_data *all, int i, int piped)
 	else
 	{
 		get_fd(all, i);
+		default_sigquit();
 		if (execve(path, all->arr, all->c_envp) == -1)
 		{
 			ft_printf("exited after execve\n");

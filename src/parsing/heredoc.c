@@ -27,6 +27,7 @@ static void	heredoc_error(t_data *all, t_token *tkn_ptr, int line_n)
 		ft_putstr_fd(" delimited by end-of-file (wanted `", 2);
 		ft_putstr_fd(tkn_ptr->token, 2);
 		ft_putendl_fd("')", 2);
+		free(num);
 	}
 	count += (line_n - count);
 	//printf("count: %d line_n: %d\n" , count, line_n);
