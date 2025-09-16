@@ -43,7 +43,7 @@ static void	word_split(t_token *tkn_ptr, char **env_var, int *pos)
 
 //-----------------------------------------------------------------------------
 //attempts to expand a variable, if it exists in the environment
-static	void	expand_var(char **c_envp, char **env_var)
+static	void	expand_var(t_token *tkn_ptr, char **c_envp, char **env_var)
 {
 	int		i;
 	int		j;
@@ -63,6 +63,7 @@ static	void	expand_var(char **c_envp, char **env_var)
 		if (!ft_strncmp(c_envp[j], *env_var, ++i))
 		{
 			*env_var = ft_strdup(&c_envp[j][i]);
+			tkn_ptr->exp = 1;
 			break ;
 		}
 		j++;
@@ -74,7 +75,7 @@ static	void	expand_var(char **c_envp, char **env_var)
 //-----------------------------------------------------------------------------
 //once a '$' in the token, valid_expansion() checks whether an expansion is 
 //valid before calling expand_var()
-static char	*valid_expansion(t_data *all, char *token, int *i)
+static char	*valid_expansion(t_data *all, t_token *tkn_ptr, char *token, int *i)
 {
 	char	*env_var;
 	int		len;
@@ -92,7 +93,7 @@ static char	*valid_expansion(t_data *all, char *token, int *i)
 			len++;
 		}
 		env_var = find_token(token, (*i)--, len);
-		return (expand_var(all->c_envp, &env_var), env_var);
+		return (expand_var(tkn_ptr, all->c_envp, &env_var), env_var);
 	}
 	else if (token[*i + 1] == '$')
 	{
@@ -106,8 +107,9 @@ static char	*valid_expansion(t_data *all, char *token, int *i)
 //-----------------------------------------------------------------------------
 //keeps what it finds, even if it is not a valid expansions
 //happens when an expansion is attempted within quotes, e.g. "hi$HOME"
-static char	*keep_expansion(char *token, int *i)
+static char	*keep_expansion(t_data *all, char *token, int *i)
 {
+	(void)all;
 	char	*env_var;
 	int		len;
 
@@ -128,7 +130,16 @@ static char	*keep_expansion(char *token, int *i)
 			if (token[*i] == '$' && token[*i + 1] == '$')
 				skip_to(token, '\'', i, &len); //TODO: is this correct?
 			if (token[*i] == '$' && token[*i + 1] != '"')// || !ft_isspace(token[*i])))
-				break ;
+			{
+			// 	env_var = find_token(token, (*i)--, len);
+			// 	(*i)++;
+			// 	env_var = ft_strjoin(env_var, valid_expansion(all, token, i));
+			// 	printf("env_var:%s\n", env_var);
+			// 	// (*i)++;
+			// 	// do_expansion(all, token + *i);
+			// 	return (env_var);
+				break;
+			}
 			(*i)++;
 			len++;
 		}
@@ -140,7 +151,7 @@ static char	*keep_expansion(char *token, int *i)
 //-----------------------------------------------------------------------------
 //iterates through the token to check at which point valid_expansion()
 //and keep_expansion() should be called
-char	*do_expansion(t_data *all, char *token)
+char	*do_expansion(t_data *all, t_token *tkn_ptr, char *token)
 {
 	int		i;
 	char	*env_var;
@@ -157,9 +168,9 @@ char	*do_expansion(t_data *all, char *token)
 		else if (token[i] == '$' && token[i + 1] == '\0')
 			env_var = ft_strdup("$");
 		else if (token[i] == '$' && token[i + 1] != '\'' && token[i + 1] != '"')
-			env_var = valid_expansion(all, token, &i);
+			env_var = valid_expansion(all, tkn_ptr, token, &i);
 		else
-			env_var = keep_expansion(token, &i);
+			env_var = keep_expansion(all, token, &i);
 		temp = env_var;
 		env_var = ft_strjoin(prev_env_var, temp);
 		(free(prev_env_var)), (free(temp));
@@ -176,12 +187,12 @@ void	expansion(t_data *all, t_token *tkn_ptr, int *position)
 {
 	char	*expanded;
 
-	expanded = do_expansion(all, tkn_ptr->token);
+	expanded = do_expansion(all, tkn_ptr, tkn_ptr->token);
 	tkn_ptr->token = expanded;
-	//delete_quotes(tkn_ptr->token);
+	//printf("token:%s, exp->%d\n", tkn_ptr->token, tkn_ptr->exp);
 	if ((ft_strchr(expanded, ' ') || ft_strchr(expanded, '\t')
 		|| ft_strchr(expanded, '\n') || ft_strchr(expanded, '\v')
 		|| ft_strchr(expanded, '\f') || ft_strchr(expanded, '\r'))
-		&& !tkn_ptr->exp)
+		&& tkn_ptr->exp)
 		word_split(tkn_ptr, &expanded, position);
 }

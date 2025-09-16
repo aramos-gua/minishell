@@ -70,7 +70,7 @@ static char	*write_heredoc(t_data *all, t_token *tkn_ptr, int to_expand)
 		else if (to_expand)
 		{
 			char *expanded;
-			expanded = do_expansion(all, line);
+			expanded = do_expansion(all, tkn_ptr, line);
 			ft_putendl_fd(expanded, here_fd);
 			free(expanded);
 		}

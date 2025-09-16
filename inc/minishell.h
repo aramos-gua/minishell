@@ -71,7 +71,7 @@ void	delete_quotes(char *token);
 int		lexing(t_data *all);
 
 //expansion.c
-char	*do_expansion(t_data *all, char *token);
+char	*do_expansion(t_data *all, t_token *tkn_ptr, char *token);
 void	expansion(t_data *all, t_token *tkn_ptr, int *position);
 
 //redirects.c
