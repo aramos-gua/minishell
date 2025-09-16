@@ -52,9 +52,16 @@ void	fill_exp(t_data *all)
 	if (!all->c_exp)
 		return (all->return_val = 1, perror("malloc error"));
 	i = 0;
-	while (all->c_envp[i])
+	while (all->c_envp[i] != NULL)
 	{
+		char	*temp;
+
+		temp = NULL;
+		if (all->c_exp[i])
+			temp = all->c_exp[i];
 		all->c_exp[i] = ft_strdup(all->c_envp[i]);
+		if (temp)
+			free(temp);
 		i++;
 	}
 	all->c_exp[i] = NULL;
@@ -85,9 +92,12 @@ void	fill_exp(t_data *all)
 	{
 		char	*temp;
 
-		temp = all->c_exp[i];
+		temp = NULL;
+		if (all->c_exp[i])
+			temp = all->c_exp[i];
 		array[i] = ft_strdup(all->c_exp[i]);
-		free(temp);
+		if (temp)
+			free(temp);
 	}
  	array[i++] = ft_strdup(arg_node->token);
  	array[i] = NULL;
@@ -114,9 +124,12 @@ static char	**update_envp(t_data *all, char *new_element, t_token *arg_node)
 	{
 		char	*temp;
 
-		temp = all->c_envp[i];
+		temp = NULL;
+		if (all->c_envp)
+			temp = all->c_envp[i];
 		array[i] = ft_strdup(all->c_envp[i]);
-		free(temp);
+		if (temp)
+			free(temp);
 		i++;
 	}
 	array[i++] = ft_strdup(arg_node->token);
@@ -131,10 +144,11 @@ int	ft_export(t_data *all, int proc, t_token *cmd_node)
 	t_token	*arg;
 	char	*key_val;
 
+	key_val = NULL;
 	if (all->total_proc > 1)
 		return (1);
-	if (all->c_exp == NULL)
-		fill_exp(all);
+	// if (all->c_exp == NULL)
+	// 	fill_exp(all);
 	if ((ft_lstsize(all->tokens, proc)) == 1)
 		ft_print_exp(all);
 	arg = cmd_node->next;
@@ -148,17 +162,32 @@ int	ft_export(t_data *all, int proc, t_token *cmd_node)
 		key_val = nullify(arg->token);
 		if (key_val[ft_strlen(key_val) - 1] == '=')
 		{
-			char **temp;
-			temp = all->c_envp;
+			// char	**temp;
+			// int		new_arr_flag;
+
+			// new_arr_flag = 0;
+			// temp = NULL;
+			// if (exist_in_arr(key_val, all->c_envp, false) != -1)
+			// {
+			// 	temp = all->c_envp;
+				// new_arr_flag = 1;
+			// }
 			all->c_envp = update_envp(all, key_val, arg);
-			free_double_char(temp);
+			// if (new_arr_flag && temp && temp[0])
+			// 	free_double_char(temp);
 		}
-		char **temp2;
-		temp2 = all->c_exp;
+		char	**temp2;
+		int		new_arr_flag2;
+
+		new_arr_flag2 = 0;
+		if (exist_in_arr(key_val, all->c_exp, true) != -1)
+			temp2 = all->c_exp;
 		all->c_exp = update_exp(all, key_val, arg);
-		free_double_char(temp2);
+		if (new_arr_flag2)
+			free_double_char(temp2);
 		arg = arg->next;
 	}
-	free(key_val);
+	if (key_val)
+		free(key_val);
 	return (1);
 }
