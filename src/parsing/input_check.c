@@ -45,7 +45,7 @@ static int	syntax_re_in(char *input, int *i)
 				return (ft_putstr_fd(SYNTAX, 2), ft_putendl_fd(" `<<'", 2), 1);
 		}
 	}
-	return (0);
+	return ((*i)--, 0);
 }
 
 //-----------------------------------------------------------------------------
@@ -79,7 +79,7 @@ static int	syntax_re_out(char *input, int *i)
 				return (ft_putstr_fd(SYNTAX, 2), ft_putendl_fd(" `>>'", 2), 1);
 		}
 	}
-	return (0);
+	return ((*i)--, 0);
 }
 
 //-----------------------------------------------------------------------------
@@ -148,7 +148,6 @@ static int	syntax_multiple_pipes(char *input, int *i)
 //with ascii 26 (SUB) and later added back during tokenisation
 static int	syntax_quotes(char *input, int *i)
 {
-	//printf("char[%d]:%c\n", *i, input[*i]);
 	(*i)++;
 	if (input[*i - 1] == '\'')
 	{

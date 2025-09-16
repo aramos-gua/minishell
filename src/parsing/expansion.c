@@ -189,7 +189,6 @@ void	expansion(t_data *all, t_token *tkn_ptr, int *position)
 
 	expanded = do_expansion(all, tkn_ptr, tkn_ptr->token);
 	tkn_ptr->token = expanded;
-	//printf("token:%s, exp->%d\n", tkn_ptr->token, tkn_ptr->exp);
 	if ((ft_strchr(expanded, ' ') || ft_strchr(expanded, '\t')
 		|| ft_strchr(expanded, '\n') || ft_strchr(expanded, '\v')
 		|| ft_strchr(expanded, '\f') || ft_strchr(expanded, '\r'))
