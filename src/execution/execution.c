@@ -136,6 +136,7 @@ int	execution(t_data *all, int i, int piped, bool run)
 		if (only_ops(all, i))
 			all->info->which_hangs = i;
 		executron(all, i);
+	}
 	if (g_signal == SIGQUIT)
 		all->return_val = 131;
 	return (0);
