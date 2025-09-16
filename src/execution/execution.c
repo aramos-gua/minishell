@@ -87,43 +87,54 @@ static int	executron(t_data *all, int i)
 	return (0);
 }
 
-int	no_command(t_data *all, int proc)
+int	only_ops(t_data *all, int proc)
 {
 	t_token	*list_tail;
 	t_token	*list_head;
 	int		command_flag;
 
-	command_flag = 1;
+	command_flag = proc;
 	list_tail = all->tokens;
 	list_head = list_tail->next;
 	if (list_head == list_tail)
 	{
 		if (list_head->type == COMMAND)
-			return (0);
-		else
-			return (1);
+			return (-1);
+		else if (list_head->type == APPEND || list_head->type == RE_IN || list_head->type == RE_OUT)
+			return (proc);
 	}
 	while (list_head->process_nbr != proc)
 		list_head = list_head->next;
 	while (list_head->process_nbr == proc && list_head != list_tail)
 	{
 		if (list_head->type == COMMAND)
-			return (command_flag = 0, 0);
+			return (command_flag = -1, command_flag);
 		list_head = list_head->next;
 	}
 	return (command_flag);
 }
 
-//starts the execution of commands by recursively forking, redirecting
-//and calling execve or builtins accordingly
 int	execution(t_data *all, int i, int piped, bool run)
 {
-	if (no_command(all, i))
-		return (1);
+	if (only_ops(all,i) != -1)
+		all->info->which_hangs = (only_ops(all, i));
+	else
+		all->info->which_hangs = -1;
 	set_signals_noninteractive();
 	if (i + 1 == all->info->total_proc || run)
+	{
+		if (all->info->which_hangs == i)
+		{
+			if (i == 0 && all->total_proc == 1)
+				return (1);
+			exit(1);
+		}
 		execute_command(all, i, piped);
+	}
 	else
+	{
+		if (only_ops(all, i))
+			all->info->which_hangs = i;
 		executron(all, i);
 	if (g_signal == SIGQUIT)
 		all->return_val = 131;
