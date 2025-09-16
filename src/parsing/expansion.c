@@ -71,36 +71,6 @@ static	void	expand_var(char **c_envp, char **env_var)
 		*env_var = ft_strdup("");
 	free(temp);
 }
-
-//-----------------------------------------------------------------------------
-//keeps what it finds, even if it is not a valid expansions
-//happens when an expansion is attempted within quotes, e.g. "hi$HOME"
-static char	*keep_expansion(char *token, int *i)
-{
-	char	*env_var;
-	int		len;
-
-	env_var = NULL;
-	len = 1;
-	(*i)++;
-	if (token[*i - 1] == '\'' && token[*i] != '\0')
-		skip_to(token, '\'', i, &len);
-	else
-	{
-		while (token[*i] != '"' && token[*i] != '\0')
-		{
-			if (token[*i] == '$' && token[*i + 1] == '$')
-				skip_to(token, '\'', i, &len);
-			if (token[*i] == '$' && token[*i + 1] != '"')
-				break ;
-			(*i)++;
-			len++;
-		}
-	}
-	env_var = find_token(token, (*i)--, len);
-	return (env_var);
-}
-
 //-----------------------------------------------------------------------------
 //once a '$' in the token, valid_expansion() checks whether an expansion is 
 //valid before calling expand_var()
@@ -131,6 +101,40 @@ static char	*valid_expansion(t_data *all, char *token, int *i)
 	}
 	else
 		return (ft_strdup(""));
+}
+
+//-----------------------------------------------------------------------------
+//keeps what it finds, even if it is not a valid expansions
+//happens when an expansion is attempted within quotes, e.g. "hi$HOME"
+static char	*keep_expansion(char *token, int *i)
+{
+	char	*env_var;
+	int		len;
+
+	env_var = NULL;
+	len = 1;
+	(*i)++;
+	if (token[*i - 1] == '$')
+		return (NULL);
+	else if ((token[*i - 1] == '\'' && token[*i] == '\'')
+		|| (token[*i - 1] == '"' && token[*i] == '"'))
+		return (NULL);
+	else if (token[*i - 1] == '\'' && token[*i] != '\0')
+		skip_to(token, '\'', i, &len);
+	else
+	{
+		while (token[*i] != '"' && token[*i] != '\0')
+		{
+			if (token[*i] == '$' && token[*i + 1] == '$')
+				skip_to(token, '\'', i, &len); //TODO: is this correct?
+			if (token[*i] == '$' && token[*i + 1] != '"')// || !ft_isspace(token[*i])))
+				break ;
+			(*i)++;
+			len++;
+		}
+	}
+	env_var = find_token(token, (*i)--, len);
+	return (env_var);
 }
 
 //-----------------------------------------------------------------------------
@@ -174,6 +178,7 @@ void	expansion(t_data *all, t_token *tkn_ptr, int *position)
 
 	expanded = do_expansion(all, tkn_ptr->token);
 	tkn_ptr->token = expanded;
+	//delete_quotes(tkn_ptr->token);
 	if ((ft_strchr(expanded, ' ') || ft_strchr(expanded, '\t')
 		|| ft_strchr(expanded, '\n') || ft_strchr(expanded, '\v')
 		|| ft_strchr(expanded, '\f') || ft_strchr(expanded, '\r'))

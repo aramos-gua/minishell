@@ -148,6 +148,7 @@ static int	syntax_multiple_pipes(char *input, int *i)
 //with ascii 26 (SUB) and later added back during tokenisation
 static int	syntax_quotes(char *input, int *i)
 {
+	//printf("char[%d]:%c\n", *i, input[*i]);
 	(*i)++;
 	if (input[*i - 1] == '\'')
 	{
@@ -171,7 +172,7 @@ static int	syntax_quotes(char *input, int *i)
 		if (input[*i] == '\0')
 			return (ft_putendl_fd(D_QUOTE, 2), 1);
 	}
-	(*i)++;
+	//(*i)++;
 	return (0);
 }
 

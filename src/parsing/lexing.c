@@ -115,7 +115,8 @@ static void	reformat_tokens(t_data *all)
 			if (is_redirect(temp->prev->token) != HERE_DOC)
 				expansion(all, temp, &i);
 		}
-		(sub_char(temp->token, 26, '|')), (delete_quotes(temp->token));
+		delete_quotes(temp->token);
+		sub_char(temp->token, 26, '|');
 		temp = temp->next;
 		if (i > prev)
 		{
