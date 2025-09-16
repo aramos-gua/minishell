@@ -88,7 +88,7 @@ void	free_all(t_data *all)
 		free_t_proc(all->info, all->total_proc);
 	if (all->tokens)
 		free_t_token(all->tokens);
-	// if (all->arr)
-	// 	free(all->arr);
+	if (all->arr)
+		free_double_char(all->arr);
 	unlink_heredocs(all->total_proc);
 }

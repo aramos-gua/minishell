@@ -20,6 +20,7 @@ void	init_all(t_data *all)
 	all->procs = NULL;
 	all->info = NULL;
 	all->tokens = NULL;
+	all->arr = NULL;
 	all->total_proc = 0;
 }
 static void	first_init(t_data *all)
@@ -28,7 +29,6 @@ static void	first_init(t_data *all)
 	all->return_val = 0;
 	all->c_envp = NULL;
 	all->c_exp = NULL;
-	all->arr = NULL;
 	init_all(all);
 }
 
@@ -88,11 +88,11 @@ int	main(int argc, char *argv[], char *envp[])
 		(free_all(&all), init_all(&all));
 		if (!isatty(fileno(stdin))) //TODO: change back
 		{
-			break ;
-			//char *temp;
-			//temp = get_next_line(fileno(stdin));
-			//input = ft_strtrim(temp, "\n");
-			//free(temp);
+			// break ;
+			char *temp;
+			temp = get_next_line(fileno(stdin));
+			input = ft_strtrim(temp, "\n");
+			free(temp);
 		}
 		else
 			input = readline("minishell> ");

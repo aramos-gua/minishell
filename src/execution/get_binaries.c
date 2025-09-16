@@ -12,31 +12,66 @@
 
 #include "../../inc/minishell.h"
 
-char	**array_builder(t_data *all, int proc)
+int	count_cmd_arg(t_token *list, int proc)
 {
-	t_token	*tmp;
-	int		i;
+	t_token	*tail;
+	t_token	*head;
+	int		count;
 
-	i = 0;
-	all->arr = ft_calloc ((ft_lstsize(all->tokens, proc) + 1), sizeof(char *));
-	if (!all->arr)
-		return (NULL);
-	tmp = all->tokens;
-	while ((tmp->type != COMMAND || tmp->process_nbr != proc))
-		tmp = tmp->next;
-	all->arr[i] = ft_calloc((ft_strlen(tmp->token) + 1), sizeof(char));
-	ft_strlcpy(all->arr[i], tmp->token, ft_strlen(tmp->token) + 1);
-	i++;
-	tmp = tmp->next;
-	while (tmp->type == ARGUMENT && tmp->process_nbr == proc)
+	count = 1;
+	tail = list;
+	// dprintf(2, "tail is [%s]\n", tail->token);
+	head = tail->next;
+	// dprintf(2, "head is [%s]\n", head->token);
+	while (head != tail && head->process_nbr != proc)
+		head = head->next;
+	while (head != tail)
 	{
-		all->arr[i] = ft_calloc((ft_strlen(tmp->token) + 1), sizeof(char));
-		ft_strlcpy(all->arr[i], tmp->token, ft_strlen(tmp->token) + 1);
-		i++;
-		tmp = tmp->next;
+		if (head->type == COMMAND || head->type == ARGUMENT)
+			count++;
+		head = head->next;
 	}
-	all->arr[i] = NULL;
-	return (all->arr);
+	// dprintf(2, "\n\ncount is [%d]\n\n", count);
+	return (count);
+}
+
+int	array_builder(t_data *all, int proc)
+{
+	t_token	*head;
+	t_token	*tail;
+	char	**array;
+	int		i;
+	int		len;
+
+	if (all->arr)
+		free_double_char(all->arr);
+	len = count_cmd_arg(all->tokens, proc);
+	// dprintf(2, "len of array will be [%d]\n", len + 1);
+	i = 0;
+	array = ft_calloc((len + 1), sizeof(char *));
+	if (!all->arr)
+	{
+		dprintf(2, "calloc failed for array builder\n");
+		return (all->return_val = 1, 1);
+	}
+	tail = all->tokens;
+	// dprintf(2, "tail is [%s]\n", tail->token);
+	head = tail->next;
+	// dprintf(2, "head is [%s]\n", head->token);
+	while (head->process_nbr != proc || head->type != COMMAND)
+		head = head->next;
+	array[i] = ft_calloc((ft_strlen(head->token) + 1), sizeof(char));
+	array[i++] = ft_strdup(head->token);
+	head = head->next;
+	while (head->type == ARGUMENT && head->process_nbr == proc)
+	{
+		array[i] = ft_calloc((ft_strlen(head->token) + 1), sizeof(char));
+		array[i++] = ft_strdup(head->token);
+		head = head->next;
+	}
+	array[i] = NULL;
+	all->arr = array;
+	return (0);
 }
 
 char	*build_path(char *cmd, char **paths)

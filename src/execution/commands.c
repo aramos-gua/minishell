@@ -20,6 +20,7 @@ int	execute_command(t_data *all, int i, int piped)
 	int		pid;
 	int		nodes;
 
+	// dprintf(2, "starting execute command\n");
 	nodes = ft_lstsize(all->tokens, i);
 	cmd = get_process(all->tokens, i);
 	if (!cmd)
@@ -43,7 +44,14 @@ int	execute_command(t_data *all, int i, int piped)
 	path = get_cmd_path(cmd->token, all->c_envp);
 	if (!path)
 		return (command_not_found(all, cmd));
+	// dprintf(2, "starting array builder\n");
 	array_builder(all, i);
+	// dprintf(2, "after array builder\n");
+	// int c = 0;
+	// while (all->arr)
+	// {
+	// 	dprintf(2, "item[%d]-> %s\n", c, all->arr[c]);
+	// }
 	if (!piped)
 	{
 		pid = fork();
@@ -52,9 +60,10 @@ int	execute_command(t_data *all, int i, int piped)
 			get_fd(all, i);
 			if (execve(path, all->arr, all->c_envp) == -1)
 			{
-				ft_printf("exited after execve\n");
+				perror("minishell: execve\n");
 				free(path);
-				exit (1);
+				all->return_val = 1;
+				return (ft_exit(all, nodes, cmd, fds_bak));
 			}
 		}
 		else
@@ -65,9 +74,10 @@ int	execute_command(t_data *all, int i, int piped)
 		get_fd(all, i);
 		if (execve(path, all->arr, all->c_envp) == -1)
 		{
-			ft_printf("exited after execve\n");
+			perror("minishell: execve\n");
 			free(path);
-			exit (1);
+			all->return_val = 1;
+			return (ft_exit(all, nodes, cmd, fds_bak));
 		}
 	}
 	free(path);
