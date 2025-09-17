@@ -61,9 +61,11 @@ int	execute_command(t_data *all, int i, int piped)
 			if (get_fd(all, i))
 				return (all->return_val = 1, 1);
 			// dprintf(2, "comming till here 1\n");
+			default_sigquit();
 			if (execve(path, all->arr, all->c_envp) == -1)
 			{
 				perror("minishell: execve\n");
+				//ft_printf("exited after execve\n");
 				free(path);
 				all->return_val = 1;
 				return (ft_exit(all, nodes, cmd, fds_bak));
@@ -77,6 +79,7 @@ int	execute_command(t_data *all, int i, int piped)
 		if (get_fd(all, i))
 			return (all->return_val = 1, 1);
 		// dprintf(2, "comming till here\n");
+		default_sigquit();
 		if (execve(path, all->arr, all->c_envp) == -1)
 		{
 			perror("minishell: execve\n");

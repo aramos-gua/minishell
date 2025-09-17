@@ -112,10 +112,10 @@ static void	reformat_tokens(t_data *all)
 			if (is_redirect(temp->prev->token) != HERE_DOC)
 				expansion(all, temp, &i);
 		}
-		sub_char(temp->token, 26, '|');
-		delete_quotes(temp->token);
+		(sub_char(temp->token, 26, '|'), delete_quotes(temp->token));
 		temp = temp->next;
-		if (i > prev)
+		//printf("i:%d, prev:%d\n", i, prev);
+		if (i > prev) // && (&(all->tokens) != &(all->tokens->next)))
 		{
 			del_t_token(&(all->tokens), i + 1);
 			i--;

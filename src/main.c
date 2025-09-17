@@ -6,7 +6,7 @@
 /*   By: mtice <mtice@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 14:40:36 by mtice             #+#    #+#             */
-/*   Updated: 2025/09/14 22:06:52 by mtice            ###   ########.fr       */
+/*   Updated: 2025/09/17 21:30:08 by mtice            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	init_all(t_data *all)
 	all->tokens = NULL;
 	all->arr = NULL;
 	all->total_proc = 0;
+	all->errors = NULL;
 }
 static void	first_init(t_data *all)
 {
@@ -105,8 +106,6 @@ int	main(int argc, char *argv[], char *envp[])
 				break;
 		}
 		add_history(input);
-		// if (!ft_strncmp("exit\0", input, 5)) //TODO: remove because it causes mem leaks
-		// 	break ;
 		if (is_minishell(input))
 		{
 			add_shlvl(&all);
@@ -114,11 +113,10 @@ int	main(int argc, char *argv[], char *envp[])
 		}
 		if (parsing(&all, input))
 			continue ;
-		if (execution(&all, 0, 0, 0))
-			continue ;
-		if (g_signal == SIGQUIT)
-			all.return_val = 131;
-	}	
+		// if (execution(&all, 0, 0, 0))
+		// 	continue ;
+		// redir_errors(all.errors);
+	}
 	rl_clear_history();
   	free_double_char(all.c_envp);
 	free_all(&all);

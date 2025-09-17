@@ -21,6 +21,16 @@ static void	ignore_sigquit(void)
 	sigaction(SIGQUIT, &act, NULL);
 }
 
+void	default_sigquit(void)
+{
+	struct sigaction	act;
+
+	ft_bzero(&act, sizeof(act));
+	act.sa_handler = SIG_DFL;
+	sigaction(SIGQUIT, &act, NULL);
+	sigaction(SIGINT, &act, NULL);
+}
+
 static void	signal_heredoc(int signal)
 {
 	g_signal = signal;
@@ -40,13 +50,13 @@ void	set_signals_heredoc(void)
 static void	signal_noninteractive(int signal)
 {
 	g_signal = signal;
-	if (g_signal == SIGQUIT)
-		ft_putendl_fd("Quit (core dumped)", 2);
-	else
-	{
-		rl_on_new_line();
-		rl_replace_line("", 0);
-	}
+	// if (g_signal == SIGQUIT)
+	// 	ft_putendl_fd("Quit (core dumped)", 2);
+	// else
+	// {
+	// 	rl_on_new_line();
+	// 	rl_replace_line("", 0);
+	// }
 }
 
 void	set_signals_noninteractive()
@@ -54,9 +64,13 @@ void	set_signals_noninteractive()
 	struct sigaction	act;
 
 	ft_bzero(&act, sizeof(act));
-	act.sa_handler = &signal_noninteractive;
+	act.sa_handler = SIG_IGN;
 	sigaction(SIGINT, &act, NULL);
 	sigaction(SIGQUIT, &act, NULL);
+	act.sa_handler = &signal_noninteractive;
+	// sigaction(SIGINT, &act, NULL);
+	// sigaction(SIGQUIT, &act, NULL);
+
 }
 
 static void	signal_interactive(int signal)

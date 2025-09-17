@@ -27,6 +27,7 @@ static void	heredoc_error(t_data *all, t_token *tkn_ptr, int line_n)
 		ft_putstr_fd(" delimited by end-of-file (wanted `", 2);
 		ft_putstr_fd(tkn_ptr->token, 2);
 		ft_putendl_fd("')", 2);
+		free(num);
 	}
 	count += (line_n - count);
 	//printf("count: %d line_n: %d\n" , count, line_n);
@@ -61,8 +62,10 @@ static char	*write_heredoc(t_data *all, t_token *tkn_ptr, int to_expand)
 			heredoc_error(all, tkn_ptr, line_n);
 			break;
 		}
+		// if (g_signal != SA_RESTART)
+		// 	break ; //TODO: free
 		if (g_signal != SA_RESTART)
-			break ; //TODO: free
+			return (free(proc_nbr), free(path), close(here_fd), line);
 		else if (!ft_strncmp(line, tkn_ptr->token, ft_strlen(tkn_ptr->token) + 1))
 			break;
 		else if (!to_expand)
@@ -77,8 +80,8 @@ static char	*write_heredoc(t_data *all, t_token *tkn_ptr, int to_expand)
 		line_n++;
 	}
 	(free(proc_nbr), free(path), close(here_fd));
-	if (g_signal != SA_RESTART)
-		return (line);
+	// if (g_signal != SA_RESTART)
+	// 	return (line);
 	return (NULL);
 }
 
