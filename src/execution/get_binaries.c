@@ -43,29 +43,21 @@ int	array_builder(t_data *all, int proc)
 	int		i;
 	int		len;
 
-	if (all->arr)
-		free_double_char(all->arr);
+	// if (all->arr)
+	// 	free_double_char(all->arr);
 	len = count_cmd_arg(all->tokens, proc);
-	// dprintf(2, "len of array will be [%d]\n", len + 1);
 	i = 0;
-	array = ft_calloc((len + 1), sizeof(char *));
-	if (!all->arr)
-	{
-		dprintf(2, "calloc failed for array builder\n");
-		return (all->return_val = 1, 1);
-	}
+	array = malloc((len + 1) * sizeof(char *));
+	if (!array)
+		return (perror("malloc"), all->return_val = 1, 1);
 	tail = all->tokens;
-	// dprintf(2, "tail is [%s]\n", tail->token);
 	head = tail->next;
-	// dprintf(2, "head is [%s]\n", head->token);
 	while (head->process_nbr != proc || head->type != COMMAND)
 		head = head->next;
-	array[i] = ft_calloc((ft_strlen(head->token) + 1), sizeof(char));
-	array[i++] = ft_strdup(head->token);
+	array[i++] = strdup((head->token));
 	head = head->next;
 	while (head->type == ARGUMENT && head->process_nbr == proc)
 	{
-		array[i] = ft_calloc((ft_strlen(head->token) + 1), sizeof(char));
 		array[i++] = ft_strdup(head->token);
 		head = head->next;
 	}

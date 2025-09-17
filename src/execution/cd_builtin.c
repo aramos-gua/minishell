@@ -46,7 +46,7 @@ static char	*get_home(t_data *all, char **arr)
 	}
 	len = ft_strlen(arr[i]);
 	home = ft_substr(arr[i], 5, len);
-	dprintf(2, "home [%s]\n", home);
+	// dprintf(2, "home [%s]\n", home);
 	return (home);
 }
 
