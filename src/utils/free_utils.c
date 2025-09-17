@@ -55,8 +55,24 @@ void	free_t_token(t_token *tokens)
 		i++;
 	}
 	while (i--)
-
 		del_t_token(&tokens, i);
+}
+
+static void	free_t_error(t_error *errors)
+{
+	t_error	*temp;
+	int		i;
+
+	temp = NULL;
+	i = -1;
+	while (temp != errors->next)
+	{
+		if (i++ == -1)
+			temp = errors->next;
+		i++;
+	}
+	while (i--)
+		del_t_error(&errors, i);
 }
 
 //-----------------------------------------------------------------------------
@@ -88,6 +104,8 @@ void	free_all(t_data *all)
 		free_t_proc(all->info, all->total_proc);
 	if (all->tokens)
 		free_t_token(all->tokens);
+	if (all->errors)
+		free_t_error(all->errors);
 	// if (all->arr)
 	// 	free(all->arr);
 	unlink_heredocs(all->total_proc);

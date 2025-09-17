@@ -6,7 +6,7 @@
 /*   By: mtice <mtice@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/14 13:54:53 by mtice             #+#    #+#             */
-/*   Updated: 2025/09/14 21:09:59 by mtice            ###   ########.fr       */
+/*   Updated: 2025/09/17 21:27:53 by mtice            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,13 @@ typedef struct s_token
 	struct s_token	*next;
 }				t_token;
 
+typedef struct	s_error
+{
+	struct s_error	*next;
+	char			*filename;
+	struct s_error	*prev;
+}				t_error;
+
 //-----------------------------------------------------------------------------
 //stores EVERYTHING will always be declared as t_data *all
 //stores a pointer to the other structs
@@ -89,6 +96,7 @@ typedef struct s_data
 	char			**procs;
 	t_proc			*info;
 	t_token			*tokens;
+	t_error			*errors;
 	int				shlvl;
 	int				total_proc;//think this doesnt work well
 	unsigned char	return_val;

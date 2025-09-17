@@ -6,7 +6,7 @@
 /*   By: mtice <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 15:29:12 by mtice             #+#    #+#             */
-/*   Updated: 2025/09/14 13:14:25 by aramos           ###   ########.fr       */
+/*   Updated: 2025/09/17 21:28:56 by mtice            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,18 +76,22 @@ void	expansion(t_data *all, t_token *tkn_ptr, int *position);
 
 //redirects.c
 int		redirects(t_data *all);
+void	redir_errors(t_error *errors);
 
 //heredoc.c
 char	*heredoc(t_data *all);
 
-//parsing_utils.c
-t_token	*create_t_token(void);
+//t_token_utils.c
+t_token	*create_token(void);
 t_token	*add_t_token(t_token *tail, char *token, int nbr);
-t_token	*add_at_pos(t_token *tail, char *token, int nbr, int position);
 t_token	*del_t_token(t_token **tail, int position);
 void	print_t_token(t_token *tokens);
 
-//utils
+//t_error_utils.c
+t_error	*add_t_error(t_error *tail, char *filename);
+t_error	*del_t_error(t_error **tail, int position);
+
+//utils.c
 int		is_builtin(char *s);
 
 //signals.c

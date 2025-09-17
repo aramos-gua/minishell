@@ -145,12 +145,10 @@ static char	*keep_expansion(t_data *all, t_token *tkn_ptr, char *token, int *i)
 			{
 				env_var = find_token(token, (*i)--, len);
 				(*i)++;
-				temp = ft_strjoin(env_var, valid_expansion(all, tkn_ptr, token, i));
-				free(env_var);
-				//(*i)--;
-				// printf("token[%d]:%c\n", *i, token[*i]);
+				char *temp1 = valid_expansion(all, tkn_ptr, token, i);
 				len = -1;
-				// printf("i:%d, len:%d\n", *i, len);
+				temp = ft_strjoin(env_var, temp1);
+				(free(env_var), free(temp1));
 			}
 			(*i)++;
 			len++;
