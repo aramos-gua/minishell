@@ -44,26 +44,21 @@ int	exist_in_arr(char *str, char **array, bool exp)
 void	fill_exp(t_data *all)
 {
 	int		i;
+	char	**array;
 
 	i = 0;
 	while (all->c_envp[i])
 		i++;
-	all->c_exp = ft_calloc((i + 1), sizeof(char *));
-	if (!all->c_exp)
+	array = ft_calloc((i + 1), sizeof(char *));
+	if (!array)
 		return (all->return_val = 1, perror("malloc error"));
-	i = 0;
-	while (all->c_envp[i] != NULL)
-	{
-		char	*temp;
-
-		temp = NULL;
-		if (all->c_exp[i])
-			temp = all->c_exp[i];
-		all->c_exp[i] = ft_strdup(all->c_envp[i]);
-		if (temp)
-			free(temp);
-		i++;
-	}
+	i = -1;
+	while (all->c_envp[++i] != NULL)
+		array[i] = ft_strdup(all->c_envp[i]);
+	array[i] = NULL;
+	if (all->c_exp)
+		free_double_char(all->c_exp);
+	all->c_exp = array;
 }
 
 //appends a new entry at the end of c_exp array for export of strings 

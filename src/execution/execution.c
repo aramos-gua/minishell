@@ -20,6 +20,8 @@ int	get_fd(t_data *all, int proc)
 	int		fd_in;
 	int		fd_out;
 
+	all->info->bak[0] = dup(STDIN_FILENO);
+	all->info->bak[1] = dup(STDIN_FILENO);
 	if (!all->info)
 		return (-1);
 	current = all->info;
@@ -29,16 +31,30 @@ int	get_fd(t_data *all, int proc)
 	fd_out = current->out_fd;
 	if (fd_in != STDIN_FILENO)
 	{
-		dup2(fd_in, STDIN_FILENO);
-		close(fd_in);
-		all->info->rev_fds = 1;
+		if (fd_in > 0)
+		{
+			dup2(fd_in, STDIN_FILENO);
+			close(fd_in);
+			return (all->info->rev_fds = 1, 0);
+		}
+		dup2(all->info->bak[1], STDOUT_FILENO);
+		dprintf(2, "minishell: %s %s", "[insert FD name]", NO_FILE_OR_D);//TODO:insert fd name
+		return (all->return_val = 1, 1);
 	}
-	else if (fd_out != STDOUT_FILENO)
+	if (fd_out != STDOUT_FILENO)
 	{
-		dup2(fd_out, STDOUT_FILENO);
-		close(fd_out);
-		all->info->rev_fds = 1;
+		if (fd_out > 0)
+		{
+			dup2(fd_out, STDOUT_FILENO);
+			close(fd_out);
+			return (all->info->rev_fds = 1, 0);
+		}
+		dup2(all->info->bak[0], STDIN_FILENO);
+		dprintf(2, "minishell: %s %s", "[insert FD name", NO_FILE_OR_D);//TODO:insert fd name
+		return (all->return_val = 1, 1);
 	}
+	close(all->info->bak[0]);
+	close(all->info->bak[1]);
 	return (0);
 }
 
@@ -130,7 +146,8 @@ int	execution(t_data *all, int i, int piped, bool run)
 				return (1);
 			exit(1);
 		}
-		execute_command(all, i, piped);
+		if (execute_command(all, i, piped))
+			return (all->return_val = 1, 1);
 	}
 	else
 	{

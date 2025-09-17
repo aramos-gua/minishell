@@ -31,7 +31,8 @@ int	execute_command(t_data *all, int i, int piped)
 		fds_bak[1] = dup(STDOUT_FILENO);
 		if (!ft_strncmp(cmd->token, "exit\0", 5) && cmd->next == cmd)
 			return (ft_exit(all, nodes, cmd, fds_bak));
-		get_fd(all, i);
+		if (get_fd(all, i))
+			return (all->return_val = 1, 1);
 		which_builtin(cmd->token, all, i);
 		dup2(fds_bak[0], STDIN_FILENO);
 		dup2(fds_bak[1], STDOUT_FILENO);
@@ -57,7 +58,9 @@ int	execute_command(t_data *all, int i, int piped)
 		pid = fork();
 		if (pid == 0)
 		{
-			get_fd(all, i);
+			if (get_fd(all, i))
+				return (all->return_val = 1, 1);
+			// dprintf(2, "comming till here 1\n");
 			if (execve(path, all->arr, all->c_envp) == -1)
 			{
 				perror("minishell: execve\n");
@@ -71,7 +74,9 @@ int	execute_command(t_data *all, int i, int piped)
 	}
 	else
 	{
-		get_fd(all, i);
+		if (get_fd(all, i))
+			return (all->return_val = 1, 1);
+		// dprintf(2, "comming till here\n");
 		if (execve(path, all->arr, all->c_envp) == -1)
 		{
 			perror("minishell: execve\n");

@@ -39,8 +39,9 @@ int	ft_echo(t_data *all, t_token *cmd_node)
 
 static void	delete_element(t_token *arg, char **arr)
 {
-	int	i;
-	int	count;
+	int		i;
+	int		count;
+	char	*temp;
 
 	count = 0;
 	i = exist_in_arr(arg->token, arr, false);
@@ -48,7 +49,9 @@ static void	delete_element(t_token *arg, char **arr)
 		count++;
 	if (i > -1)
 	{
+		temp = arr[i];
 		arr[i] = arr[count - 1];
+		free (temp);
 		arr[count - 1] = NULL;
 	}
 }
