@@ -53,7 +53,7 @@ int	execute_command(t_data *all, int i, int piped)
 			default_sigquit();
 			if (execve(path, all->arr, all->c_envp) == -1)
 			{
-				ft_printf("exited after execve\n");
+				//ft_printf("exited after execve\n");
 				free(path);
 				exit (1);
 			}
