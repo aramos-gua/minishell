@@ -56,7 +56,7 @@ static void	delete_element(t_token *arg, char **arr)
 	}
 }
 
-int	ft_unset(t_data *all, t_token *cmd_node)
+int	ft_unset(t_data *all, t_token *cmd_node, int proc)
 {
 	t_token	*arg;
 
@@ -66,8 +66,12 @@ int	ft_unset(t_data *all, t_token *cmd_node)
 		arg = cmd_node->next;
 	else
 		return (1);
-	delete_element(arg, all->c_envp);
-	delete_element(arg, all->c_exp);
+	while (arg->type == ARGUMENT && arg->process_nbr == proc)
+	{
+		delete_element(arg, all->c_envp);
+		delete_element(arg, all->c_exp);
+		arg = arg->next;
+	}
 	return (1);
 }
 
