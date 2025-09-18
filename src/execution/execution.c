@@ -111,21 +111,18 @@ int	only_ops(t_data *all, int proc)
 	if (list_head == all->tokens)
 	{
 		if (list_head->type == COMMAND)
-			return (dprintf(2, "returning first if of if(lisdhead == alltokens\n"), -1);
+			return (-1);
 		else if (list_head->type == APPEND || list_head->type == RE_IN || list_head->type == RE_OUT)
-			return (dprintf(2, "returning proc number from first else"), proc);
+			return (proc);
 	}
 	while (list_head->process_nbr != proc)
 		list_head = list_head->next;
-	dprintf(2, "list head [%s] -> ", list_head->token);
 	while (list_head->process_nbr == proc && list_head != all->tokens)
 	{
 		if (list_head->type == COMMAND)
 			return (-1);
-		dprintf(2, "list head [%s] -> ", list_head->token);
 		list_head = list_head->next;
 	}
-	dprintf(2, "list head [%s] -> ", list_head->token);
 	if (list_head->type == COMMAND)
 		return (-1);
 	return (proc);
