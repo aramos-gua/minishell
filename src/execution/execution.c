@@ -105,29 +105,30 @@ static int	executron(t_data *all, int i)
 
 int	only_ops(t_data *all, int proc)
 {
-	t_token	*list_tail;
 	t_token	*list_head;
-	int		command_flag;
 
-	command_flag = proc;
-	list_tail = all->tokens;
-	list_head = list_tail->next;
-	if (list_head == list_tail)
+	list_head = all->tokens->next;
+	if (list_head == all->tokens)
 	{
 		if (list_head->type == COMMAND)
-			return (-1);
+			return (dprintf(2, "returning first if of if(lisdhead == alltokens\n"), -1);
 		else if (list_head->type == APPEND || list_head->type == RE_IN || list_head->type == RE_OUT)
-			return (proc);
+			return (dprintf(2, "returning proc number from first else"), proc);
 	}
 	while (list_head->process_nbr != proc)
 		list_head = list_head->next;
-	while (list_head->process_nbr == proc && list_head != list_tail)
+	dprintf(2, "list head [%s] -> ", list_head->token);
+	while (list_head->process_nbr == proc && list_head != all->tokens)
 	{
 		if (list_head->type == COMMAND)
-			return (command_flag = -1, command_flag);
+			return (-1);
+		dprintf(2, "list head [%s] -> ", list_head->token);
 		list_head = list_head->next;
 	}
-	return (command_flag);
+	dprintf(2, "list head [%s] -> ", list_head->token);
+	if (list_head->type == COMMAND)
+		return (-1);
+	return (proc);
 }
 
 int	execution(t_data *all, int i, int piped, bool run)
