@@ -51,7 +51,7 @@ static char	*write_heredoc(t_data *all, t_token *tkn_ptr, int to_expand)
 	}
 	while (42)
 	{
-		set_signals_heredoc();
+		//set_signals_heredoc();
 		line = readline("> ");
 		// if (g_signal != SA_RESTART)
 		// 	break ; //TODO: free

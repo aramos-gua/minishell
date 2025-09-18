@@ -20,8 +20,6 @@ int	get_fd(t_data *all, int proc)
 	int		fd_in;
 	int		fd_out;
 
-	all->info->bak[0] = dup(STDIN_FILENO);
-	all->info->bak[1] = dup(STDIN_FILENO);
 	if (!all->info)
 		return (-1);
 	current = all->info;
@@ -35,11 +33,13 @@ int	get_fd(t_data *all, int proc)
 		{
 			dup2(fd_in, STDIN_FILENO);
 			close(fd_in);
-			return (all->info->rev_fds = 1, 0);
+			// return (all->info->rev_fds = 1, 0);
 		}
-		dup2(all->info->bak[1], STDOUT_FILENO);
-		dprintf(2, "minishell: %s %s", "[insert FD name]", NO_FILE_OR_D);//TODO:insert fd name
-		return (all->return_val = 1, 1);
+		else
+		{
+			// dup2(all->info->bak[0], STDIN_FILENO);
+			return (all->return_val = 1, 1);
+		}
 	}
 	if (fd_out != STDOUT_FILENO)
 	{
@@ -47,14 +47,15 @@ int	get_fd(t_data *all, int proc)
 		{
 			dup2(fd_out, STDOUT_FILENO);
 			close(fd_out);
-			return (all->info->rev_fds = 1, 0);
+			// return (all->info->rev_fds = 1, 0);
 		}
-		dup2(all->info->bak[0], STDIN_FILENO);
-		dprintf(2, "minishell: %s %s", "[insert FD name", NO_FILE_OR_D);//TODO:insert fd name
-		return (all->return_val = 1, 1);
+		else
+		{
+			// if (all->info->rev_fds == 1)
+			// 	dup2(all->info->bak[1], STDOUT_FILENO);
+			return (all->return_val = 1, 1);
+		}
 	}
-	close(all->info->bak[0]);
-	close(all->info->bak[1]);
 	return (0);
 }
 
@@ -103,59 +104,67 @@ static int	executron(t_data *all, int i)
 	return (0);
 }
 
-int	only_ops(t_data *all, int proc)
+int	 only_ops(t_data *all, int proc)
 {
-	t_token	*list_tail;
-	t_token	*list_head;
-	int		command_flag;
+	t_token *temp;
 
-	command_flag = proc;
-	list_tail = all->tokens;
-	list_head = list_tail->next;
-	if (list_head == list_tail)
+	temp = all->tokens->next;
+	if (all->tokens == all->tokens->next)
 	{
-		if (list_head->type == COMMAND)
+		if (temp->type == COMMAND)
 			return (-1);
-		else if (list_head->type == APPEND || list_head->type == RE_IN || list_head->type == RE_OUT)
+		else if (temp->type == APPEND || temp->type == RE_IN || temp->type == RE_OUT)
 			return (proc);
 	}
-	while (list_head->process_nbr != proc)
-		list_head = list_head->next;
-	while (list_head->process_nbr == proc && list_head != list_tail)
+	while (temp->process_nbr != proc)
+		temp = temp->next;
+	while (temp->process_nbr == proc && temp != all->tokens)
 	{
-		if (list_head->type == COMMAND)
-			return (command_flag = -1, command_flag);
-		list_head = list_head->next;
+		if (temp->type == COMMAND)
+			return (-1);
+		temp = temp->next;
 	}
-	return (command_flag);
+	if (temp->type == COMMAND)
+		return (-1);
+	return (proc);
+}
+
+int	close_fd(t_data *all, int proc, bool out)
+{
+	t_proc *node;
+
+	node = all->info;
+	while (all->info->process_nbr != proc)
+		node = node->next;
+	if (!out && node->in_fd != -1 && node->in_fd > 2)
+		return(node->in_fd);
+	if (out && node->out_fd != -1 && node->out_fd > 2)
+		return(node->out_fd);
+	return (-1) ;
 }
 
 int	execution(t_data *all, int i, int piped, bool run)
 {
-	if (only_ops(all,i) != -1)
-		all->info->which_hangs = (only_ops(all, i));
-	else
-		all->info->which_hangs = -1;
+	all->info->which_hangs = (only_ops(all, i));
 	set_signals_noninteractive();
 	if (i + 1 == all->info->total_proc || run)
 	{
 		// dprintf(2, "executing now\n");
 		if (all->info->which_hangs == i)
 		{
-			if (i == 0 && all->total_proc == 1)
+			if (all->total_proc == i + 1)
 				return (1);
-			exit(1);
+			else
+			{
+				close(close_fd(all, i, 0));
+				close(close_fd(all, i, 1));
+				exit(1);
+			}
 		}
 		if (execute_command(all, i, piped))
 			return (all->return_val = 1, 1);
 	}
 	else
-	{
-		if (only_ops(all, i))
-			all->info->which_hangs = i;
 		executron(all, i);
-	}
-	if (g_signal == SIGQUIT)
-		all->return_val = 131;
-	return (0);
+	return (1);
 }

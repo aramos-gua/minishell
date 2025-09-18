@@ -85,15 +85,15 @@ int	main(int argc, char *argv[], char *envp[])
 		return (ft_putendl_fd("minishell: envp could not be found", 2), 1);
 	while (42)
 	{
-		set_signals_interactive();
+		//set_signals_interactive();
 		(free_all(&all), init_all(&all));
 		if (!isatty(fileno(stdin))) //TODO: change back
 		{
-			// break ;
-			char *temp;
-			temp = get_next_line(fileno(stdin));
-			input = ft_strtrim(temp, "\n");
-			free(temp);
+			break ;
+			// char *temp;
+			// temp = get_next_line(fileno(stdin));
+			// input = ft_strtrim(temp, "\n");
+			// free(temp);
 		}
 		else
 			input = readline("minishell> ");
@@ -113,9 +113,8 @@ int	main(int argc, char *argv[], char *envp[])
 		}
 		if (parsing(&all, input))
 			continue ;
-		// if (execution(&all, 0, 0, 0))
-		// 	continue ;
-		// redir_errors(all.errors);
+		if (redir_errors(all.errors) && !execution(&all, 0, 0, 0))
+			break ;
 	}
 	rl_clear_history();
   	free_double_char(all.c_envp);

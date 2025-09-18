@@ -64,6 +64,11 @@ int	ft_cd(t_token *cmd, t_data *all, int nodes)
 {
 	char	*old_dir;
 
+	if (all->total_proc != 1)
+	{
+		ft_dprintf(2, "will returin\n");
+		return (1);
+	}
 	if (nodes > 2)
 	{
 		ft_dprintf(2, "minishell: cd: %s\n", TOO_ARGS);

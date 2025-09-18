@@ -76,7 +76,7 @@ void	expansion(t_data *all, t_token *tkn_ptr, int *position);
 
 //redirects.c
 int		redirects(t_data *all);
-void	redir_errors(t_error *errors);
+int		redir_errors(t_error *errors);
 
 //heredoc.c
 char	*heredoc(t_data *all);

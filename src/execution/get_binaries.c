@@ -54,7 +54,7 @@ int	array_builder(t_data *all, int proc)
 	head = tail->next;
 	while (head->process_nbr != proc || head->type != COMMAND)
 		head = head->next;
-	array[i++] = strdup((head->token));
+	array[i++] = ft_strdup((head->token));
 	head = head->next;
 	while (head->type == ARGUMENT && head->process_nbr == proc)
 	{
