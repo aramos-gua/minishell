@@ -117,13 +117,13 @@ static int	syntax_multiple_pipes(char *input, int *i)
 	r = 0;
 	if (input[*i] == '|')
 	{
-		while (w >= 0 && (ft_isspace(input[w]) || input[w] == '<' || input[w] == '>'))
+		while (w > 0 && (ft_isspace(input[w]) || input[w] == '<' || input[w] == '>'))
 		{
 			if (input[w] == '<' || input[w] == '>')
 				r++;
 			w--;
 		}
-		if (w == 0)
+		if (w == 0 || w == -1)
 			j += 1;
 		while ((input[*i] == '|' || ft_isspace(input[*i])) && input[*i] != '\0')
 		{
