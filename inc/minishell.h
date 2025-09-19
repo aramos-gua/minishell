@@ -106,6 +106,7 @@ void	free_t_proc(t_proc *info, int total_procs);
 void	free_t_token(t_token *tokens);
 void	unlink_heredocs(int total_procs);
 void	free_all(t_data *all);
+void	last_free(t_data *all);
 
 //execution.c
 int		execution(t_data *all, int i, int piped, bool run);

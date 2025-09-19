@@ -56,7 +56,8 @@ static int	open_redir(t_data *all, int type, t_token *tkn_ptr, t_proc *info_ptr)
 	(free(proc_nbr), free(path));
 	(void)all;
 	if (info_ptr->in_fd < 0 || info_ptr->out_fd < 0)
-		return (all->errors = add_t_error(all->errors, tkn_ptr->token), 1);
+		return (ft_putstr_fd("minishell: ", 2), perror(tkn_ptr->token), 1);
+		//return (all->errors = add_t_error(all->errors, tkn_ptr->token), 1);
 	return (0);
 }
 
@@ -77,12 +78,13 @@ int	redirects(t_data *all)
 		if (token_temp->process_nbr != info_temp->process_nbr)
 			info_temp = info_temp->next;
 		if (open_redir(all, token_temp->type, token_temp, info_temp))
-		{
-			while (token_temp->process_nbr == info_temp->process_nbr)
-				token_temp = token_temp->next;
-		}
-		else
-			token_temp = token_temp->next;
+			return (1);
+		// {
+		// 	while (token_temp->process_nbr == info_temp->process_nbr)
+		// 		token_temp = token_temp->next;
+		// }
+		// else
+		token_temp = token_temp->next;
 	}
 	return (0);
 }

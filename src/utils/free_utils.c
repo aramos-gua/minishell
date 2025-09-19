@@ -107,6 +107,18 @@ void	free_all(t_data *all)
 	if (all->errors)
 		free_t_error(all->errors);
 	// if (all->arr)
-	// 	free(all->arr);
+	// 	free_double_char(all->arr);
 	unlink_heredocs(all->total_proc);
+}
+
+//-----------------------------------------------------------------------------
+//frees the variables that only need to be freed at the end of the program
+void	last_free(t_data *all)
+{
+	rl_clear_history();
+	if (all->c_envp)
+		free_double_char(all->c_envp);
+	if (all->c_exp)
+		free_double_char(all->c_exp);
+	free_all(all);
 }
