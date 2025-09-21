@@ -51,8 +51,8 @@ void	ft_putexp(char *str)
 	write(STDOUT_FILENO, "\"", 2);
 	while (str[i])
 	{
-		if (str[i] == '\"')
-			i++;
+		if (ft_strchr("\"\\$", str[i]))
+			write(STDOUT_FILENO, "\\", 1);
 		write(STDOUT_FILENO, &str[i], 1);
 		i++;
 	}

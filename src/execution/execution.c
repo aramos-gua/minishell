@@ -29,7 +29,7 @@ int	get_fd(t_data *all, int proc)
 		current = current->next;
 	fd_in = current->in_fd;
 	fd_out = current->out_fd;
-	dprintf(2, "fd_in [%d] fd_out [%d]\n", fd_in, fd_out);
+	// dprintf(2, "fd_in [%d] fd_out [%d]\n", fd_in, fd_out);
 	if (fd_in != STDIN_FILENO)
 	{
 		if (fd_in > 0)
@@ -135,19 +135,19 @@ int	execution(t_data *all, int i, int piped, bool run)
 	//
 	// fds_bak[0] = dup(STDIN_FILENO);
 	// fds_bak[1] = dup(STDOUT_FILENO);
-	if (only_ops(all,i) != -1)
-		all->info->which_hangs = (only_ops(all, i));
-	else
-		all->info->which_hangs = -1;
+	// if (only_ops(all,i) != -1)
+	// 	all->info->which_hangs = (only_ops(all, i));
+	// else
+	// 	all->info->which_hangs = -1;
 	set_signals_noninteractive();
 	if (i + 1 == all->info->total_proc || run)
 	{
 		// dprintf(2, "executing now\n");
-		if (all->info->which_hangs == i)
-		{
-			if (i == 0 && all->total_proc == 1)
-				return (1);
-			exit(1);
+		// if (all->info->which_hangs == i)
+		// {
+		// 	if (i == 0 && all->total_proc == 1)
+		// 		return (1);
+			// exit(1);
 		// rl_clear_history();
 		// free_double_char(all->c_envp);
 		// if (all->c_exp)
@@ -156,14 +156,14 @@ int	execution(t_data *all, int i, int piped, bool run)
 		// 	restore(all, bak);
 		// free_all(all);
 		// exit(all->return_val);
-		}
+		// }
 		if (execute_command(all, i, piped))
 			return (all->return_val = 1, 1);
 	}
 	else
 	{
-		if (only_ops(all, i))
-			all->info->which_hangs = i;
+		// if (only_ops(all, i))
+		// 	all->info->which_hangs = i;
 		executron(all, i);
 	}
 	if (g_signal == SIGQUIT)

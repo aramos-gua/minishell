@@ -13,21 +13,21 @@
 #include "../../inc/minishell.h"
 
 //gets previos directory by searching last slash occurrence and trimming it
-static char	*get_prev_dir(t_data *all)
-{
-	char	*cwd;
-	char	*last_slash;
-
-	cwd = getcwd(NULL, 0);
-	if (!cwd)
-		return (all->return_val = 1, NULL);
-	last_slash = ft_strrchr(cwd, '/');
-	if (last_slash && last_slash != cwd)
-		*last_slash = '\0';
-	else if (last_slash == cwd)
-		cwd[1] = '\0';
-	return (all->return_val = 0, cwd);
-}
+// static char	*get_prev_dir(t_data *all)
+// {
+// 	char	*cwd;
+// 	char	*last_slash;
+//
+// 	cwd = getcwd(NULL, 0);
+// 	if (!cwd)
+// 		return (all->return_val = 1, NULL);
+// 	last_slash = ft_strrchr(cwd, '/');
+// 	if (last_slash && last_slash != cwd)
+// 		*last_slash = '\0';
+// 	else if (last_slash == cwd)
+// 		cwd[1] = '\0';
+// 	return (all->return_val = 0, cwd);
+// }
 
 //looks for HOME defined in the env and if found, returns that path
 static char	*get_home(t_data *all, char **arr)
@@ -73,16 +73,12 @@ int	ft_cd(t_token *cmd, t_data *all, int nodes)
 	old_dir = getcwd(NULL, 0);
 	if (!old_dir)
 		return (all->return_val = 1);
-	else if (nodes == 1 && !ft_strncmp(cmd->token, "cd\0", 3))
+	else if (nodes == 1)
 		return (go_home(all, old_dir), free(old_dir), 1);
-	else if (nodes == 2 && !ft_strncmp(cmd->next->token, "~\0", 2))
+	else if (nodes == 2 && !ft_strncmp(cmd->next->token, "~", 2))
 		return (go_home(all, old_dir), free(old_dir), 1);
 	else if (chdir((const char *)cmd->next->token) == -1)
 		return (all->return_val = 1, perror("minishell"), 1);
-	else if (!strncmp(cmd->next->token, "..\0", 3))
-		chdir(get_prev_dir(all));
-	else
-		chdir(cmd->next->token);
 	update_env_cd(all, "OLDPWD=", old_dir);
 	new_dir = getcwd(NULL, 0);
 	update_env_cd(all, "PWD=", new_dir);

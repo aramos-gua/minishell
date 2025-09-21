@@ -44,7 +44,7 @@ char	*ft_strtrim(char const *s1, char const *set)
 		return (NULL);
 	if (s1[0] == '\0')
 		return (ft_strdup(""));
-	while (ft_strchr(set, s1[i]) != NULL)
+	while (s1[i] && ft_strchr(set, s1[i]) != NULL)
 		i++;
 	while (ft_strrchr(set, s1[j]) != NULL && j != 0)
 		j--;

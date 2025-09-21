@@ -19,22 +19,18 @@ int	execute_command(t_data *all, int i, int piped)
 	int		fds_bak[2];
 	int		pid;
 	int		nodes;
-	t_proc	*current;
 
-	current = all->info;
 	nodes = ft_lstsize(all->tokens, i);
 	cmd = get_process(all->tokens, i);
 	if (!cmd)
 	{
-		while (current->process_nbr != i)
-			current = current->next;
-		dprintf(2, "fd_in [%d] fd_out [%d]\n", current->in_fd, current->out_fd);
-		if (current->in_fd != STDIN_FILENO)
-			close(current->in_fd);
-		if (current->out_fd != STDOUT_FILENO)
-			close(current->out_fd);
 		if (!piped)
 			return (0);
+		if (all->c_envp)
+		free_double_char(all->c_envp);
+		if (all->c_exp)
+		free_double_char(all->c_exp);
+		free_all(all);
 		exit (0);
 	}
 	if (is_builtin(cmd->token))
@@ -50,9 +46,14 @@ int	execute_command(t_data *all, int i, int piped)
 		dup2(fds_bak[1], STDOUT_FILENO);
 		close(fds_bak[0]);
 		close(fds_bak[1]);
-		if (piped)
-			exit(0);
-		return (0);
+		if (!piped)
+			return (0);
+		if (all->c_envp)
+		free_double_char(all->c_envp);
+		if (all->c_exp)
+		free_double_char(all->c_exp);
+		free_all(all);
+		exit (0);
 	}
 	path = get_cmd_path(cmd->token, all->c_envp);
 	if (!path)
@@ -65,7 +66,6 @@ int	execute_command(t_data *all, int i, int piped)
 		{
 			if (get_fd(all, i))
 				return (all->return_val = 1, 1);
-			// dprintf(2, "comming till here 1\n");
 			if (execve(path, all->arr, all->c_envp) == -1)
 			{
 				perror("minishell: execve\n");

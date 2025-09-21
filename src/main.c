@@ -88,11 +88,11 @@ int	main(int argc, char *argv[], char *envp[])
 		(free_all(&all), init_all(&all));
 		if (!isatty(fileno(stdin))) //TODO: change back
 		{
-			// break ;
-			char *temp;
-			temp = get_next_line(fileno(stdin));
-			input = ft_strtrim(temp, "\n");
-			free(temp);
+			break ;
+			// char *temp;
+			// temp = get_next_line(fileno(stdin));
+			// input = ft_strtrim(temp, "\n");
+			// free(temp);
 		}
 		else
 			input = readline("minishell> ");

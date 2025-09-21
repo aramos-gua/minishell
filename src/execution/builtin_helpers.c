@@ -87,7 +87,5 @@ int	which_builtin(char *cmd, t_data *all, int proc)
 		return (ft_unset(all, cmd_node, proc), 1);
 	else if (!ft_strncmp(cmd, "env", len))
 		return (print_env(all), 1);
-	// else if (!ft_strncmp(cmd, "exit", len))
-	// 	return (ft_exit(all, nodes, cmd_node), 1);
 	return (0);
 }
