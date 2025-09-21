@@ -19,18 +19,30 @@ int	execute_command(t_data *all, int i, int piped)
 	int		fds_bak[2];
 	int		pid;
 	int		nodes;
+	t_proc	*current;
 
-	// dprintf(2, "starting execute command\n");
+	current = all->info;
 	nodes = ft_lstsize(all->tokens, i);
 	cmd = get_process(all->tokens, i);
 	if (!cmd)
-		write(2, "exited after cmd\n", 17);
+	{
+		while (current->process_nbr != i)
+			current = current->next;
+		dprintf(2, "fd_in [%d] fd_out [%d]\n", current->in_fd, current->out_fd);
+		if (current->in_fd != STDIN_FILENO)
+			close(current->in_fd);
+		if (current->out_fd != STDOUT_FILENO)
+			close(current->out_fd);
+		if (!piped)
+			return (0);
+		exit (0);
+	}
 	if (is_builtin(cmd->token))
 	{
+		if (!ft_strncmp(cmd->token, "exit", 5))
+			ft_exit(all, nodes, cmd);
 		fds_bak[0] = dup(STDIN_FILENO);
 		fds_bak[1] = dup(STDOUT_FILENO);
-		if (!ft_strncmp(cmd->token, "exit\0", 5) && cmd->next == cmd)
-			return (ft_exit(all, nodes, cmd, fds_bak));
 		if (get_fd(all, i))
 			return (all->return_val = 1, 1);
 		which_builtin(cmd->token, all, i);
@@ -45,14 +57,7 @@ int	execute_command(t_data *all, int i, int piped)
 	path = get_cmd_path(cmd->token, all->c_envp);
 	if (!path)
 		return (command_not_found(all, cmd));
-	// dprintf(2, "starting array builder\n");
 	array_builder(all, i);
-	// dprintf(2, "after array builder\n");
-	// int c = 0;
-	// while (all->arr)
-	// {
-	// 	dprintf(2, "item[%d]-> %s\n", c, all->arr[c]);
-	// }
 	if (!piped)
 	{
 		pid = fork();
@@ -66,7 +71,7 @@ int	execute_command(t_data *all, int i, int piped)
 				perror("minishell: execve\n");
 				free(path);
 				all->return_val = 1;
-				return (ft_exit(all, nodes, cmd, fds_bak));
+				return (ft_exit(all, nodes, cmd));
 			}
 		}
 		else
@@ -82,7 +87,7 @@ int	execute_command(t_data *all, int i, int piped)
 			perror("minishell: execve\n");
 			free(path);
 			all->return_val = 1;
-			return (ft_exit(all, nodes, cmd, fds_bak));
+			return (ft_exit(all, nodes, cmd));
 		}
 	}
 	free(path);

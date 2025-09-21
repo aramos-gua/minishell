@@ -131,7 +131,7 @@ void	restore(t_data *all, int backup[2]);
 //builtin.c
 int		ft_echo(t_data *all, t_token *cmd_node);
 int		ft_unset(t_data *all, t_token *cmd_node, int proc);
-int		ft_exit(t_data *all, int nodes, t_token *cmd_node, int *bak);
+int		ft_exit(t_data *all, int nodes, t_token *cmd_node);
 
 //builtin_helpers.c
 int		which_builtin(char *cmd, t_data *all, int proc);

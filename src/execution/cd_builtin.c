@@ -63,8 +63,9 @@ static int	go_home(t_data *all, char *old_dir)
 int	ft_cd(t_token *cmd, t_data *all, int nodes)
 {
 	char	*old_dir;
+	char	*new_dir;
 
-	if (nodes > 2)
+	if (nodes > 2 || all->info->total_proc > 1)
 	{
 		ft_dprintf(2, "minishell: cd: %s\n", TOO_ARGS);
 		return (all->return_val = 1);
@@ -73,9 +74,9 @@ int	ft_cd(t_token *cmd, t_data *all, int nodes)
 	if (!old_dir)
 		return (all->return_val = 1);
 	else if (nodes == 1 && !ft_strncmp(cmd->token, "cd\0", 3))
-		return (go_home(all, old_dir));
+		return (go_home(all, old_dir), free(old_dir), 1);
 	else if (nodes == 2 && !ft_strncmp(cmd->next->token, "~\0", 2))
-		return (go_home(all, old_dir));
+		return (go_home(all, old_dir), free(old_dir), 1);
 	else if (chdir((const char *)cmd->next->token) == -1)
 		return (all->return_val = 1, perror("minishell"), 1);
 	else if (!strncmp(cmd->next->token, "..\0", 3))
@@ -83,7 +84,9 @@ int	ft_cd(t_token *cmd, t_data *all, int nodes)
 	else
 		chdir(cmd->next->token);
 	update_env_cd(all, "OLDPWD=", old_dir);
-	update_env_cd(all, "PWD=", getcwd(NULL, 0));
+	new_dir = getcwd(NULL, 0);
+	update_env_cd(all, "PWD=", new_dir);
+	free(new_dir);
 	free(old_dir);
 	return (all->return_val = 0);
 }
