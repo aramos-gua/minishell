@@ -106,7 +106,7 @@ int	ft_exit(t_data *all, int nodes, t_token *cmd_node, int *bak)
 		}
 		else if (nodes >= 2 && isnt_number(cmd_node->next->token))
 		{
-			all->return_val = 255;
+			all->return_val = 255; //TODO: change return_val to 2
 			ft_dprintf(2, "%s exit: %s%s", PROG, \
 			  cmd_node->next->token, INV_EXIT);
 			if (exit_helper(all, bak))
@@ -115,7 +115,7 @@ int	ft_exit(t_data *all, int nodes, t_token *cmd_node, int *bak)
 		else if (nodes > 2 && !(isnt_number(cmd_node->next->token)))
 		{
 			ft_dprintf(2, "exit\nminishell: %s", TOO_ARGS);
-			return (all->return_val = 255, 1);
+			return (all->return_val = 255, 1); //TODO: change return_val to 1
 		}
 	}
 	return (0);

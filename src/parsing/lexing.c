@@ -97,8 +97,8 @@ void	delete_quotes(char *token)
 static void	reformat_tokens(t_data *all)
 {
 	t_token	*temp;
-	int		i;
 	int		prev;
+	int		i;
 
 	temp = NULL;
 	i = -1;
@@ -106,18 +106,19 @@ static void	reformat_tokens(t_data *all)
 	{
 		if (i++ == -1)
 			temp = all->tokens->next;
-		prev = i;
+		temp->pos = i;
 		if (ft_strchr(temp->token, '$'))
 		{
 			if (is_redirect(temp->prev->token) != HERE_DOC)
-				expansion(all, temp, &i);
+				expansion(all, temp);
 		}
 		(sub_char(temp->token, 26, '|'), delete_quotes(temp->token));
+		prev = i;
+		i = temp->pos;
 		temp = temp->next;
-		//printf("i:%d, prev:%d\n", i, prev);
-		if (i > prev) // && (&(all->tokens) != &(all->tokens->next)))
+		if (i > prev)
 		{
-			del_t_token(&(all->tokens), i + 1);
+			del_t_token(&(all->tokens), temp->prev->pos);
 			i--;
 		}
 	}
@@ -132,6 +133,7 @@ static void	reformat_tokens(t_data *all)
 int	lexing(t_data *all)
 {
 	reformat_tokens(all);
+	// print_t_token(all->tokens), exit(1);
 	assign_types(all->tokens);
 	return (0);
 }

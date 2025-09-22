@@ -6,7 +6,7 @@
 /*   By: mtice <mtice@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/09 20:59:44 by mtice             #+#    #+#             */
-/*   Updated: 2025/08/28 21:01:42 by mtice            ###   ########.fr       */
+/*   Updated: 2025/09/20 12:45:21 by mtice            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ static char	*keep_expansion(t_data *all, t_token *tkn_ptr, char *token, int *i)
 	char	*env_var;
 	int		len;
 	char	*temp;
-	char	dq;
+	int		dq;
 
 	env_var = NULL;
 	len = 1;

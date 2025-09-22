@@ -94,7 +94,7 @@ static void	split_tokens(t_data *all, t_proc *temp, int *i)
 			}
 		}
 		token = find_token(temp->proc, (*i)--, len);
-		all->tokens = add_t_token(all->tokens, token, temp->process_nbr);
+		all->tokens = add_t_token(all->tokens, token, temp->process_nbr, 0);
 		(*i)++;
 	}
 }

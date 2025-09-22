@@ -33,3 +33,51 @@ int	is_builtin(char *s)
 	else
 		return (0);
 }
+
+int	has_whitespace(char *s)
+{
+	if (ft_strchr(s, ' ') || ft_strchr(s, '\t')
+		|| ft_strchr(s, '\n') || ft_strchr(s, '\v')
+		|| ft_strchr(s, '\f') || ft_strchr(s, '\r'))
+		return (1);
+	else
+		return (0);
+}
+
+char	*append_char(char *s, char c)
+{
+	int		len;
+	char	*appended;
+	int		i;
+
+	len = ft_strlen(s);
+	appended = ft_calloc(sizeof(char), (len + 2));
+	if (!appended)
+	{
+		perror("Malloc error");
+		// all->return_val = 1;
+		return (free(s), NULL);
+	}
+	i = 0;
+	while (s && s[i] != '\0')
+	{
+		appended[i] = s[i];
+		i++;
+	}
+	appended[i++] = c;
+	appended[i] = '\0';
+	return (free(s), appended);
+}
+
+// int main(void)
+// {
+// 	char *s;
+// 	char c = '!';
+// 	char *res;
+//
+// 	s = strdup("Hello World");
+// 	res = append_char(s, c);
+// 	printf("%s\n", res);
+// 	free(res);
+// 	return (0);
+// }

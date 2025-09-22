@@ -71,8 +71,14 @@ void	delete_quotes(char *token);
 int		lexing(t_data *all);
 
 //expansion.c
+// char	*do_expansion(t_data *all, t_token *tkn_ptr, char *token);
+// void	expansion(t_data *all, t_token *tkn_ptr, int *position);
+
+//expansion2.c
+char	*valid_expansion2(t_data *all, t_token *tkn_ptr, char *token, int *i);
+char	*keep_expansion2(t_data *all, t_token *tkn_ptr, char *token, int *i);
 char	*do_expansion(t_data *all, t_token *tkn_ptr, char *token);
-void	expansion(t_data *all, t_token *tkn_ptr, int *position);
+void	expansion(t_data *all, t_token *tkn_ptr);
 
 //redirects.c
 int		redirects(t_data *all);
@@ -83,7 +89,7 @@ char	*heredoc(t_data *all);
 
 //t_token_utils.c
 t_token	*create_token(void);
-t_token	*add_t_token(t_token *tail, char *token, int nbr);
+t_token	*add_t_token(t_token *tail, char *token, int nbr, int position);
 t_token	*del_t_token(t_token **tail, int position);
 void	print_t_token(t_token *tokens);
 
@@ -93,6 +99,8 @@ t_error	*del_t_error(t_error **tail, int position);
 
 //utils.c
 int		is_builtin(char *s);
+int		has_whitespace(char *s);
+char	*append_char(char *s, char c);
 
 //signals.c
 void	default_sigquit(void);

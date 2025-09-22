@@ -25,7 +25,8 @@ t_token	*create_t_token(void)
 	new->next = new;
 	new->type = UNDEFINED;
 	new->builtin = 0;
-	new->exp = 0;
+	new->pos = 0;
+	new->split = 0;
 	new->token = NULL;
 	new->prev = new;
 	return (new);
@@ -33,7 +34,7 @@ t_token	*create_t_token(void)
 
 //------------------------------------------------------------------------------
 //adds a node to the t_token struct
-t_token	*add_t_token(t_token *tail, char *token, int nbr)
+t_token	*add_t_token(t_token *tail, char *token, int nbr, int position)
 {
 	t_token	*new_node;
 	t_token	*temp;
@@ -41,6 +42,7 @@ t_token	*add_t_token(t_token *tail, char *token, int nbr)
 	new_node = create_t_token();
 	new_node->process_nbr = nbr;
 	new_node->token = token;
+	new_node->pos = position;
 	if (!new_node->token)
 		return (NULL);
 	if (!tail)
@@ -91,7 +93,7 @@ t_token	*del_t_token(t_token **tail, int position)
 	t_token	*temp2;
 
 	temp = (*tail)->next;
-	while (position-- > 1)
+	while (position-- > 0)
 		temp = temp->next;
 	temp2 = temp->prev;
 	temp2->next = temp->next;
@@ -123,6 +125,7 @@ void	print_t_token(t_token *tokens)
 			printf("%-20s", temp->token);
 			printf("type:%-2d", temp->type);
 			printf("process:%-2d", temp->process_nbr);
+			printf("pos: %-2d", temp->pos);
 			printf("\n");
 			temp = temp->next;
 		}

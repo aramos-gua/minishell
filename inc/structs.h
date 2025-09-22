@@ -70,7 +70,8 @@ typedef struct s_token
 	int				process_nbr;
 	t_type			type;
 	int				builtin;
-	int				exp;
+	int				pos;
+	int				split;
 	char			*token;
 	struct s_token	*next;
 }				t_token;
