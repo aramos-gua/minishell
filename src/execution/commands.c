@@ -68,7 +68,7 @@ int	execute_command(t_data *all, int i, int piped)
 		if (pid == 0)
 		{
 			if (get_fd(all, i))
-				return (all->return_val = 1, 1);
+				return (free(path), all->return_val = 1, 1);
 			default_sigquit();
 			if (execve(path, all->arr, all->c_envp) == -1)
 			{
@@ -84,7 +84,7 @@ int	execute_command(t_data *all, int i, int piped)
 	else
 	{
 		if (get_fd(all, i))
-			return (all->return_val = 1, 1);
+			return (free(path), all->return_val = 1, 1);
 		// dprintf(2, "comming till here\n");
 		default_sigquit();
 		if (execve(path, all->arr, all->c_envp) == -1)

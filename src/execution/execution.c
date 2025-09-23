@@ -122,12 +122,27 @@ static int	executron(t_data *all, int i)
 
 int	execution(t_data *all, int i, int piped, bool run)
 {
-	// dprintf(2, "executing now\n");
+	// int	nodes;
+	// t_token	*cmd;
+	// nodes = ft_lstsize(all->tokens, i);
+	// cmd = get_process(all->tokens, i);
+	dprintf(2, "executing now\n");
 	set_signals_noninteractive(all);
 	if (i + 1 == all->info->total_proc || run)
 	{
 		if (execute_command(all, i, piped))
+		{
 			all->return_val = 1;
+			// ft_exit(all, nodes, cmd, 1);
+			if (!piped)
+				return (0);
+			if (all->c_envp)
+			free_double_char(all->c_envp);
+			if (all->c_exp)
+			free_double_char(all->c_exp);
+			free_all(all);
+			exit (1);
+		}
 	}
 	else
 	{
