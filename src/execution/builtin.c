@@ -20,7 +20,7 @@ int	ft_echo(t_data *all, t_token *cmd_node)
 
 	line_flag = 1;
 	arg = cmd_node->next;
-	while (arg->token && only_n(arg->token))
+	while (arg->token && arg->token[0] != '\0' && only_n(arg->token))
 	{
 		line_flag = 0;
 		arg = arg->next;
@@ -78,9 +78,16 @@ int	ft_unset(t_data *all, t_token *cmd_node, int proc)
 int	exit_helper(t_data *all)
 {
 	rl_clear_history();
-	free_double_char(all->c_envp);
+	if (all->c_envp)
+	{
+		free_double_char(all->c_envp);
+		all->c_envp = NULL;
+	}
 	if (all->c_exp)
+	{
 		free_double_char(all->c_exp);
+		all->c_exp = NULL;
+	}
 	all->shlvl -= 1;
 	if (all->shlvl >= 1)
 	{
@@ -96,10 +103,12 @@ int	exit_helper(t_data *all)
 }
 
 //TODO:Add print of exit to STDERR
-int	ft_exit(t_data *all, int nodes, t_token *cmd_node)
+int	ft_exit(t_data *all, int nodes, t_token *cmd_node, bool print)
 {
 	if (all->info->total_proc == 1)
 	{
+		if (print)
+			dprintf(2, "exit\n");
 		if (nodes == 1)
 			return (exit_helper(all));
 		else if (nodes == 2 && !(isnt_number(all->tokens->token)))
@@ -118,7 +127,7 @@ int	ft_exit(t_data *all, int nodes, t_token *cmd_node)
 		}
 		else if (nodes > 2 && !(isnt_number(cmd_node->next->token)))
 		{
-			ft_dprintf(2, "exit\nminishell: %s", TOO_ARGS);
+			ft_dprintf(2, "minishell: %s", TOO_ARGS);
 			return (all->return_val = 1, 1);
 		}
 	}

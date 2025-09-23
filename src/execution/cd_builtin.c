@@ -46,16 +46,22 @@ static char	*get_home(t_data *all, char **arr)
 	}
 	len = ft_strlen(arr[i]);
 	home = ft_substr(arr[i], 5, len);
-	// dprintf(2, "home [%s]\n", home);
 	return (home);
 }
 
 //gets the home directory and calls chdir to it
 static int	go_home(t_data *all, char *old_dir)
 {
-	chdir(get_home(all, all->c_envp));
+	char	*home;
+	char	*current;
+
+	home = get_home(all, all->c_envp);
+	chdir(home);
 	update_env_cd(all, "OLDPWD=", old_dir);
-	update_env_cd(all, "PWD=", getcwd(NULL, 0));
+	current = getcwd(NULL, 0);
+	update_env_cd(all, "PWD=", current);
+	free(home);
+	free(current);
 	return (all->return_val = 0, 0);
 }
 
@@ -77,8 +83,8 @@ int	ft_cd(t_token *cmd, t_data *all, int nodes)
 		return (go_home(all, old_dir), free(old_dir), 1);
 	else if (nodes == 2 && !ft_strncmp(cmd->next->token, "~", 2))
 		return (go_home(all, old_dir), free(old_dir), 1);
-	else if (chdir((const char *)cmd->next->token) == -1)
-		return (all->return_val = 1, perror("minishell"), 1);
+	else if (chdir(cmd->next->token) == -1)
+		return (free(old_dir), all->return_val = 1, ft_dprintf(2, "minishell: cd: %s: %s\n", cmd->next->token, NO_FILE_OR_D), 1);
 	update_env_cd(all, "OLDPWD=", old_dir);
 	new_dir = getcwd(NULL, 0);
 	update_env_cd(all, "PWD=", new_dir);

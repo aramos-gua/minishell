@@ -75,7 +75,7 @@ void	fill_exp(t_data *all)
  	if (i == -2)
  		return (0);
 	else if (i != -1 && new_element[len - 1] == '=')
- 		return (all->c_exp[i] = ft_strdup(arg_node->token), 0);
+ 		return (free(all->c_exp[i]), all->c_exp[i] = ft_strdup(arg_node->token), 0);
  	i = 0;
  	while (all->c_exp[i])
  		i++;
@@ -101,7 +101,7 @@ static	int	update_envp(t_data *all, char *new_element, t_token *arg_node)
 	array = NULL;
 	i = exist_in_arr(new_element, all->c_envp, false);
 	if (i != -1)
-		return (all->c_envp[i] = ft_strdup(arg_node->token), 0);
+		return (free(all->c_envp[i]), all->c_envp[i] = ft_strdup(arg_node->token), 0);
 	i = 0;
 	while (all->c_envp[i])
 		i++;
