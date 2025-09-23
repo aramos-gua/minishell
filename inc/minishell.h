@@ -99,11 +99,11 @@ t_error	*del_t_error(t_error **tail, int position);
 int		only_exp(char *token, int i);
 void	word_split(t_token *tkn_ptr, char **env_var);
 void	expand_var(t_token *tkn_ptr, char **c_envp, char **env_var);
+char	*append_char(char *s, char c);
 
 //utils.c
 int		is_builtin(char *s);
 int		has_whitespace(char *s);
-char	*append_char(char *s, char c);
 
 //signals.c
 void	default_sigquit(void);

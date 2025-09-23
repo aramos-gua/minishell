@@ -44,11 +44,6 @@ static char	*write_heredoc(t_data *all, t_token *tkn_ptr, int to_expand)
 	proc_nbr = ft_itoa(tkn_ptr->process_nbr);
 	path = ft_strjoin("/tmp/.heredoc_p", proc_nbr);
 	here_fd = open(path, O_CREAT | O_TRUNC | O_WRONLY, 0644);
-	if (here_fd < 0)
-	{
-		perror(ft_strjoin("minishell: ", path));
-		return (path);
-	}
 	while (42)
 	{
 		set_signals_heredoc();

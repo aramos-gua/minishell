@@ -31,6 +31,30 @@ int	only_exp(char *token, int i)
 		return (0);
 }
 
+char	*append_char(char *s, char c)
+{
+	int		len;
+	char	*appended;
+	int		i;
+
+	len = ft_strlen(s);
+	appended = ft_calloc(sizeof(char), (len + 2));
+	if (!appended)
+	{
+		perror("Malloc error");
+		return (free(s), NULL);
+	}
+	i = 0;
+	while (s && s[i] != '\0')
+	{
+		appended[i] = s[i];
+		i++;
+	}
+	appended[i++] = c;
+	appended[i] = '\0';
+	return (free(s), appended);
+}
+
 void	word_split(t_token *tkn_ptr, char **env_var)
 {
 	int		i;
@@ -91,4 +115,3 @@ void	expand_var(t_token *tkn_ptr, char **c_envp, char **env_var)
 		*env_var = ft_strdup("");
 	free(temp);
 }
-

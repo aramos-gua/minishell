@@ -12,85 +12,20 @@
 
 #include "../../inc/minishell.h"
 
-// static int	only_exp(char *token, int i)
-// {
-// 	if (!token)
-// 		return (0);
-// 	if (token[i] == '$' && ++i)
-// 	{
-// 		while (isspace(token[i]))
-// 			i++;
-// 	}
-// 	if (token[i] == '\0')
-// 		return (1);
-// 	else if (token[i] == '"' && token[i + 1] == '\0')
-// 		return (1);
-// 	else if (token[i] == '\'' && token[i + 1] == '\0')
-// 		return (1);
-// 	else
-// 		return (0);
-// }
+static char	*single_exp(char *token, int *i)
+{
+	char	*env_var;
+	int		len;
 
-// static void	word_split(t_token *tkn_ptr, char **env_var)
-// {
-// 	int		i;
-// 	int		len;
-// 	char	*new_var;
-// 	int		pos;
-//
-// 	pos = tkn_ptr->pos;
-// 	i = 0;
-// 	while ((*env_var)[i] != '\0')
-// 	{
-// 		len = 0;
-// 		while (ft_isspace((*env_var)[i]) && (*env_var)[i] != '\0')
-// 			i++;
-// 		while (!ft_isspace((*env_var)[i]) && (*env_var)[i] != '\0')
-// 		{
-// 			i++;
-// 			len++;
-// 		}
-// 		if (len)
-// 		{
-// 			new_var = find_token(*env_var, i--, len);
-// 			tkn_ptr->prev = add_t_token(tkn_ptr->prev, new_var, tkn_ptr->process_nbr, pos++);
-// 			i++;
-// 		}
-// 	}
-// 	tkn_ptr->pos = pos;
-// }
-
-// static void	expand_var(t_token *tkn_ptr, char **c_envp, char **env_var)
-// {
-// 	int		i;
-// 	int		j;
-// 	char	*temp;
-//
-// 	j = 0;
-// 	temp = *env_var;
-// 	*env_var = ft_strjoin(*env_var, "=");
-// 	free(temp);
-// 	temp = *env_var;
-// 	while (c_envp[j] != NULL)
-// 	{
-// 		i = 0;
-// 		while (c_envp[j][i] != '=')
-// 			i++;
-// 		if (!ft_strncmp(c_envp[j], *env_var, ++i))
-// 		{
-// 			*env_var = ft_strdup(&c_envp[j][i]);
-// 			if (has_whitespace(*env_var) && tkn_ptr->split)
-// 				word_split(tkn_ptr, env_var);
-// 			else if (has_whitespace(*env_var) && !tkn_ptr->split)
-// 				tkn_ptr->split++;
-// 			break ;
-// 		}
-// 		j++;
-// 	}
-// 	if (!c_envp[j])
-// 		*env_var = ft_strdup("");
-// 	free(temp);
-// }
+	env_var = NULL;
+	len = 0;
+	if (token[*i] == '\'')
+	{
+		skip_to(token, '\'', i, &len);
+		env_var = find_token(token, (*i)--, len);
+	}
+	return (env_var);
+}
 
 char	*valid_exp(t_data *all, t_token *tkn_ptr, char *token, int *i)
 {
@@ -121,49 +56,6 @@ char	*valid_exp(t_data *all, t_token *tkn_ptr, char *token, int *i)
 		return (ft_strdup(""));
 }
 
-// static char	*normal_exp(t_data *all, t_token *tkn_ptr, char *env_var, int *i)
-// {
-// 	char	*prev_env_var;
-// 	char	*temp;
-// 	char	*token;
-//
-// 	prev_env_var = NULL;
-// 	temp = NULL;
-// 	token = tkn_ptr->token;
-// 	while (token[*i] != '"' && token[*i] != '\'' && token[*i] != '\0') //TODO: added not '\'' here
-// 	{
-// 		if (token[*i] == '$' && !only_exp(token, *i))
-// 		{
-// 			prev_env_var = env_var;
-// 			temp = valid_exp(all, tkn_ptr, token, i);
-// 			env_var = ft_strjoin(prev_env_var, temp);
-// 			if (has_whitespace(env_var) && tkn_ptr->split)
-// 				word_split(tkn_ptr, &env_var);
-// 			(free(prev_env_var), free(temp));
-// 		}
-// 		else
-// 			env_var = append_char(env_var, token[*i]);
-// 		(*i)++;
-// 	}
-// 	return (env_var);
-// }
-//
-
-static char	*single_exp(char *token, int *i)
-{
-	char	*env_var;
-	int		len;
-
-	env_var = NULL;
-	len = 0;
-	if (token[*i] == '\'')
-	{
-		skip_to(token, '\'', i. &len);
-		env_var = find_token(token, (*i)--, len);
-	}
-	return (env_var);
-}
-
 char	*keep_exp(t_data *all, t_token *tkn_ptr, char *token, int *i)
 {
 	char	*env_var;
@@ -171,18 +63,9 @@ char	*keep_exp(t_data *all, t_token *tkn_ptr, char *token, int *i)
 	char	*temp;
 	int		dq;
 
-	env_var = NULL;
-	//prev_env_var = NULL;
-	//temp = NULL;
 	dq = 0;
-	// if (token[*i] == '\'' && skip_to(token, '\'', i, &len))
-	// 	return (env_var = find_token(token, (*i)--, len), env_var);
-	if (token[*i] == '"' && ++dq)
-	{
-		env_var = append_char(env_var, token[*i]);
-		(*i)++;
-	}
-	// env_var = normal_exp(all, tkn_ptr, env_var, i);
+	if (token[*i] == '"' && ++dq && ++(*i))
+		env_var = append_char(env_var, token[*i - 1]);
 	while (token[*i] != '"' && token[*i] != '\0')
 	{
 		if (token[*i] == '$' && !only_exp(token, *i))
@@ -210,24 +93,24 @@ char	*do_expansion(t_data *all, t_token *tkn_ptr, char *token)
 	char	*prev_env_var;
 	char	*temp;
 
-	i = -1;
+	i = 0;
 	env_var = NULL;
-	while (++i && token[i] != '\0')
+	while (token[i] != '\0')
 	{
 		prev_env_var = env_var;
 		if (token[i] == '$' && token[i + 1] == '?' && ++i)
 			env_var = ft_itoa(all->return_val);
-		else if (token[i] == '$' && token[i + 1] == '\0' && ++i)
+		else if (token[i] == '$' && token[i + 1] == '\0')
 			env_var = ft_strdup("$");
 		else if (token[i] == '$' && ++(tkn_ptr->split))
 			env_var = valid_exp(all, tkn_ptr, token, &i);
 		else if (token[i] == '\'')
-			env_var = single_exp(token, *i);
+			env_var = single_exp(token, &i);
 		else
 			env_var = keep_exp(all, tkn_ptr, token, &i);
 		temp = env_var;
 		env_var = ft_strjoin(prev_env_var, temp);
-		(free(prev_env_var), free(temp));
+		(free(prev_env_var), free(temp), i++);
 	}
 	return (free(token), env_var);
 }
