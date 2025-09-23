@@ -46,11 +46,6 @@ void subtract_shlvl(t_data *all)
 	}
 }
 
-void	add_shlvl(t_data *all)
-{
-	all->shlvl++;
-}
-
 static int	is_minishell(char *input)
 {
 	int	i;
@@ -85,7 +80,7 @@ int	main(int argc, char *argv[], char *envp[])
 		return (ft_putendl_fd("minishell: envp could not be found", 2), 1);
 	while (42)
 	{
-		(set_signals_interactive(), free_all(&all), init_all(&all));
+		(set_signals_interactive(&all), free_all(&all), init_all(&all));
 		if (!isatty(fileno(stdin))) //TODO: change back
 		{
 			//break ;
@@ -96,7 +91,7 @@ int	main(int argc, char *argv[], char *envp[])
 		}
 		else
 			input = readline("minishell> ");
-		if (!input || rl_on_new_line())//if (!input || input[0] == '\0' || rl_on_new_line())
+		if (!input || rl_on_new_line())
 		{
 			subtract_shlvl(&all);
 			if (all.shlvl)
@@ -105,11 +100,8 @@ int	main(int argc, char *argv[], char *envp[])
 				break;
 		}
 		add_history(input);
-		if (is_minishell(input))
-		{
-			add_shlvl(&all);
+		if (is_minishell(input) && ++(all.shlvl))
 			continue;
-		}
 		if (parsing(&all, input))
 			continue ;
 		if (execution(&all, 0, 0, 0))

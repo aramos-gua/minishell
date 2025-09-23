@@ -120,7 +120,7 @@ int	execution(t_data *all, int i, int piped, bool run)
 		all->info->which_hangs = (only_ops(all, i));
 	else
 		all->info->which_hangs = -1;
-	set_signals_noninteractive();
+	set_signals_noninteractive(all);
 	if (i + 1 == all->info->total_proc || run)
 	{
 		if (all->info->which_hangs == i)

@@ -37,7 +37,7 @@ static void	signal_heredoc(int signal)
 	ft_putstr_fd("\nminishell> ", 1);
 }
 
-void	set_signals_heredoc(void)
+void	set_signals_heredoc(t_data *all)
 {
 	struct	sigaction 	act;
 
@@ -45,21 +45,18 @@ void	set_signals_heredoc(void)
 	ft_bzero(&act, sizeof(act));
 	act.sa_handler = &signal_heredoc;
 	sigaction(SIGINT, &act, NULL);
+	if (g_signal == SIGINT)
+		all->return_val = 130;
+	else if (g_signal == SIGQUIT)
+		all->return_val = 131;
 }
 
 static void	signal_noninteractive(int signal)
 {
 	g_signal = signal;
-	// if (g_signal == SIGQUIT)
-	// 	ft_putendl_fd("Quit (core dumped)", 2);
-	// else
-	// {
-	// 	rl_on_new_line();
-	// 	rl_replace_line("", 0);
-	// }
 }
 
-void	set_signals_noninteractive()
+void	set_signals_noninteractive(t_data *all)
 {
 	struct sigaction	act;
 
@@ -68,9 +65,12 @@ void	set_signals_noninteractive()
 	sigaction(SIGINT, &act, NULL);
 	sigaction(SIGQUIT, &act, NULL);
 	act.sa_handler = &signal_noninteractive;
-	// sigaction(SIGINT, &act, NULL);
-	// sigaction(SIGQUIT, &act, NULL);
-
+	sigaction(SIGINT, &act, NULL);
+	sigaction(SIGQUIT, &act, NULL);
+	if (g_signal == SIGINT)
+		all->return_val = 130;
+	else if (g_signal == SIGQUIT)
+		all->return_val = 131;
 }
 
 static void	signal_interactive(int signal)
@@ -82,7 +82,7 @@ static void	signal_interactive(int signal)
 	rl_redisplay();
 }
 
-void	set_signals_interactive(void)
+void	set_signals_interactive(t_data *all)
 {
 	struct sigaction	act;
 
@@ -90,4 +90,8 @@ void	set_signals_interactive(void)
 	ft_bzero(&act, sizeof(act));
 	act.sa_handler = &signal_interactive;
 	sigaction(SIGINT, &act, NULL);
+	if (g_signal == SIGINT)
+		all->return_val = 130;
+	else if (g_signal == SIGQUIT)
+		all->return_val = 131;
 }

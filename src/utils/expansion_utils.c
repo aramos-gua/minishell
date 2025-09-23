@@ -37,7 +37,9 @@ char	*append_char(char *s, char c)
 	char	*appended;
 	int		i;
 
-	len = ft_strlen(s);
+	len = 0;
+	if (s)
+		len = ft_strlen(s);
 	appended = ft_calloc(sizeof(char), (len + 2));
 	if (!appended)
 	{

@@ -107,9 +107,9 @@ int		has_whitespace(char *s);
 
 //signals.c
 void	default_sigquit(void);
-void	set_signals_interactive(void);
-void	set_signals_noninteractive();
-void	set_signals_heredoc(void);
+void	set_signals_interactive(t_data *all);
+void	set_signals_noninteractive(t_data *all);
+void	set_signals_heredoc(t_data *all);
 //
 //free_utils
 void	free_double_char(char **arr);

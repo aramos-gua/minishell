@@ -46,7 +46,7 @@ static char	*write_heredoc(t_data *all, t_token *tkn_ptr, int to_expand)
 	here_fd = open(path, O_CREAT | O_TRUNC | O_WRONLY, 0644);
 	while (42)
 	{
-		set_signals_heredoc();
+		set_signals_heredoc(all);
 		line = readline("> ");
 		// if (g_signal != SA_RESTART)
 		// 	break ; //TODO: free
