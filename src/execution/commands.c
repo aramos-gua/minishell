@@ -58,7 +58,7 @@ int	execute_command(t_data *all, int i, int piped)
 	path = get_cmd_path(cmd->token, all->c_envp);
 	if (!cmd->token || cmd->token[0] == '\0' || !path)
 	{
-		dprintf(2, "get_cmd_path not found\n");
+		// dprintf(2, "get_cmd_path not found\n");
 		return (all->return_val = 127, command_not_found(all, cmd));
 	}
 	array_builder(all, i);

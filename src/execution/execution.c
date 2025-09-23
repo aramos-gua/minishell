@@ -126,7 +126,7 @@ int	execution(t_data *all, int i, int piped, bool run)
 	// t_token	*cmd;
 	// nodes = ft_lstsize(all->tokens, i);
 	// cmd = get_process(all->tokens, i);
-	dprintf(2, "executing now\n");
+	// dprintf(2, "executing now\n");
 	set_signals_noninteractive(all);
 	if (i + 1 == all->info->total_proc || run)
 	{
