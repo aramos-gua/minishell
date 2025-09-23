@@ -43,77 +43,79 @@ int	exist_in_arr(char *str, char **array, bool exp)
 //creates a duplicate two2d array of env
 void	fill_exp(t_data *all)
 {
-	int	i;
+	int		i;
+	char	**array;
 
 	i = 0;
 	while (all->c_envp[i])
 		i++;
-	all->c_exp = ft_calloc((i + 1), sizeof(char *));
-	if (!all->c_exp)
+	array = ft_calloc((i + 1), sizeof(char *));
+	if (!array)
 		return (all->return_val = 1, perror("malloc error"));
-	i = 0;
-	while (all->c_envp[i])
-	{
-		all->c_exp[i] = ft_strdup(all->c_envp[i]);
-		i++;
-	}
-	all->c_exp[i] = NULL;
+	i = -1;
+	while (all->c_envp[++i] != NULL)
+		array[i] = ft_strdup(all->c_envp[i]);
+	array[i] = NULL;
+	if (all->c_exp)
+		free_double_char(all->c_exp);
+	all->c_exp = array;
 }
 
 //appends a new entry at the end of c_exp array for export of strings 
 //that do or not contain a '=' character
-static char	**update_exp(t_data *all, char *new_element, t_token *arg_node)
-{
-	char	**array;
-	int		i;
-	int		len;
+ static	int	update_exp(t_data *all, char *new_element, t_token *arg_node)
+ {
+ 	char	**array;
+ 	int		i;
+ 	int		len;
 
-	len = ft_strlen(new_element);
-	i = exist_in_arr(new_element, all->c_exp, true);
-	if (i == -2)
-		return (all->c_exp);
-	if (i != -1 && new_element[len - 1] == '=')
-		return (ft_strlcpy(all->c_exp[i], \
-		arg_node->token, ft_strlen(arg_node->token) + 1), all->c_exp);
-	i = 0;
-	while (all->c_exp[i])
-		i++;
-	array = malloc((i + 2) * sizeof(char *));
-	if (!array)
-		return (all->return_val = 1, NULL);
-	i = -1;
-	while (all->c_exp[++i])
-		array[i] = all->c_exp[i];
-	array[i++] = ft_strdup(arg_node->token);
-	array[i] = NULL;
-	return (array);
+	array = NULL;
+ 	len = ft_strlen(new_element);
+ 	i = exist_in_arr(new_element, all->c_exp, true);
+ 	if (i == -2)
+ 		return (0);
+	else if (i != -1 && new_element[len - 1] == '=')
+ 		return (free(all->c_exp[i]), all->c_exp[i] = ft_strdup(arg_node->token), 0);
+ 	i = 0;
+ 	while (all->c_exp[i])
+ 		i++;
+ 	array = ft_calloc((i + 2), sizeof(char *));
+ 	if (!array)
+ 		return (1);
+ 	i = -1;
+ 	while (all->c_exp[++i])
+		array[i] = ft_strdup(all->c_exp[i]);
+ 	array[i++] = ft_strdup(arg_node->token);
+ 	array[i] = NULL;
+	free_double_char(all->c_exp);
+	all->c_exp = array;
+	return (0);
 }
 
 //updates the two2d array of env by appending a new key/value delimited by '='
-static char	**update_envp(t_data *all, char *new_element, t_token *arg_node)
+static	int	update_envp(t_data *all, char *new_element, t_token *arg_node)
 {
 	char	**array;
 	int		i;
 
+	array = NULL;
 	i = exist_in_arr(new_element, all->c_envp, false);
 	if (i != -1)
-		return (ft_strlcpy(all->c_envp[i], arg_node->token, \
-		ft_strlen(arg_node->token) + 1), all->c_envp);
+		return (free(all->c_envp[i]), all->c_envp[i] = ft_strdup(arg_node->token), 0);
 	i = 0;
 	while (all->c_envp[i])
 		i++;
 	array = malloc((i + 2) * sizeof(char *));
 	if (!array)
-		return (all->return_val = 1, NULL);
-	i = 0;
-	while (all->c_envp[i])
-	{
-		array[i] = all->c_envp[i];
-		i++;
-	}
+		return (1);
+	i = -1;
+	while (all->c_envp[++i])
+		array[i] = ft_strdup(all->c_envp[i]);
 	array[i++] = ft_strdup(arg_node->token);
 	array[i] = NULL;
-	return (array);
+	free_double_char(all->c_envp);
+	all->c_envp = array;
+	return (0);
 }
 
 //recreates the export builtin function, handling keys not containing
@@ -123,10 +125,9 @@ int	ft_export(t_data *all, int proc, t_token *cmd_node)
 	t_token	*arg;
 	char	*key_val;
 
+	key_val = NULL;
 	if (all->total_proc > 1)
 		return (1);
-	if (all->c_exp == NULL)
-		fill_exp(all);
 	if ((ft_lstsize(all->tokens, proc)) == 1)
 		ft_print_exp(all);
 	arg = cmd_node->next;
@@ -138,10 +139,12 @@ int	ft_export(t_data *all, int proc, t_token *cmd_node)
 			break ;
 		}
 		key_val = nullify(arg->token);
-		if (key_val[ft_strlen(key_val) - 1] == '=')
-			all->c_envp = update_envp(all, key_val, arg);
-		all->c_exp = update_exp(all, key_val, arg);
+		if (key_val && key_val[ft_strlen(key_val) - 1] == '=')
+			update_envp(all, key_val, arg);
+		update_exp(all, key_val, arg);
 		arg = arg->next;
+		if (key_val)
+			free(key_val);
 	}
 	return (1);
 }

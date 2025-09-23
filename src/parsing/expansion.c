@@ -99,7 +99,7 @@ char	*do_expansion(t_data *all, t_token *tkn_ptr, char *token)
 	while (token[i] != '\0')
 	{
 		prev_env_var = env_var;
-		if (token[i] == '$' && token[i + 1] == '?' && ++i)
+		if (token[i] == '$' && token[i + 1] == '?' && ++i)//TODO:Check with mtice for invalid read size 1 ecgi "'$USER
 			env_var = ft_itoa(all->return_val);
 		else if (token[i] == '$' && token[i + 1] == '\0')
 			env_var = ft_strdup("$");

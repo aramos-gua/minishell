@@ -6,7 +6,7 @@
 /*   By: mtice <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 15:29:12 by mtice             #+#    #+#             */
-/*   Updated: 2025/09/23 15:57:29 by mtice            ###   ########.fr       */
+/*   Updated: 2025/09/23 18:03:16 by aramos           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,7 @@ int		execution(t_data *all, int i, int piped, bool run);
 int		get_fd(t_data *all, int proc);
 
 //get_binaries.c
-char	**array_builder(t_data *all, int proc);
+int		array_builder(t_data *all, int proc);
 char	*build_path(char *cmd, char **paths);
 char	*get_cmd_path(char *cmd, char **env);
 
@@ -147,8 +147,8 @@ void	restore(t_data *all, int backup[2]);
 
 //builtin.c
 int		ft_echo(t_data *all, t_token *cmd_node);
-int		ft_unset(t_data *all, t_token *cmd_node);
-int		ft_exit(t_data *all, int nodes, t_token *cmd_node, int *bak);
+int		ft_unset(t_data *all, t_token *cmd_node, int proc);
+int		ft_exit(t_data *all, int nodes, t_token *cmd_node, bool print);
 
 //builtin_helpers.c
 int		which_builtin(char *cmd, t_data *all, int proc);
@@ -176,4 +176,7 @@ int		var_len(char *str);
 
 //errors.c
 int		command_not_found(t_data *all, t_token *cmd);
+
+//errno.c
+void	ft_return_val(t_data *all, int ft_errno);
 #endif

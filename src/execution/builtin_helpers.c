@@ -26,12 +26,15 @@ int	update_env_cd(t_data *all, char *search, char *path)
 {
 	int		i;
 	char	*updated_path;
+	char	*temp;
 
 	updated_path = ft_strjoin(search, path);
 	if (!updated_path)
 		return (1);
 	i = get_env_index(all->c_envp, search, ft_strlen(search));
-	all->c_envp[i] = updated_path;
+	temp = updated_path;
+	free(all->c_envp[i]);
+	all->c_envp[i] = temp;
 	return (all->return_val = 0, 0);
 }
 
@@ -72,19 +75,17 @@ int	which_builtin(char *cmd, t_data *all, int proc)
 	len = ft_strlen(cmd);
 	nodes = ft_lstsize(all->tokens, proc);
 	cmd_node = get_cmd_node(all->tokens->next, proc);
-	if (!ft_strncmp(cmd, "echo\0", len))
+	if (!ft_strncmp(cmd, "echo", len))
 		return (ft_echo(all, cmd_node), 1);
-	else if (!ft_strncmp(cmd, "cd\0", len))
+	else if (!ft_strncmp(cmd, "cd", len))
 		return (ft_cd(cmd_node, all, nodes), 1);
-	else if (!ft_strncmp(cmd, "pwd\0", len))
+	else if (!ft_strncmp(cmd, "pwd", len))
 		return (ft_pwd(all, cmd_node), 1);
-	else if (!ft_strncmp(cmd, "export\0", len))
+	else if (!ft_strncmp(cmd, "export", len))
 		return (ft_export(all, proc, cmd_node), 1);
-	else if (!ft_strncmp(cmd, "unset\0", len))
-		return (ft_unset(all, cmd_node), 1);
-	else if (!ft_strncmp(cmd, "env\0", len))
+	else if (!ft_strncmp(cmd, "unset", len))
+		return (ft_unset(all, cmd_node, proc), 1);
+	else if (!ft_strncmp(cmd, "env", len))
 		return (print_env(all), 1);
-	else if (!ft_strncmp(cmd, "exit\0", len))
-		return (ft_exit(all, nodes, cmd_node, NULL), 1);
 	return (0);
 }

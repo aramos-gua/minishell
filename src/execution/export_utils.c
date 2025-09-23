@@ -12,7 +12,7 @@
 
 #include "../../inc/minishell.h"
 
-//returns and int corresponding to the index of the occurrence of '='. Inclusive
+//returns an int corresponding to the index of the occurrence of '='. Inclusive
 int	var_len(char *str)
 {
 	int	i;
@@ -51,8 +51,8 @@ void	ft_putexp(char *str)
 	write(STDOUT_FILENO, "\"", 2);
 	while (str[i])
 	{
-		if (str[i] == '\"')
-			i++;
+		if (ft_strchr("\"\\$", str[i]))
+			write(STDOUT_FILENO, "\\", 1);
 		write(STDOUT_FILENO, &str[i], 1);
 		i++;
 	}

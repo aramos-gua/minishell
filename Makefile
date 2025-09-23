@@ -31,7 +31,8 @@ SRC :=	$(SRC_DIR)/main.c \
 		$(SRC_DIR)/execution/export.c \
 		$(SRC_DIR)/execution/export_utils.c \
 		$(SRC_DIR)/execution/errors.c \
-		$(SRC_DIR)/execution/cleaner.c
+		$(SRC_DIR)/execution/cleaner.c \
+		$(SRC_DIR)/execution/errno.c
 
 
 OBJ := $(patsubst $(SRC_DIR)/%,$(OBJ_DIR)/%,$(SRC:.c=.o))
@@ -81,7 +82,7 @@ clean:
 		@make clean -C my_libft/ft_printf
 		@make clean -C my_libft/ft_dprintf
 		@make clean -C my_libft/gnl
-		@$(RM) $(OBJ) $(OBJ_DIR)
+		@$(RM) $(OBJ) $(OBJ_DIR) rm asd echo grep lol tmp_err_bash tmp_err_minishell tmp_out_bash tmp_out_minishell
 
 fclean: clean
 		@make fclean -C my_libft/libft

@@ -29,13 +29,20 @@ t_token	*get_process(t_token *list, int i)
 t_token	*get_cmd_node(t_token *list, int i)
 {
 	t_token	*current;
+	bool	seen_before;
 
+	seen_before = false;
 	if (!list)
 		return (NULL);
-	current = list->next;
+	current = list;
 	while ((current->type != COMMAND && current->builtin != 1) \
 		|| current->process_nbr != i)
+	{
+		if ((current == list && seen_before)|| current->process_nbr > i)
+			return (NULL);
+		seen_before = true;
 		current = current->next;
+	}
 	return (current);
 }
 

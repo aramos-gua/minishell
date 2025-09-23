@@ -52,6 +52,7 @@ typedef struct s_proc
 	int				last_pid;
 	int				in_fd;
 	int				out_fd;
+	int				bak[2];
 	int				rev_fds;
 	int				total_proc;
 	int				which_hangs;
