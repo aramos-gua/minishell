@@ -12,27 +12,27 @@
 
 #include "../../inc/minishell.h"
 
-void	redir_errors(t_error *errors)
-{
-	t_error	*temp;
-	int		i;
-
-	temp = NULL;
-	i = -1;
-	if (!errors)
-		return ;
-	while (temp != errors->next)
-	{
-		if (i++ == -1)
-			temp = errors->next;
-		(ft_putstr_fd("minishell: ", 2), ft_putstr_fd(temp->filename, 2));
-		(ft_putstr_fd(" ", 2), ft_putendl_fd(NO_FILE_OR_D, 2));
-		temp = temp->next;
-	}
-}
+// void	redir_errors(t_error *errors)
+// {
+// 	t_error	*temp;
+// 	int		i;
+//
+// 	temp = NULL;
+// 	i = -1;
+// 	if (!errors)
+// 		return ;
+// 	while (temp != errors->next)
+// 	{
+// 		if (i++ == -1)
+// 			temp = errors->next;
+// 		(ft_putstr_fd("minishell: ", 2), ft_putstr_fd(temp->filename, 2));
+// 		(ft_putstr_fd(" ", 2), ft_putendl_fd(NO_FILE_OR_D, 2));
+// 		temp = temp->next;
+// 	}
+// }
 
 //TODO: check if path has been correctly freed
-static int	open_redir(t_data *all, int type, t_token *tkn_ptr, t_proc *info_ptr)
+static int	open_redir(int type, t_token *tkn_ptr, t_proc *info_ptr)
 {
 	char	*proc_nbr;
 	char	*path;
@@ -54,10 +54,8 @@ static int	open_redir(t_data *all, int type, t_token *tkn_ptr, t_proc *info_ptr)
 		info_ptr->out_fd
 			= open(tkn_ptr->token, O_CREAT | O_WRONLY | O_APPEND, 0644);
 	(free(proc_nbr), free(path));
-	(void)all;
 	if (info_ptr->in_fd < 0 || info_ptr->out_fd < 0)
-		return (ft_putstr_fd("minishell: ", 2), perror(tkn_ptr->token), 1);
-		//return (all->errors = add_t_error(all->errors, tkn_ptr->token), 1);
+		(ft_putstr_fd("minishell: ", 2), perror(tkn_ptr->token));
 	return (0);
 }
 
@@ -77,13 +75,7 @@ int	redirects(t_data *all)
 			token_temp = all->tokens->next;
 		if (token_temp->process_nbr != info_temp->process_nbr)
 			info_temp = info_temp->next;
-		if (open_redir(all, token_temp->type, token_temp, info_temp))
-			return (1);
-		// {
-		// 	while (token_temp->process_nbr == info_temp->process_nbr)
-		// 		token_temp = token_temp->next;
-		// }
-		// else
+		open_redir(token_temp->type, token_temp, info_temp);
 		token_temp = token_temp->next;
 	}
 	return (0);
