@@ -66,7 +66,6 @@ void	skip_to(char *process, char skip_to, int *i, int *len);
 int		tokeniser(t_data *all);
 
 //lexing.c
-void	assign_types(t_token *tokens);
 void	delete_quotes(char *token);
 int		lexing(t_data *all);
 

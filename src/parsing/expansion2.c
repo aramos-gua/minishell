@@ -139,11 +139,10 @@ char	*keep_expansion2(t_data *all, t_token *tkn_ptr, char *token, int *i)
 		env_var = find_token(token, (*i)--, len);
 		return (env_var);
 	}
-	if (token[*i] == '"') //TODO: added flag here
+	if (token[*i] == '"' && ++len) //TODO: added flag here
 	{
 		env_var = append_char(env_var, token[*i]);
 		(*i)++;
-		len = 1;
 	}
 	while (token[*i] != '"' && token[*i] != '\0')
 	{
@@ -160,8 +159,10 @@ char	*keep_expansion2(t_data *all, t_token *tkn_ptr, char *token, int *i)
 			env_var = append_char(env_var, token[*i]);
 		(*i)++;
 	}
-	if (len == 1 && token[*i] == '"')
+	if (token[*i] == '"' && len)
 		env_var = append_char(env_var, token[*i]);
+	else
+		(*i)--;
 	return (env_var);
 }
 

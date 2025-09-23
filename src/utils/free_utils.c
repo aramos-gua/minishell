@@ -120,5 +120,7 @@ void	last_free(t_data *all)
 		free_double_char(all->c_envp);
 	if (all->c_exp)
 		free_double_char(all->c_exp);
+	if (all->arr)
+		free_double_char(all->arr);
 	free_all(all);
 }
