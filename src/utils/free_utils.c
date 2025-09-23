@@ -58,23 +58,6 @@ void	free_t_token(t_token *tokens)
 		del_t_token(&tokens, i);
 }
 
-static void	free_t_error(t_error *errors)
-{
-	t_error	*temp;
-	int		i;
-
-	temp = NULL;
-	i = -1;
-	while (temp != errors->next)
-	{
-		if (i++ == -1)
-			temp = errors->next;
-		i++;
-	}
-	while (i--)
-		del_t_error(&errors, i);
-}
-
 //-----------------------------------------------------------------------------
 //unlinks heredocs, in case they exist
 void	unlink_heredocs(int total_procs)
