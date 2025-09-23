@@ -6,7 +6,7 @@
 /*   By: mtice <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 15:29:12 by mtice             #+#    #+#             */
-/*   Updated: 2025/09/17 21:28:56 by mtice            ###   ########.fr       */
+/*   Updated: 2025/09/23 15:57:29 by mtice            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,13 +56,11 @@ int		parsing(t_data *all, char *input);
 int		input_check(char *input);
 
 //process_info.c
-t_proc	*del_t_proc(t_proc **tail, int position);
-void	print_t_proc(t_proc *info);
 int		find_processes(t_data *all, char *input);
 
 //tokeniser.c
 char	*find_token(char *process, int i, int len);
-void	skip_to(char *process, char skip_to, int *i, int *len);
+int		skip_to(char *process, char skip_to, int *i, int *len);
 int		tokeniser(t_data *all);
 
 //lexing.c
@@ -70,12 +68,8 @@ void	delete_quotes(char *token);
 int		lexing(t_data *all);
 
 //expansion.c
-// char	*do_expansion(t_data *all, t_token *tkn_ptr, char *token);
-// void	expansion(t_data *all, t_token *tkn_ptr, int *position);
-
-//expansion2.c
-char	*valid_expansion2(t_data *all, t_token *tkn_ptr, char *token, int *i);
-char	*keep_expansion2(t_data *all, t_token *tkn_ptr, char *token, int *i);
+char	*keep_exp(t_data *all, t_token *tkn_ptr, char *token, int *i);
+char	*valid_exp(t_data *all, t_token *tkn_ptr, char *token, int *i);
 char	*do_expansion(t_data *all, t_token *tkn_ptr, char *token);
 void	expansion(t_data *all, t_token *tkn_ptr);
 
@@ -86,6 +80,11 @@ void	redir_errors(t_error *errors);
 //heredoc.c
 char	*heredoc(t_data *all);
 
+//t_proc_utils.c
+t_proc	*add_t_proc(t_proc *tail, char *proc, int total_proc);
+t_proc	*del_t_proc(t_proc **tail, int position);
+void	print_t_proc(t_proc *info);
+
 //t_token_utils.c
 t_token	*create_token(void);
 t_token	*add_t_token(t_token *tail, char *token, int nbr, int position);
@@ -95,6 +94,11 @@ void	print_t_token(t_token *tokens);
 //t_error_utils.c
 t_error	*add_t_error(t_error *tail, char *filename);
 t_error	*del_t_error(t_error **tail, int position);
+
+//expansion_utils.c
+int		only_exp(char *token, int i);
+void	word_split(t_token *tkn_ptr, char **env_var);
+void	expand_var(t_token *tkn_ptr, char **c_envp, char **env_var);
 
 //utils.c
 int		is_builtin(char *s);

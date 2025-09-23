@@ -45,7 +45,7 @@ char	*find_token(char *process, int i, int len)
 //(except if that char is '<' or '>')
 //used to bypass a condition in a while loop, if it should be ignored
 //(e.g. if quotes are found we want to iterate through whitespaces as well)
-void	skip_to(char *process, char skip_to, int *i, int *len)
+int	skip_to(char *process, char skip_to, int *i, int *len)
 {
 	(*i)++;
 	(*len)++;
@@ -57,7 +57,7 @@ void	skip_to(char *process, char skip_to, int *i, int *len)
 	}
 	else if ((process[*i - 1] == '<' && process[*i] != '<')
 		|| (process[*i - 1] == '>' && process[*i] != '>'))
-		return ;
+		return (1);
 	else
 	{
 		while (process[*i] != skip_to && process[*i] != '\0')
@@ -68,6 +68,7 @@ void	skip_to(char *process, char skip_to, int *i, int *len)
 		(*i)++;
 		(*len)++;
 	}
+	return (1);
 }
 
 static void	split_tokens(t_data *all, t_proc *temp, int *i)

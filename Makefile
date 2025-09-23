@@ -10,10 +10,12 @@ SRC :=	$(SRC_DIR)/main.c \
 		$(SRC_DIR)/parsing/process_info.c \
 		$(SRC_DIR)/parsing/tokeniser.c \
 		$(SRC_DIR)/parsing/lexing.c \
-		$(SRC_DIR)/parsing/expansion2.c\
+		$(SRC_DIR)/parsing/expansion.c\
 		$(SRC_DIR)/parsing/redirects.c \
 		$(SRC_DIR)/parsing/heredoc.c \
 		$(SRC_DIR)/utils/utils.c \
+		$(SRC_DIR)/utils/expansion_utils.c \
+		$(SRC_DIR)/utils/t_proc_utils.c \
 		$(SRC_DIR)/utils/t_token_utils.c \
 		$(SRC_DIR)/utils/t_error_utils.c \
 		$(SRC_DIR)/utils/signals.c \
