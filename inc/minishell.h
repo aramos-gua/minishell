@@ -6,7 +6,7 @@
 /*   By: mtice <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 15:29:12 by mtice             #+#    #+#             */
-/*   Updated: 2025/09/14 13:14:25 by aramos           ###   ########.fr       */
+/*   Updated: 2025/09/23 18:03:16 by aramos           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,4 +159,7 @@ int		var_len(char *str);
 
 //errors.c
 int		command_not_found(t_data *all, t_token *cmd);
+
+//errno.c
+void	ft_return_val(t_data *all, int ft_errno);
 #endif

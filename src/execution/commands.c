@@ -6,7 +6,7 @@
 /*   By: Alejandro Ramos <alejandro.ramos.gua@gmai  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 19:05:11 by Alejandro Ram     #+#    #+#             */
-/*   Updated: 2025/09/13 18:32:38 by aramos           ###   ########.fr       */
+/*   Updated: 2025/09/23 18:19:09 by aramos           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,10 @@ int	execute_command(t_data *all, int i, int piped)
 	}
 	path = get_cmd_path(cmd->token, all->c_envp);
 	if (!path)
-		return (command_not_found(all, cmd));
+	{
+		dprintf(2, "get_cmd_path not found\n");
+		return (all->return_val = 127, command_not_found(all, cmd));
+	}
 	array_builder(all, i);
 	if (!piped)
 	{
@@ -70,7 +73,7 @@ int	execute_command(t_data *all, int i, int piped)
 			{
 				perror("minishell: \n");
 				free(path);
-				all->return_val = errno;
+				ft_return_val(all, errno);
 				return (ft_exit(all, nodes, cmd, 0));
 			}
 		}
@@ -86,7 +89,7 @@ int	execute_command(t_data *all, int i, int piped)
 		{
 			perror("minishell: \n");
 			free(path);
-			all->return_val = errno;
+			ft_return_val(all, errno);
 			return (ft_exit(all, nodes, cmd, 0));
 		}
 	}
