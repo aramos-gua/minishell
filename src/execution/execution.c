@@ -35,7 +35,6 @@ int	get_fd(t_data *all, int proc)
 			close(fd_in);
 			return (all->info->rev_fds = 1, 0);
 		}
-		dprintf(2, "minishell: %s %s", "[insert FD name]", NO_FILE_OR_D);//TODO:insert fd name
 		return (all->return_val = 1, 1);
 	}
 	if (fd_out != STDOUT_FILENO)
@@ -46,7 +45,6 @@ int	get_fd(t_data *all, int proc)
 			close(fd_out);
 			return (all->info->rev_fds = 1, 0);
 		}
-		dprintf(2, "minishell: %s %s", "[insert FD name", NO_FILE_OR_D);//TODO:insert fd name
 		return (all->return_val = 1, 1);
 	}
 	return (0);
@@ -129,7 +127,7 @@ int	execution(t_data *all, int i, int piped, bool run)
 	if (i + 1 == all->info->total_proc || run)
 	{
 		if (execute_command(all, i, piped))
-			return (all->return_val = 1, 1);
+			all->return_val = 1;
 	}
 	else
 	{
