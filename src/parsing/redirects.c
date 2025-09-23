@@ -12,25 +12,6 @@
 
 #include "../../inc/minishell.h"
 
-// void	redir_errors(t_error *errors)
-// {
-// 	t_error	*temp;
-// 	int		i;
-//
-// 	temp = NULL;
-// 	i = -1;
-// 	if (!errors)
-// 		return ;
-// 	while (temp != errors->next)
-// 	{
-// 		if (i++ == -1)
-// 			temp = errors->next;
-// 		(ft_putstr_fd("minishell: ", 2), ft_putstr_fd(temp->filename, 2));
-// 		(ft_putstr_fd(" ", 2), ft_putendl_fd(NO_FILE_OR_D, 2));
-// 		temp = temp->next;
-// 	}
-// }
-
 //TODO: check if path has been correctly freed
 static int	open_redir(int type, t_token *tkn_ptr, t_proc *info_ptr)
 {
