@@ -132,7 +132,7 @@ int	execution(t_data *all, int i, int piped, bool run)
 	{
 		if (execute_command(all, i, piped))
 		{
-			all->return_val = 1;
+			all->return_val = 1; //TODO: this overrides the 127 returned from command not found
 			// ft_exit(all, nodes, cmd, 1);
 			if (!piped)
 				return (0);

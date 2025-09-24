@@ -105,10 +105,12 @@ void	expand_var(t_token *tkn_ptr, char **c_envp, char **env_var)
 		if (!ft_strncmp(c_envp[j], *env_var, ++i))
 		{
 			*env_var = ft_strdup(&c_envp[j][i]);
-			if (has_whitespace(*env_var) && tkn_ptr->split)
-				word_split(tkn_ptr, env_var);
-			else if (has_whitespace(*env_var) && !tkn_ptr->split)
-				tkn_ptr->split++;
+			// if (has_whitespace(*env_var) && tkn_ptr->split)
+			// 	word_split(tkn_ptr, env_var);
+			// else if (has_whitespace(*env_var) && !tkn_ptr->split)
+			// 	tkn_ptr->split++;
+			if (has_whitespace(*env_var))
+				tkn_ptr->split = 2;
 			break ;
 		}
 		j++;

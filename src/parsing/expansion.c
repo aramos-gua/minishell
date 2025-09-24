@@ -74,8 +74,8 @@ char	*keep_exp(t_data *all, t_token *tkn_ptr, char *token, int *i)
 			prev_env_var = env_var;
 			temp = valid_exp(all, tkn_ptr, token, i);
 			env_var = ft_strjoin(prev_env_var, temp);
-			if (has_whitespace(env_var) && tkn_ptr->split)
-				word_split(tkn_ptr, &env_var);
+			// if (has_whitespace(env_var) && tkn_ptr->split)
+			// 	word_split(tkn_ptr, &env_var);
 			(free(prev_env_var), free(temp));
 		}
 		else
@@ -99,7 +99,7 @@ char	*do_expansion(t_data *all, t_token *tkn_ptr, char *token)
 	while (token[i] != '\0')
 	{
 		prev_env_var = env_var;
-		if (token[i] == '$' && token[i + 1] == '?' && ++i)//TODO:Check with mtice for invalid read size 1 ecgi "'$USER
+		if (token[i] == '$' && token[i + 1] == '?' && ++i)
 			env_var = ft_itoa(all->return_val);
 		else if (token[i] == '$' && token[i + 1] == '\0')
 			env_var = ft_strdup("$");
@@ -122,4 +122,6 @@ void	expansion(t_data *all, t_token *tkn_ptr)
 
 	expanded = do_expansion(all, tkn_ptr, tkn_ptr->token);
 	tkn_ptr->token = expanded;
+	if(tkn_ptr->split == 2)
+		word_split(tkn_ptr, &expanded);
 }
