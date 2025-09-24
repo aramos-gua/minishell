@@ -26,6 +26,7 @@ t_token	*create_t_token(void)
 	new->type = UNDEFINED;
 	new->builtin = 0;
 	new->pos = 0;
+	new->exp = 0;
 	new->split = 0;
 	new->token = NULL;
 	new->prev = new;

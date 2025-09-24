@@ -72,6 +72,7 @@ typedef struct s_token
 	t_type			type;
 	int				builtin;
 	int				pos;
+	int				exp;
 	int				split;
 	char			*token;
 	struct s_token	*next;

@@ -41,9 +41,9 @@ static void	assign_types(t_token *tokens)
 	{
 		if (i == -1 && i++)
 			temp = tokens->next;
-		if (is_redirect(temp->token))
+		if (is_redirect(temp->token) && !temp->exp)
 			temp->type = OPERATOR;
-		else if (is_redirect(temp->prev->token))
+		else if (temp->prev->type == OPERATOR)
 			temp->type = is_redirect(temp->prev->token);
 		else if (temp->process_nbr == i && ++i)
 			temp->type = COMMAND;
