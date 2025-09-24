@@ -114,7 +114,8 @@ static void	reformat_tokens(t_data *all)
 		prev = i;
 		i = temp->pos;
 		temp = temp->next;
-		if (i > prev || !ft_strncmp("\0", temp->prev->token, 1))
+		if (i > prev || (!ft_strncmp("\0", temp->prev->token, 1)
+				&& all->tokens != all->tokens->next))
 			(del_t_token(&(all->tokens), temp->prev->pos), i--);
 	}
 }
@@ -132,6 +133,9 @@ int	lexing(t_data *all)
 
 	assign_types(all->tokens);
 	reformat_tokens(all);
+	if (all->tokens == all->tokens->next
+		&& !ft_strncmp("\0", all->tokens->token, 1))
+		return (1);
 	assign_types(all->tokens);
 	temp = NULL;
 	i = -1;

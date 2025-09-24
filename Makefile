@@ -17,7 +17,6 @@ SRC :=	$(SRC_DIR)/main.c \
 		$(SRC_DIR)/utils/expansion_utils.c \
 		$(SRC_DIR)/utils/t_proc_utils.c \
 		$(SRC_DIR)/utils/t_token_utils.c \
-		$(SRC_DIR)/utils/t_error_utils.c \
 		$(SRC_DIR)/utils/signals.c \
 		$(SRC_DIR)/utils/free_utils.c \
 		$(SRC_DIR)/execution/execution.c \
