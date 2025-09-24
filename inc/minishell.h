@@ -90,10 +90,8 @@ t_token	*create_token(void);
 t_token	*add_t_token(t_token *tail, char *token, int nbr, int position);
 t_token	*del_t_token(t_token **tail, int position);
 void	print_t_token(t_token *tokens);
+int		tokens_in_process(t_token *tokens, int process);
 
-//t_error_utils.c
-t_error	*add_t_error(t_error *tail, char *filename);
-t_error	*del_t_error(t_error **tail, int position);
 
 //expansion_utils.c
 int		only_exp(char *token, int i);

@@ -189,9 +189,9 @@ int	input_check(char *input)
 	{
 		while (ft_isspace(input[i]))
 			i++;
-		if (prev_c == '<' && (input[i] == '>'))// || input[i] == '<'))
+		if (prev_c == '<' && input[i] == '>')//|| input[i] == '<'))
 			return (ft_putstr_fd(SYNTAX, 2), ft_putendl_fd(" `>'", 2), 1);
-		else if (prev_c == '>' && (input[i] == '<'))// || input[i] == '>'))
+		else if (prev_c == '>' && input[i] == '<')// || input[i] == '>'))
 			return (ft_putstr_fd(SYNTAX, 2), ft_putendl_fd(" `>'", 2), 1);
 		prev_c = input[i];
 		if ((input[i] == '\'' || input[i] == '"') && syntax_quotes(input, &i))

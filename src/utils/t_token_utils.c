@@ -62,27 +62,27 @@ t_token	*add_t_token(t_token *tail, char *token, int nbr, int position)
 //-----------------------------------------------------------------------------
 //adds a node to the t_token struct at position
 //position is 0-indexed
-t_token	*add_at_pos(t_token *tail, char *token, int nbr, int position)
-{
-	t_token	*new_node;
-	t_token	*temp;
-
-	new_node = create_t_token();
-	new_node->process_nbr = nbr;
-	new_node->token = token;
-	if (tail == NULL)
-		return (new_node);
-	temp = tail->next;
-	while (position-- > 1)
-		temp = temp->next;
-	new_node->prev = temp;
-	new_node->next = temp->next;
-	temp->next->prev = new_node;
-	temp->next = new_node;
-	if (temp == tail)
-		tail = tail->next;
-	return (tail);
-}
+// t_token	*add_at_pos(t_token *tail, char *token, int nbr, int position)
+// {
+// 	t_token	*new_node;
+// 	t_token	*temp;
+//
+// 	new_node = create_t_token();
+// 	new_node->process_nbr = nbr;
+// 	new_node->token = token;
+// 	if (tail == NULL)
+// 		return (new_node);
+// 	temp = tail->next;
+// 	while (position-- > 1)
+// 		temp = temp->next;
+// 	new_node->prev = temp;
+// 	new_node->next = temp->next;
+// 	temp->next->prev = new_node;
+// 	temp->next = new_node;
+// 	if (temp == tail)
+// 		tail = tail->next;
+// 	return (tail);
+// }
 
 //-----------------------------------------------------------------------------
 //deletes the node at position
@@ -130,4 +130,33 @@ void	print_t_token(t_token *tokens)
 			temp = temp->next;
 		}
 	}
+}
+
+//-----------------------------------------------------------------------------
+//counts the number of tokens in a process
+int	tokens_in_process(t_token *tokens, int process)
+{
+	t_token	*temp;
+	int		i;
+	int		count;
+
+	temp = NULL;
+	i = -1;
+	count = 0;
+	if (tokens == tokens->next)
+		return (count = 1, count);
+	while (temp != tokens->next)//&& temp->process_nbr != process)
+	{
+		if (i++ == -1)
+			temp = tokens->next;
+		if (temp->process_nbr == process)
+			break ;
+		temp = temp->next;
+	}
+	while (temp->process_nbr == process)
+	{	
+		count++;
+		temp = temp->next;
+	}
+	return (count);
 }

@@ -18,6 +18,9 @@ int	command_not_found(t_data *all, t_token *cmd)
 	if (!cmd->token || !ft_strncmp("\0", cmd->token, 1))
 		ft_dprintf(STDERR_FILENO, "'': command not found\n");
 	else
-		ft_dprintf(STDERR_FILENO, "%s: command not found\n", cmd->token);
+	{
+		ft_putstr_fd(cmd->token, STDERR_FILENO);
+		ft_putendl_fd(": command not found", 2);
+	}
 	return (all->return_val);
 }

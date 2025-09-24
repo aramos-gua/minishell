@@ -115,7 +115,7 @@ static void	reformat_tokens(t_data *all)
 		i = temp->pos;
 		temp = temp->next;
 		if (i > prev || (!ft_strncmp("\0", temp->prev->token, 1)
-				&& all->tokens != all->tokens->next))
+			&& tokens_in_process(all->tokens, temp->prev->process_nbr) > 1))
 			(del_t_token(&(all->tokens), temp->prev->pos), i--);
 	}
 }
