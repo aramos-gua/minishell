@@ -111,7 +111,7 @@ char	*do_expansion(t_data *all, t_token *tkn_ptr, char *token)
 			env_var = keep_exp(all, tkn_ptr, token, &i);
 		temp = env_var;
 		env_var = ft_strjoin(prev_env_var, temp);
-		(free(prev_env_var), free(temp), i++);
+		(free(prev_env_var), free(temp), ++i);
 	}
 	return (free(token), env_var);
 }

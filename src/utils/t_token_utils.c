@@ -157,6 +157,8 @@ int	tokens_in_process(t_token *tokens, int process)
 	{	
 		count++;
 		temp = temp->next;
+		if (temp == tokens->next)
+			break;
 	}
 	return (count);
 }

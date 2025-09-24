@@ -84,7 +84,7 @@ int	ft_print_exp(t_data *all)
 
 void	export_error(t_data *all, t_token *arg)
 {
-	ft_dprintf(2, "minishell: export: \'%s\': %s\n", arg->token, INV_ARG);
+	ft_dprintf(2, "minishell: export: `%s\': %s\n", arg->token, INV_ARG);
 	all->return_val = 1;
 	arg = arg->next;
 	return ;
