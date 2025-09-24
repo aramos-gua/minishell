@@ -144,7 +144,8 @@ int	lexing(t_data *all)
 	{
 		if (i++ == -1)
 			temp = all->tokens->next;
-		delete_quotes(temp->token);
+		if (temp->type != HERE_DOC)
+			delete_quotes(temp->token);
 		temp = temp->next;
 	}
 	return (0);

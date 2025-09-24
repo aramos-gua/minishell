@@ -6,7 +6,7 @@
 /*   By: mtice <mtice@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 14:37:21 by mtice             #+#    #+#             */
-/*   Updated: 2025/09/14 20:41:31 by mtice            ###   ########.fr       */
+/*   Updated: 2025/09/24 20:17:41 by mtice            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,6 @@ static char	*write_heredoc(t_data *all, t_token *tkn_ptr, int to_expand)
 	{
 		set_signals_heredoc(all);
 		line = readline("> ");
-		// if (g_signal != SA_RESTART)
-		// 	break ; //TODO: free
 		if (!line || g_signal != SA_RESTART) //TODO: if g_signal != SA_RESTART
 		{
 			if (g_signal != SA_RESTART)
@@ -57,8 +55,6 @@ static char	*write_heredoc(t_data *all, t_token *tkn_ptr, int to_expand)
 			heredoc_error(all, tkn_ptr, line_n);
 			break;
 		}
-		// if (g_signal != SA_RESTART)
-		// 	break ; //TODO: free
 		if (g_signal != SA_RESTART)
 			return (free(proc_nbr), free(path), close(here_fd), line);
 		else if (!ft_strncmp(line, tkn_ptr->token, ft_strlen(tkn_ptr->token) + 1))
@@ -75,8 +71,6 @@ static char	*write_heredoc(t_data *all, t_token *tkn_ptr, int to_expand)
 		line_n++;
 	}
 	(free(proc_nbr), free(path), close(here_fd));
-	// if (g_signal != SA_RESTART)
-	// 	return (line);
 	return (NULL);
 }
 
