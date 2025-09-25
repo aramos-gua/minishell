@@ -23,17 +23,17 @@ int	execute_command(t_data *all, int i, int piped)
 
 	nodes = ft_lstsize(all->tokens, i);
 	cmd = get_process(all->tokens, i);
-	// if (!cmd)
-	// {
-	// 	if (!piped)
-	// 		return (0);
-	// 	if (all->c_envp)
-	// 	free_double_char(all->c_envp);
-	// 	if (all->c_exp)
-	// 	free_double_char(all->c_exp);
-	// 	free_all(all);
-	// 	exit (0);
-	// }
+	if (!cmd)
+	{
+		if (!piped)
+			return (0);
+		if (all->c_envp)
+		free_double_char(all->c_envp);
+		if (all->c_exp)
+		free_double_char(all->c_exp);
+		free_all(all);
+		exit (0);
+	}
 	if (is_builtin(cmd->token))
 	{
 		if (!ft_strncmp(cmd->token, "exit", 5))
