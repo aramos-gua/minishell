@@ -95,59 +95,44 @@ static int	executron(t_data *all, int i)
 	return (0);
 }
 
-// int	only_ops(t_data *all, int proc)
-// {
-// 	t_token	*list_head;
-//
-// 	list_head = all->tokens->next;
-// 	if (list_head == all->tokens)
-// 	{
-// 		if (list_head->type == COMMAND)
-// 			return (-1);
-// 		else if (list_head->type == APPEND || list_head->type == RE_IN || list_head->type == RE_OUT)
-// 			return (proc);
-// 	}
-// 	while (list_head->process_nbr != proc)
-// 		list_head = list_head->next;
-// 	while (list_head->process_nbr == proc && list_head != all->tokens)
-// 	{
-// 		if (list_head->type == COMMAND)
-// 			return (-1);
-// 		list_head = list_head->next;
-// 	}
-// 	if (list_head->type == COMMAND)
-// 		return (-1);
-// 	return (proc);
-// }
-
 int	execution(t_data *all, int i, int piped, bool run)
 {
-	// int	nodes;
-	// t_token	*cmd;
-	// nodes = ft_lstsize(all->tokens, i);
-	// cmd = get_process(all->tokens, i);
+	int	return_val;
 	// dprintf(2, "executing now\n");
 	set_signals_noninteractive(all);
 	if (i + 1 == all->info->total_proc || run)
 	{
-		if (execute_command(all, i, piped))
+		return_val = (execute_command(all, i, piped));
+		if (return_val == 0)
 		{
-			all->return_val = 1; //TODO: this overrides the 127 returned from command not found
-			// ft_exit(all, nodes, cmd, 1);
-			if (!piped)
-				return (0);
-			if (all->c_envp)
-			free_double_char(all->c_envp);
-			if (all->c_exp)
-			free_double_char(all->c_exp);
-			free_all(all);
-			exit (1);
+			if (all->return_val != 0)
+			{
+				if (all->c_envp)
+				free_double_char(all->c_envp);
+				if (all->c_exp)
+				free_double_char(all->c_exp);
+				free_all(all);
+				exit (all->return_val);
+			}
+		}
+		else if (return_val == 1)
+		{
+			if (all->return_val != 0)
+			{
+				if (!piped)
+					return (0);
+				if (all->c_envp)
+				free_double_char(all->c_envp);
+				if (all->c_exp)
+				free_double_char(all->c_exp);
+				free_all(all);
+				exit (all->return_val);
+			}
+
 		}
 	}
 	else
-	{
 		executron(all, i);
-	}
 	if (g_signal == SIGQUIT)
 		all->return_val = 131;
 	return (0);

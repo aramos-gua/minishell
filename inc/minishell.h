@@ -178,5 +178,5 @@ int		var_len(char *str);
 int		command_not_found(t_data *all, t_token *cmd);
 
 //errno.c
-void	ft_return_val(t_data *all, int ft_errno);
+unsigned char	ft_return_val(t_data *all, int ft_errno);
 #endif

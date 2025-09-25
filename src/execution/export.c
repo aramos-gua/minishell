@@ -118,6 +118,24 @@ static	int	update_envp(t_data *all, char *new_element, t_token *arg_node)
 	return (0);
 }
 
+int	valid_exp_arg(char *str)
+{
+	int i;
+	int	ret;
+
+	i = 0;
+	ret = 0;
+	while (str[i])
+	{
+		if (str[i] == '=')
+			break ;
+		if (!ft_isalpha(str[i]) && str[i] != '_' && !ft_isdigit(str[i]) && str[i] != '=')
+			ret = 1;
+		i++;
+	}
+	return (ret);
+}
+
 //recreates the export builtin function, handling keys not containing
 //'=' char, and prepending information on export
 int	ft_export(t_data *all, int proc, t_token *cmd_node)
@@ -133,7 +151,7 @@ int	ft_export(t_data *all, int proc, t_token *cmd_node)
 	arg = cmd_node->next;
 	while (arg->type == ARGUMENT && arg->process_nbr == proc)
 	{
-		if (arg->token && (!ft_isalpha(arg->token[0]) && arg->token[0] != '_'))
+		if (arg->token && valid_exp_arg(arg->token))
 		{
 			export_error(all, arg);
 			break ;
