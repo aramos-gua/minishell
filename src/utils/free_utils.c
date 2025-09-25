@@ -6,7 +6,7 @@
 /*   By: mtice <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 18:47:06 by mtice             #+#    #+#             */
-/*   Updated: 2025/07/12 18:59:12 by mtice            ###   ########.fr       */
+/*   Updated: 2025/09/25 15:40:49 by mtice            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,33 +75,4 @@ void	unlink_heredocs(int total_procs)
 			unlink(path);
 		(free(proc_nbr)), (free(path));
 	}
-}
-
-//-----------------------------------------------------------------------------
-//frees all variables, if they exist
-void	free_all(t_data *all)
-{
-	if (all->procs)
-		free_double_char(all->procs);
-	if (all->info)
-		free_t_proc(all->info, all->total_proc);
-	if (all->tokens)
-		free_t_token(all->tokens);
-	if (all->arr)
-		free_double_char(all->arr);
-	unlink_heredocs(all->total_proc);
-}
-
-//-----------------------------------------------------------------------------
-//frees the variables that only need to be freed at the end of the program
-void	last_free(t_data *all)
-{
-	rl_clear_history();
-	if (all->c_envp)
-		free_double_char(all->c_envp);
-	if (all->c_exp)
-		free_double_char(all->c_exp);
-	if (all->arr)
-		free_double_char(all->arr);
-	free_all(all);
 }

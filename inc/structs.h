@@ -28,18 +28,18 @@ typedef enum e_type
 	APPEND
 }			t_type;
 
-//-----------------------------------------------------------------------------
-//enum which helps to assign a mode to the global variable g_mode
-typedef enum e_mode
-{
-	NON_INTERACTIVE,
-	INTERACTIVE,
-	H_DOC,
-	EXIT,
-}			t_mode;
+// //-----------------------------------------------------------------------------
+// //enum which helps to assign a mode to the global variable g_mode
+// typedef enum e_mode
+// {
+// 	NON_INTERACTIVE,
+// 	INTERACTIVE,
+// 	H_DOC,
+// 	EXIT,
+// }			t_mode;
 
 //-----------------------------------------------------------------------------
-//holds the string which is the unmodified process in a two2d array
+//holds the string which is the unmodified process in a 2d array
 //t_proc->proc[j][i]: where j is the process_nbr and i the process string
 //process_nbr: the number of the process we are in (will always start at 0)
 typedef struct s_proc
@@ -78,15 +78,8 @@ typedef struct s_token
 	struct s_token	*next;
 }				t_token;
 
-typedef struct	s_error
-{
-	struct s_error	*next;
-	char			*filename;
-	struct s_error	*prev;
-}				t_error;
-
 //-----------------------------------------------------------------------------
-//stores EVERYTHING will always be declared as t_data *all
+//will always be declared as t_data *all
 //stores a pointer to the other structs
 //stores any other useful info
 //c_envp: a copy of envp obtained in the main TODO: use to search paths && alter env vars
@@ -99,7 +92,6 @@ typedef struct s_data
 	char			**procs;
 	t_proc			*info;
 	t_token			*tokens;
-	t_error			*errors;
 	int				shlvl;
 	int				total_proc;//think this doesnt work well
 	unsigned char	return_val;

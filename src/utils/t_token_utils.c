@@ -14,7 +14,7 @@
 
 //-----------------------------------------------------------------------------
 //creates a node for the t_token struct
-//initialises type and the builtin flag
+//initialises its variables
 t_token	*create_t_token(void)
 {
 	t_token	*new;
@@ -59,31 +59,6 @@ t_token	*add_t_token(t_token *tail, char *token, int nbr, int position)
 		return (tail);
 	}
 }
-
-//-----------------------------------------------------------------------------
-//adds a node to the t_token struct at position
-//position is 0-indexed
-// t_token	*add_at_pos(t_token *tail, char *token, int nbr, int position)
-// {
-// 	t_token	*new_node;
-// 	t_token	*temp;
-//
-// 	new_node = create_t_token();
-// 	new_node->process_nbr = nbr;
-// 	new_node->token = token;
-// 	if (tail == NULL)
-// 		return (new_node);
-// 	temp = tail->next;
-// 	while (position-- > 1)
-// 		temp = temp->next;
-// 	new_node->prev = temp;
-// 	new_node->next = temp->next;
-// 	temp->next->prev = new_node;
-// 	temp->next = new_node;
-// 	if (temp == tail)
-// 		tail = tail->next;
-// 	return (tail);
-// }
 
 //-----------------------------------------------------------------------------
 //deletes the node at position
@@ -146,7 +121,7 @@ int	tokens_in_process(t_token *tokens, int process)
 	count = 0;
 	if (tokens == tokens->next)
 		return (count = 1, count);
-	while (temp != tokens->next)//&& temp->process_nbr != process)
+	while (temp != tokens->next)
 	{
 		if (i++ == -1)
 			temp = tokens->next;
@@ -155,11 +130,11 @@ int	tokens_in_process(t_token *tokens, int process)
 		temp = temp->next;
 	}
 	while (temp->process_nbr == process)
-	{	
+	{
 		count++;
 		temp = temp->next;
 		if (temp == tokens->next)
-			break;
+			break ;
 	}
 	return (count);
 }

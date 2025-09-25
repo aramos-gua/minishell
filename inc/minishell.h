@@ -6,7 +6,7 @@
 /*   By: mtice <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 15:29:12 by mtice             #+#    #+#             */
-/*   Updated: 2025/09/23 18:03:16 by aramos           ###   ########.fr       */
+/*   Updated: 2025/09/25 15:49:18 by mtice            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ extern volatile sig_atomic_t	g_signal;
 //main.c
 void	init_all(t_data *all);
 void	subtract_shlvl(t_data *all);
-void	add_shlvl(t_data *all);
 
 //envp.c
 void	print_env(t_data *all);
@@ -75,7 +74,6 @@ void	expansion(t_data *all, t_token *tkn_ptr);
 
 //redirects.c
 int		redirects(t_data *all);
-void	redir_errors(t_error *errors);
 
 //heredoc.c
 char	*heredoc(t_data *all);
@@ -92,14 +90,19 @@ t_token	*del_t_token(t_token **tail, int position);
 void	print_t_token(t_token *tokens);
 int		tokens_in_process(t_token *tokens, int process);
 
-
 //expansion_utils.c
 int		only_exp(char *token, int i);
 void	word_split(t_token *tkn_ptr, char **env_var);
 void	expand_var(t_token *tkn_ptr, char **c_envp, char **env_var);
 char	*append_char(char *s, char c);
 
-//utils.c
+//init_utils.c
+void	first_init(t_data *all);
+void	init_all(t_data *all);
+int		is_minishell(char *input);
+void	subtract_shlvl(t_data *all);
+
+//parsing_utils.c
 int		is_builtin(char *s);
 int		has_whitespace(char *s);
 
@@ -108,12 +111,14 @@ void	default_sigquit(void);
 void	set_signals_interactive(t_data *all);
 void	set_signals_noninteractive(t_data *all);
 void	set_signals_heredoc(t_data *all);
-//
+
 //free_utils
 void	free_double_char(char **arr);
 void	free_t_proc(t_proc *info, int total_procs);
 void	free_t_token(t_token *tokens);
 void	unlink_heredocs(int total_procs);
+
+//free_all.c
 void	free_all(t_data *all);
 void	last_free(t_data *all);
 

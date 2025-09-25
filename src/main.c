@@ -6,7 +6,7 @@
 /*   By: mtice <mtice@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 14:40:36 by mtice             #+#    #+#             */
-/*   Updated: 2025/09/17 21:30:08 by mtice            ###   ########.fr       */
+/*   Updated: 2025/09/25 15:49:19 by mtice            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,59 +14,6 @@
 
 volatile sig_atomic_t	g_signal = SA_RESTART;
 
-void	init_all(t_data *all)
-{
-	g_signal = SA_RESTART;
-	all->procs = NULL;
-	all->info = NULL;
-	all->tokens = NULL;
-	all->arr = NULL;
-	all->total_proc = 0;
-	all->errors = NULL;
-}
-static void	first_init(t_data *all)
-{
-	all->shlvl = 1;
-	all->return_val = 0;
-	all->c_envp = NULL;
-	all->c_exp = NULL;
-	init_all(all);
-}
-
-void subtract_shlvl(t_data *all)
-{
-	all->shlvl--;
-	if (all->shlvl > 2)
-	{
-		rl_clear_history();
-		free_double_char(all->c_envp);
-		if (all->c_exp)
-			free_double_char(all->c_exp);
-		find_envp(all, all->envp);
-	}
-}
-
-static int	is_minishell(char *input)
-{
-	int	i;
-
-	if (!ft_strncmp("./minishell\0", input, 12))
-		return (1);
-	else if (!ft_strncmp("./minishell", input, 11))
-	{
-		i = 11;
-		while(ft_isspace(input[i]))
-			i++;
-		if (input[i] == '\0')
-			return (1);
-		else
-			return (0);
-	}
-	return (0);
-}
-
-//TODO: correct implementations of exit and env
-//TODO: allow execution to handle exit, and remember to free_all when exit is called
 int	main(int argc, char *argv[], char *envp[])
 {
 	(void)argv;

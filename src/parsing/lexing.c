@@ -109,14 +109,14 @@ static void	reformat_tokens(t_data *all)
 		{
 			if (is_redirect(temp->prev->token) != HERE_DOC)
 				expansion(all, temp);
-			if (all->tokens == all->tokens->next && all->tokens->token[0] == '\0')
+			if (all->tokens == all->tokens->next
+				&& all->tokens->token[0] == '\0')
 				return ;
 		}
-		sub_char(temp->token, 26, '|');
-		prev = i;
-		i = temp->pos;
+		(sub_char(temp->token, 26, '|'), prev = i, i = temp->pos);
 		temp = temp->next;
-		if (i > prev || (!ft_strncmp("\0", temp->prev->token, 1) && tokens_in_process(all->tokens, temp->prev->process_nbr) > 1))
+		if (i > prev || (!ft_strncmp("\0", temp->prev->token, 1)
+				&& tokens_in_process(all->tokens, temp->prev->process_nbr) > 1))
 			(del_t_token(&(all->tokens), temp->prev->pos), i--);
 	}
 }

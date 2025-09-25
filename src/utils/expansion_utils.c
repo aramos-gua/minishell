@@ -11,14 +11,15 @@
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
-
+//-----------------------------------------------------------------------------
+//detects if there are only $ and whitespaces within double quotes
 int	only_exp(char *token, int i)
 {
 	if (!token)
 		return (0);
 	if (token[i] == '$' && ++i)
 	{
-		while (isspace(token[i]))
+		while (ft_isspace(token[i]))
 			i++;
 	}
 	if (token[i] == '\0')
@@ -31,6 +32,8 @@ int	only_exp(char *token, int i)
 		return (0);
 }
 
+//-----------------------------------------------------------------------------
+//appends a char c to string s, while freeing the intial malloc-ed string
 char	*append_char(char *s, char c)
 {
 	int		len;
@@ -57,35 +60,38 @@ char	*append_char(char *s, char c)
 	return (free(s), appended);
 }
 
+//-----------------------------------------------------------------------------
+//p: position, n_var: n_var
+//splits an environment variable that contains whitespaces into separate tokens
 void	word_split(t_token *tkn_ptr, char **env_var)
 {
 	int		i;
 	int		len;
-	char	*new_var;
-	int		pos;
+	char	*n_var;
+	int		p;
 
-	pos = tkn_ptr->pos;
+	p = tkn_ptr->pos;
 	i = 0;
 	while ((*env_var)[i] != '\0')
 	{
 		len = 0;
 		while (ft_isspace((*env_var)[i]) && (*env_var)[i] != '\0')
 			i++;
-		while (!ft_isspace((*env_var)[i]) && (*env_var)[i] != '\0')
-		{
-			i++;
+		while (!ft_isspace((*env_var)[i]) && (*env_var)[i] != '\0' && ++i)
 			len++;
-		}
 		if (len)
 		{
-			new_var = find_token(*env_var, i--, len);
-			tkn_ptr->prev = add_t_token(tkn_ptr->prev, new_var, tkn_ptr->process_nbr, pos++);
+			n_var = find_token(*env_var, i--, len);
+			tkn_ptr->prev
+				= add_t_token(tkn_ptr->prev, n_var, tkn_ptr->process_nbr, p++);
 			i++;
 		}
 	}
-	tkn_ptr->pos = pos;
+	tkn_ptr->pos = p;
 }
 
+//-----------------------------------------------------------------------------
+//if a variable is found to be an existing environment variable, it is expanded
 void	expand_var(t_token *tkn_ptr, char **c_envp, char **env_var)
 {
 	int		i;
@@ -95,8 +101,7 @@ void	expand_var(t_token *tkn_ptr, char **c_envp, char **env_var)
 	j = 0;
 	temp = *env_var;
 	*env_var = ft_strjoin(*env_var, "=");
-	free(temp);
-	temp = *env_var;
+	(free(temp), temp = *env_var);
 	while (c_envp[j] != NULL)
 	{
 		i = 0;
@@ -105,10 +110,6 @@ void	expand_var(t_token *tkn_ptr, char **c_envp, char **env_var)
 		if (!ft_strncmp(c_envp[j], *env_var, ++i))
 		{
 			*env_var = ft_strdup(&c_envp[j][i]);
-			// if (has_whitespace(*env_var) && tkn_ptr->split)
-			// 	word_split(tkn_ptr, env_var);
-			// else if (has_whitespace(*env_var) && !tkn_ptr->split)
-			// 	tkn_ptr->split++;
 			if (has_whitespace(*env_var))
 				tkn_ptr->split = 2;
 			break ;
