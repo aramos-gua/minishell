@@ -12,14 +12,15 @@
 
 #include "../../inc/minishell.h"
 
-static void	heredoc_error(t_data *all, t_token *tkn_ptr, int line_n)
+static void	heredoc_error(t_token *tkn_ptr, int line_n)
 {
-	(void)all;
 	static int		count = 0;
 	char			*num;
 
 	if (g_signal == SA_RESTART)
 	{
+		if (count != 0)
+			count = line_n;
 		ft_putstr_fd("minishell: warning: here-document at line ", 2);
 		num = ft_itoa(count + 1);
 		ft_putstr_fd(num, 2);
@@ -27,8 +28,11 @@ static void	heredoc_error(t_data *all, t_token *tkn_ptr, int line_n)
 		ft_putstr_fd(tkn_ptr->token, 2);
 		ft_putendl_fd("')", 2);
 		free(num);
+		if (count == 0)
+			count += 1;
 	}
-	count += (line_n - count);
+	else
+		count += (line_n - count);
 }
 
 static char	*write_heredoc(t_data *all, t_token *tkn_ptr, int to_expand)
@@ -50,7 +54,7 @@ static char	*write_heredoc(t_data *all, t_token *tkn_ptr, int to_expand)
 		{
 			if (g_signal != SA_RESTART)
 				++line_n;
-			heredoc_error(all, tkn_ptr, line_n);
+			heredoc_error(tkn_ptr, line_n);
 			break ;
 		}
 		if (g_signal != SA_RESTART)
