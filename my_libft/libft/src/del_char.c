@@ -16,7 +16,7 @@ void	del_char(char *s, int pos)
 {
 	int	i;
 	int	new;
-	
+
 	i = 0;
 	if (pos >= ft_strlen(s))
 		return ;

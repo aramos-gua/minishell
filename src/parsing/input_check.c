@@ -115,30 +115,23 @@ static int	syntax_multiple_pipes(char *input, int *i)
 	j = 0;
 	w = *i - 1;
 	r = 0;
-	if (input[*i] == '|')
+	while (w > 0
+		&& (ft_isspace(input[w]) || input[w] == '<' || input[w] == '>'))
 	{
-		while (w > 0
-			&& (ft_isspace(input[w]) || input[w] == '<' || input[w] == '>'))
-		{
-			if (input[w] == '<' || input[w] == '>')
-				r++;
-			w--;
-		}
-		if (w == 0 || w == -1)
-			j += 1;
-		while ((input[*i] == '|' || ft_isspace(input[*i])) && input[*i] != '\0')
-		{
-			if (input[*i] == '|')
-				j++;
-			(*i)++;
-		}
-		(*i)--;
-		if (input[*i + 1] == '\0' || j == 2 || r >= 1)
-			return (ft_putstr_fd(SYNTAX, 2), ft_putendl_fd(" `|'", 2), 1);
-		else if (j > 2)
-			return (ft_putstr_fd(SYNTAX, 2), ft_putendl_fd(" `||'", 2), 1);
+		if (input[w] == '<' || input[w] == '>')
+			r++;
+		w--;
 	}
-	return (0);
+	while ((input[*i] == '|' || ft_isspace(input[*i])) && input[*i] != '\0')
+	{
+		if (input[(*i)++] == '|')
+			j++;
+	}
+	if (input[*i] == '\0' || j == 2 || r >= 1 || (w <= 0 && j == 1))
+		return (ft_putstr_fd(SYNTAX, 2), ft_putendl_fd(" `|'", 2), 1);
+	else if ((w <= 0 && j > 1) || j > 2)
+		return (ft_putstr_fd(SYNTAX, 2), ft_putendl_fd(" `||'", 2), 1);
+	return (--(*i), 0);
 }
 
 //-----------------------------------------------------------------------------
