@@ -19,6 +19,7 @@ int	execute_command(t_data *all, int i, int piped)
 	int		fds_bak[2];
 	int		pid;
 	int		nodes;
+	int		status;
 
 	nodes = ft_lstsize(all->tokens, i);
 	cmd = get_process(all->tokens, i);
@@ -59,7 +60,7 @@ int	execute_command(t_data *all, int i, int piped)
 	if (!cmd->token || cmd->token[0] == '\0' || !path)
 	{
 		// dprintf(2, "get_cmd_path not found\n");
-		return (all->return_val = 127, command_not_found(all, cmd));
+		return (command_not_found(all, cmd), 1);
 	}
 	array_builder(all, i);
 	if (!piped)
@@ -70,16 +71,21 @@ int	execute_command(t_data *all, int i, int piped)
 			if (get_fd(all, i))
 				return (free(path), all->return_val = 1, 1);
 			default_sigquit();
+			// if (execve("/home/aramos/minishell/testfile", all->arr, all->c_envp) == -1)
 			if (execve(path, all->arr, all->c_envp) == -1)
 			{
-				perror("minishell: \n");
+				dprintf(2, "minishell: %s", cmd->token);
+				perror(": ");
 				free(path);
-				ft_return_val(all, errno);
-				return (ft_exit(all, nodes, cmd, 0));
+				return (ft_return_val(all, errno), 0);
 			}
 		}
 		else
-			waitpid(all->info[i].pid, NULL, 0);
+		{
+			waitpid(all->info[i].pid, &status, 0);
+			if (WIFEXITED(status))
+				all->return_val = WEXITSTATUS(status);
+		}
 	}
 	else
 	{
@@ -87,14 +93,15 @@ int	execute_command(t_data *all, int i, int piped)
 			return (free(path), all->return_val = 1, 1);
 		// dprintf(2, "comming till here\n");
 		default_sigquit();
+		// if (execve("/home/aramos/minishell/testfile", all->arr, all->c_envp) == -1)
 		if (execve(path, all->arr, all->c_envp) == -1)
 		{
-			perror("minishell: \n");
+			dprintf(2, "minishell: %s", cmd->token);
+			perror(": ");
 			free(path);
-			ft_return_val(all, errno);
-			return (ft_exit(all, nodes, cmd, 0));
+			return (ft_return_val(all, errno), 0);
 		}
 	}
 	free(path);
-	return (0);
+	return (-1);
 }
