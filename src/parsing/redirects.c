@@ -58,8 +58,9 @@ int	redirects(t_data *all)
 			info_temp = info_temp->next;
 		if (open_redir(token_temp->type, token_temp, info_temp))
 		{
+			all->return_val = 1;
 			if (all->total_proc == 1)
-				return (0);
+				return (1);
 			while (token_temp->process_nbr == info_temp->process_nbr)
 				token_temp = token_temp->next;
 		}

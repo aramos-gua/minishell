@@ -30,10 +30,10 @@ int	parsing(t_data *all, char *input)
 	else if (new_input && ft_strncmp(new_input, "\0", 1))
 		(free_all(all), init_all(all), parsing(all, new_input), add_history(new_input));
 	else if (redirects(all))
-		return (all->return_val = 1, all->return_val);
+		return (1);
 	// printf("-----------INFO LIST----------------\n");
 	// print_t_proc(all->info);
 	// printf("----------TOKEN LIST----------------\n");
 	// print_t_token(all->tokens);
-	return (all->return_val = 0, all->return_val);
+	return (0);
 }
