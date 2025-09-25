@@ -6,7 +6,7 @@
 /*   By: mtice <mtice@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 14:37:21 by mtice             #+#    #+#             */
-/*   Updated: 2025/09/24 20:17:41 by mtice            ###   ########.fr       */
+/*   Updated: 2025/09/25 16:05:23 by mtice            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ static void	heredoc_error(t_data *all, t_token *tkn_ptr, int line_n)
 	static int		count = 0;
 	char			*num;
 
-	//printf("count: %d\n", count);
 	if (g_signal == SA_RESTART)
 	{
 		ft_putstr_fd("minishell: warning: here-document at line ", 2);
@@ -30,7 +29,6 @@ static void	heredoc_error(t_data *all, t_token *tkn_ptr, int line_n)
 		free(num);
 	}
 	count += (line_n - count);
-	//printf("count: %d line_n: %d\n" , count, line_n);
 }
 
 static char	*write_heredoc(t_data *all, t_token *tkn_ptr, int to_expand)
@@ -48,22 +46,22 @@ static char	*write_heredoc(t_data *all, t_token *tkn_ptr, int to_expand)
 	{
 		set_signals_heredoc(all);
 		line = readline("> ");
-		if (!line || g_signal != SA_RESTART) //TODO: if g_signal != SA_RESTART
+		if (!line || g_signal != SA_RESTART)
 		{
 			if (g_signal != SA_RESTART)
 				++line_n;
 			heredoc_error(all, tkn_ptr, line_n);
-			break;
+			break ;
 		}
 		if (g_signal != SA_RESTART)
 			return (free(proc_nbr), free(path), close(here_fd), line);
 		else if (!ft_strncmp(line, tkn_ptr->token, ft_strlen(tkn_ptr->token) + 1))
-			break;
+			break ;
 		else if (!to_expand)
 			ft_putendl_fd(line, here_fd);
 		else if (to_expand)
 		{
-			char *expanded;
+			char	*expanded;
 			expanded = do_expansion(all, tkn_ptr, line);
 			ft_putendl_fd(expanded, here_fd);
 			free(expanded);
@@ -77,7 +75,7 @@ static char	*write_heredoc(t_data *all, t_token *tkn_ptr, int to_expand)
 //------------------------------------------------------------------------------
 //heredoc()
 //TODO:notes
-char *heredoc(t_data *all)
+char	*heredoc(t_data *all)
 {
 	int		i;
 	t_token	*temp;

@@ -28,12 +28,11 @@ int	parsing(t_data *all, char *input)
 	if (!ft_strncmp(new_input, "\0", 1))
 		return (1);
 	else if (new_input && ft_strncmp(new_input, "\0", 1))
-		(free_all(all), init_all(all), parsing(all, new_input), add_history(new_input));
+	{
+		(free_all(all), init_all(all), parsing(all, new_input));
+		add_history(new_input);
+	}
 	else if (redirects(all))
 		return (1);
-	// printf("-----------INFO LIST----------------\n");
-	// print_t_proc(all->info);
-	// printf("----------TOKEN LIST----------------\n");
-	// print_t_token(all->tokens);
 	return (0);
 }

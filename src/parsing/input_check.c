@@ -117,7 +117,8 @@ static int	syntax_multiple_pipes(char *input, int *i)
 	r = 0;
 	if (input[*i] == '|')
 	{
-		while (w > 0 && (ft_isspace(input[w]) || input[w] == '<' || input[w] == '>'))
+		while (w > 0
+			&& (ft_isspace(input[w]) || input[w] == '<' || input[w] == '>'))
 		{
 			if (input[w] == '<' || input[w] == '>')
 				r++;
@@ -171,7 +172,6 @@ static int	syntax_quotes(char *input, int *i)
 		if (input[*i] == '\0')
 			return (ft_putendl_fd(D_QUOTE, 2), 1);
 	}
-	//(*i)++;
 	return (0);
 }
 
@@ -189,9 +189,9 @@ int	input_check(char *input)
 	{
 		while (ft_isspace(input[i]))
 			i++;
-		if (prev_c == '<' && input[i] == '>')//|| input[i] == '<'))
+		if (prev_c == '<' && input[i] == '>')
 			return (ft_putstr_fd(SYNTAX, 2), ft_putendl_fd(" `>'", 2), 1);
-		else if (prev_c == '>' && input[i] == '<')// || input[i] == '>'))
+		else if (prev_c == '>' && input[i] == '<')
 			return (ft_putstr_fd(SYNTAX, 2), ft_putendl_fd(" `>'", 2), 1);
 		prev_c = input[i];
 		if ((input[i] == '\'' || input[i] == '"') && syntax_quotes(input, &i))
