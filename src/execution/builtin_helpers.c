@@ -58,11 +58,13 @@ int	only_n(char *arg)
 
 	i = 0;
 	if (arg && arg[0] == '-' && arg[i + 1])
+	{
 		i++;
-	while (arg[i] == 'n')
-		i++;
-	if (arg[i] == '\0')
-		return (1);
+		while (arg[i] == 'n')
+			i++;
+		if (arg[i] == '\0')
+			return (1);
+	}
 	return (0);
 }
 

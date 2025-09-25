@@ -20,13 +20,19 @@ int	ft_echo(t_data *all, t_token *cmd_node)
 
 	line_flag = 1;
 	arg = cmd_node->next;
-	while (arg->token && arg->token[0] != '\0' && only_n(arg->token))
+
+	while (arg->token && only_n(arg->token))
 	{
 		line_flag = 0;
 		arg = arg->next;
 	}
 	while (arg->type == ARGUMENT)
 	{
+		if (arg->token[0] == '\0')
+		{
+			arg = arg->next;
+			continue ;
+		}
 		ft_printf("%s", arg->token);
 		if (arg->next->type == ARGUMENT)
 			ft_printf(" ");
