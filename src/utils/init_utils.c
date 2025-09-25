@@ -50,7 +50,7 @@ int	is_minishell(char *input)
 	return (0);
 }
 
-void	subtract_shlvl(t_data *all)
+int	subtract_shlvl(t_data *all)
 {
 	all->shlvl--;
 	if (all->shlvl > 2)
@@ -61,4 +61,5 @@ void	subtract_shlvl(t_data *all)
 			free_double_char(all->c_exp);
 		find_envp(all, all->envp);
 	}
+	return (1);
 }

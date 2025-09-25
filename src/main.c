@@ -16,15 +16,15 @@ volatile sig_atomic_t	g_signal = SA_RESTART;
 
 int	main(int argc, char *argv[], char *envp[])
 {
-	(void)argv;
 	t_data	all;
-	char 	*input = NULL;
+	char	*input;
 
 	if (argc > 1)
 		return (126);
-	first_init(&all);
+	(first_init(&all), (void)argv);
 	if (find_envp(&all, envp))
 		return (ft_putendl_fd("minishell: envp could not be found", 2), 1);
+	input = NULL;
 	while (42)
 	{
 		(set_signals_interactive(&all), free_all(&all), init_all(&all));
@@ -38,27 +38,20 @@ int	main(int argc, char *argv[], char *envp[])
 		}
 		else
 			input = readline("minishell> ");
-		if (!input || rl_on_new_line())
+		if ((!input || rl_on_new_line()) && subtract_shlvl(&all))
 		{
-			subtract_shlvl(&all);
 			if (all.shlvl)
 				continue ;
 			else
-				break;
+				break ;
 		}
 		add_history(input);
 		if (is_minishell(input) && ++(all.shlvl))
-			continue;
+			continue ;
 		if (parsing(&all, input))
 			continue ;
 		if (execution(&all, 0, 0, 0))
 			continue ;
-		// redir_errors(all.errors);
 	}
-	// rl_clear_history();
-	//  	free_double_char(all.c_envp);
-	// free_all(&all);
-	// if (all.c_exp)
-	// 	free_double_char(all.c_exp);
 	return (last_free(&all), all.return_val);
 }

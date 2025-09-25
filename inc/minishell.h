@@ -40,9 +40,6 @@
 
 extern volatile sig_atomic_t	g_signal;
 
-//main.c
-void	init_all(t_data *all);
-void	subtract_shlvl(t_data *all);
 
 //envp.c
 void	print_env(t_data *all);
@@ -100,7 +97,7 @@ char	*append_char(char *s, char c);
 void	first_init(t_data *all);
 void	init_all(t_data *all);
 int		is_minishell(char *input);
-void	subtract_shlvl(t_data *all);
+int		subtract_shlvl(t_data *all);
 
 //parsing_utils.c
 int		is_builtin(char *s);

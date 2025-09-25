@@ -34,7 +34,7 @@ void	default_sigquit(void)
 static void	signal_heredoc(int signal)
 {
 	g_signal = signal;
-	ft_putstr_fd("\nminishell> ", 1);
+	ft_putstr_fd("\nminishell>", 1);
 }
 
 void	set_signals_heredoc(t_data *all)

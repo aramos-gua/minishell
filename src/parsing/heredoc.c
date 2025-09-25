@@ -12,7 +12,7 @@
 
 #include "../../inc/minishell.h"
 
-static void	heredoc_error(t_token *tkn_ptr, int line_n)
+static void	heredoc_error(t_token *tkn_ptr, int *line_n)
 {
 	static int		count = 0;
 	char			*num;
@@ -20,7 +20,7 @@ static void	heredoc_error(t_token *tkn_ptr, int line_n)
 	if (g_signal == SA_RESTART)
 	{
 		if (count != 0)
-			count = line_n;
+			count = *line_n;
 		ft_putstr_fd("minishell: warning: here-document at line ", 2);
 		num = ft_itoa(count + 1);
 		ft_putstr_fd(num, 2);
@@ -32,7 +32,7 @@ static void	heredoc_error(t_token *tkn_ptr, int line_n)
 			count += 1;
 	}
 	else
-		count += (line_n - count);
+		count += (++(*line_n) - count);
 }
 
 static char	*write_heredoc(t_data *all, t_token *tkn_ptr, int to_expand)
@@ -52,13 +52,9 @@ static char	*write_heredoc(t_data *all, t_token *tkn_ptr, int to_expand)
 		line = readline("> ");
 		if (!line || g_signal != SA_RESTART)
 		{
-			if (g_signal != SA_RESTART)
-				++line_n;
-			heredoc_error(tkn_ptr, line_n);
-			break ;
-		}
-		if (g_signal != SA_RESTART)
+			heredoc_error(tkn_ptr, &line_n);
 			return (free(proc_nbr), free(path), close(here_fd), line);
+		}
 		else if (!ft_strncmp(line, tkn_ptr->token, ft_strlen(tkn_ptr->token) + 1))
 			break ;
 		else if (!to_expand)
@@ -67,13 +63,11 @@ static char	*write_heredoc(t_data *all, t_token *tkn_ptr, int to_expand)
 		{
 			char	*expanded;
 			expanded = do_expansion(all, tkn_ptr, line);
-			ft_putendl_fd(expanded, here_fd);
-			free(expanded);
+			(ft_putendl_fd(expanded, here_fd), free(expanded));
 		}
 		line_n++;
 	}
-	(free(proc_nbr), free(path), close(here_fd));
-	return (NULL);
+	return (free(proc_nbr), free(path), close(here_fd), NULL);
 }
 
 //------------------------------------------------------------------------------
