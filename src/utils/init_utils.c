@@ -53,6 +53,7 @@ int	is_minishell(char *input)
 int	subtract_shlvl(t_data *all)
 {
 	all->shlvl--;
+//	ft_putendl_fd("exit", 2);
 	if (all->shlvl > 2)
 	{
 		rl_clear_history();

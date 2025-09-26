@@ -12,88 +12,85 @@
 
 #include "../../inc/minishell.h"
 
-static void	heredoc_error(t_token *tkn_ptr, int *line_n)
+static int	heredoc_error(t_token *tkn_ptr, int n, int *l_nbr)
 {
-	static int		count = 0;
-	char			*num;
+	char	*num;
 
 	if (g_signal == SA_RESTART)
 	{
-		if (count != 0)
-			count = *line_n;
 		ft_putstr_fd("minishell: warning: here-document at line ", 2);
-		num = ft_itoa(count + 1);
+		num = ft_itoa(*l_nbr);
 		ft_putstr_fd(num, 2);
 		ft_putstr_fd(" delimited by end-of-file (wanted `", 2);
 		ft_putstr_fd(tkn_ptr->token, 2);
 		ft_putendl_fd("')", 2);
 		free(num);
-		if (count == 0)
-			count += 1;
+		*l_nbr += n - 1;
 	}
 	else
-		count += (++(*line_n) - count);
+		*l_nbr += n;
+	return (1);
 }
 
-static char	*write_heredoc(t_data *all, t_token *tkn_ptr, int to_expand)
+//-----------------------------------------------------------------------------
+// writes to the heredoc
+// l: line (each line written to the heredoc)
+// n: number of lines written to the heredoc
+static char	*write_heredoc(t_data *all, t_token *tkn_ptr, int to_exp, int *ln)
 {
 	char		*proc_nbr;
 	char		*path;
 	int			here_fd;
-	char		*line;
-	static int	line_n = 0;
+	char		*l;
+	int			n;
 
 	proc_nbr = ft_itoa(tkn_ptr->process_nbr);
 	path = ft_strjoin("/tmp/.heredoc_p", proc_nbr);
 	here_fd = open(path, O_CREAT | O_TRUNC | O_WRONLY, 0644);
-	while (42)
+	n = 0;
+	while (++n)
 	{
-		set_signals_heredoc(all);
-		line = readline("> ");
-		if (!line || g_signal != SA_RESTART)
-		{
-			heredoc_error(tkn_ptr, &line_n);
-			return (free(proc_nbr), free(path), close(here_fd), line);
-		}
-		else if (!ft_strncmp(line, tkn_ptr->token, ft_strlen(tkn_ptr->token) + 1))
+		(set_signals_heredoc(all), l = readline("> "));
+		if ((!l || g_signal != SA_RESTART) && heredoc_error(tkn_ptr, n, ln))
+			return (free(proc_nbr), free(path), close(here_fd), l);
+		else if (!ft_strncmp(l, tkn_ptr->token, ft_strlen(tkn_ptr->token) + 1))
 			break ;
-		else if (!to_expand)
-			ft_putendl_fd(line, here_fd);
-		else if (to_expand)
+		else if (!to_exp)
+			ft_putendl_fd(l, here_fd);
+		else if (to_exp)
 		{
-			char	*expanded;
-			expanded = do_expansion(all, tkn_ptr, line);
-			(ft_putendl_fd(expanded, here_fd), free(expanded));
+			(free(path), path = do_expansion(all, tkn_ptr, l));
+			(ft_putendl_fd(path, here_fd));
 		}
-		line_n++;
 	}
 	return (free(proc_nbr), free(path), close(here_fd), NULL);
 }
 
 //------------------------------------------------------------------------------
-//heredoc()
-//TODO:notes
+//opens heredocs and flags them for do_expansion
+//deletes the quotes in the token that is the heredoc delimiter
+//ln: line number
 char	*heredoc(t_data *all)
 {
-	int		i;
-	t_token	*temp;
-	char	*input;
-	int		to_expand;
+	int			i;
+	t_token		*temp;
+	char		*input;
+	static int	ln = 0;
 
 	i = -1;
 	temp = NULL;
+	ln++;
 	while (temp != all->tokens->next)
 	{
-		to_expand = 0;
 		if (i++ == -1)
 			temp = all->tokens->next;
 		if (temp->type == HERE_DOC)
 		{
 			if (ft_strchr(temp->token, '"') || ft_strchr(temp->token, '\''))
-				delete_quotes(temp->token);
+				(delete_quotes(temp->token), temp->exp = 0);
 			else
-				to_expand = 1;
-			input = write_heredoc(all, temp, to_expand);
+				temp->exp = 1;
+			input = write_heredoc(all, temp, temp->exp, &ln);
 			if (input)
 				return (input);
 		}

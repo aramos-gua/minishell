@@ -133,7 +133,5 @@ int	execution(t_data *all, int i, int piped, bool run)
 	}
 	else
 		executron(all, i);
-	if (g_signal == SIGQUIT)
-		all->return_val = 131;
 	return (0);
 }
