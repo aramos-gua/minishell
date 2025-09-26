@@ -28,6 +28,8 @@ int	ft_echo(t_data *all, t_token *cmd_node)
 	}
 	while (arg->type == ARGUMENT)
 	{
+		if (ft_strncmp(arg->token, "$?", 3))
+			all->return_val = 0;
 		if (arg->token[0] == '\0')
 		{
 			arg = arg->next;
