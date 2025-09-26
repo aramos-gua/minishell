@@ -47,8 +47,6 @@ void	set_signals_heredoc(t_data *all)
 	sigaction(SIGINT, &act, NULL);
 	if (g_signal == SIGINT)
 		all->return_val = 130;
-	else if (g_signal == SIGQUIT)
-		all->return_val = 131;
 }
 
 static void	signal_noninteractive(int signal)
@@ -92,6 +90,4 @@ void	set_signals_interactive(t_data *all)
 	sigaction(SIGINT, &act, NULL);
 	if (g_signal == SIGINT)
 		all->return_val = 130;
-	else if (g_signal == SIGQUIT)
-		all->return_val = 131;
 }
