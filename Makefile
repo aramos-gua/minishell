@@ -7,15 +7,16 @@ SRC :=	$(SRC_DIR)/main.c \
 		$(SRC_DIR)/parsing/envp.c \
 		$(SRC_DIR)/parsing/parsing.c \
 		$(SRC_DIR)/parsing/input_check.c \
+		$(SRC_DIR)/parsing/syntax_check.c \
 		$(SRC_DIR)/parsing/process_info.c \
 		$(SRC_DIR)/parsing/tokeniser.c \
 		$(SRC_DIR)/parsing/lexing.c \
 		$(SRC_DIR)/parsing/expansion.c\
+		$(SRC_DIR)/parsing/expansion_utils.c \
 		$(SRC_DIR)/parsing/redirects.c \
 		$(SRC_DIR)/parsing/heredoc.c \
 		$(SRC_DIR)/utils/init_utils.c \
 		$(SRC_DIR)/utils/parsing_utils.c \
-		$(SRC_DIR)/utils/expansion_utils.c \
 		$(SRC_DIR)/utils/t_proc_utils.c \
 		$(SRC_DIR)/utils/t_token_utils.c \
 		$(SRC_DIR)/utils/signals.c \

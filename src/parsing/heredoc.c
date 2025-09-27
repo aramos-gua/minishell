@@ -55,13 +55,12 @@ static char	*write_heredoc(t_data *all, t_token *tkn_ptr, int to_exp, int *ln)
 			return (free(proc_nbr), free(path), close(here_fd), l);
 		else if (!ft_strncmp(l, tkn_ptr->token, ft_strlen(tkn_ptr->token) + 1))
 			break ;
-		else if (!to_exp)
-			ft_putendl_fd(l, here_fd);
 		else if (to_exp)
 		{
-			(free(path), path = do_expansion(all, tkn_ptr, l));
-			(ft_putendl_fd(path, here_fd));
+			(free(path), path = l);
+			l = do_expansion(all, tkn_ptr, path);
 		}
+		(ft_putendl_fd(l, here_fd));
 	}
 	return (free(proc_nbr), free(path), close(here_fd), NULL);
 }

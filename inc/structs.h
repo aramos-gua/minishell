@@ -28,7 +28,7 @@ typedef enum e_type
 	APPEND
 }			t_type;
 
-// //-----------------------------------------------------------------------------
+// //---------------------------------------------------------------------------
 // //enum which helps to assign a mode to the global variable g_mode
 // typedef enum e_mode
 // {
@@ -82,7 +82,7 @@ typedef struct s_token
 //will always be declared as t_data *all
 //stores a pointer to the other structs
 //stores any other useful info
-//c_envp: a copy of envp obtained in the main TODO: use to search paths && alter env vars
+//c_envp: a copy of envp obtained in the main
 typedef struct s_data
 {
 	char			**envp;
