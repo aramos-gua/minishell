@@ -125,7 +125,7 @@ int	valid_exp_arg(char *str)
 
 	i = 0;
 	ret = 0;
-	while (str[i])
+	while (str[i] && (ft_isalpha(str[0]) || str[0] == '_')) //TODO: changed my mtice
 	{
 		if (str[i] == '=')
 			break ;
