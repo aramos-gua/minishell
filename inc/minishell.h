@@ -6,7 +6,7 @@
 /*   By: mtice <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 15:29:12 by mtice             #+#    #+#             */
-/*   Updated: 2025/09/25 15:49:18 by mtice            ###   ########.fr       */
+/*   Updated: 2025/09/27 14:44:57 by mtice            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,10 +110,12 @@ void			print_t_token(t_token *tokens);
 int				tokens_in_process(t_token *tokens, int process);
 
 //signals.c
-void			default_sigquit(void);
 void			set_signals_interactive(t_data *all);
 void			set_signals_noninteractive(t_data *all);
-void			set_signals_heredoc(t_data *all);
+
+//signal_utils.c
+void			ignore_sigquit(void);
+void			default_sigquit(void);
 
 //free_utils
 void			free_double_char(char **arr);

@@ -12,6 +12,24 @@
 
 #include "../../inc/minishell.h"
 
+static void	signal_heredoc(int signal)
+{
+	g_signal = signal;
+	ft_putstr_fd("\nminishell>", 1);
+}
+
+static void	set_signals_heredoc(t_data *all)
+{
+	struct sigaction	act;
+
+	ignore_sigquit();
+	ft_bzero(&act, sizeof(act));
+	act.sa_handler = &signal_heredoc;
+	sigaction(SIGINT, &act, NULL);
+	if (g_signal == SIGINT)
+		all->return_val = 130;
+}
+
 static int	heredoc_error(t_token *tkn_ptr, int n, int *l_nbr)
 {
 	char	*num;
@@ -55,12 +73,11 @@ static char	*write_heredoc(t_data *all, t_token *tkn_ptr, int to_exp, int *ln)
 			return (free(proc_nbr), free(path), close(here_fd), l);
 		else if (!ft_strncmp(l, tkn_ptr->token, ft_strlen(tkn_ptr->token) + 1))
 			break ;
+		else if (!to_exp)
+			ft_putendl_fd(l, here_fd);
 		else if (to_exp)
-		{
-			(free(path), path = l);
-			l = do_expansion(all, tkn_ptr, path);
-		}
-		(ft_putendl_fd(l, here_fd));
+			(free(path), path = do_expansion(all, tkn_ptr, l),
+				ft_putendl_fd(path, here_fd));
 	}
 	return (free(proc_nbr), free(path), close(here_fd), NULL);
 }

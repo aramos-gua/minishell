@@ -6,48 +6,30 @@
 /*   By: mtice <mtice@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 15:13:31 by mtice             #+#    #+#             */
-/*   Updated: 2025/09/14 21:47:42 by mtice            ###   ########.fr       */
+/*   Updated: 2025/09/27 14:45:03 by mtice            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-static void	ignore_sigquit(void)
-{
-	struct sigaction	act;
-
-	ft_bzero(&act, sizeof(act));
-	act.sa_handler = SIG_IGN;
-	sigaction(SIGQUIT, &act, NULL);
-}
-
-void	default_sigquit(void)
-{
-	struct sigaction	act;
-
-	ft_bzero(&act, sizeof(act));
-	act.sa_handler = SIG_DFL;
-	sigaction(SIGQUIT, &act, NULL);
-	sigaction(SIGINT, &act, NULL);
-}
-
-static void	signal_heredoc(int signal)
-{
-	g_signal = signal;
-	ft_putstr_fd("\nminishell>", 1);
-}
-
-void	set_signals_heredoc(t_data *all)
-{
-	struct	sigaction 	act;
-
-	ignore_sigquit();
-	ft_bzero(&act, sizeof(act));
-	act.sa_handler = &signal_heredoc;
-	sigaction(SIGINT, &act, NULL);
-	if (g_signal == SIGINT)
-		all->return_val = 130;
-}
+// void	ignore_sigquit(void)
+// {
+// 	struct sigaction	act;
+//
+// 	ft_bzero(&act, sizeof(act));
+// 	act.sa_handler = SIG_IGN;
+// 	sigaction(SIGQUIT, &act, NULL);
+// }
+//
+// void	default_sigquit(void)
+// {
+// 	struct sigaction	act;
+//
+// 	ft_bzero(&act, sizeof(act));
+// 	act.sa_handler = SIG_DFL;
+// 	sigaction(SIGQUIT, &act, NULL);
+// 	sigaction(SIGINT, &act, NULL);
+// }
 
 static void	signal_noninteractive(int signal)
 {
