@@ -125,6 +125,8 @@ int	valid_exp_arg(char *str)
 
 	i = 0;
 	ret = 0;
+	if (str[0] == '=' || str[0] == '-' || ft_isdigit(str[0]) || str[0] == '+' || str[0] == '?')
+		return (1);
 	while (str[i] && (ft_isalpha(str[0]) || str[0] == '_')) //TODO: changed my mtice
 	{
 		if (str[i] == '=')
@@ -145,7 +147,7 @@ int	ft_export(t_data *all, int proc, t_token *cmd_node)
 
 	key_val = NULL;
 	if (all->total_proc > 1)
-		return (1);
+		return (all->return_val = 1, 1);
 	if ((ft_lstsize(all->tokens, proc)) == 1)
 		ft_print_exp(all);
 	arg = cmd_node->next;

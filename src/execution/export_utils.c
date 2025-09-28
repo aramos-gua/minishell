@@ -86,6 +86,8 @@ void	export_error(t_data *all, t_token *arg)
 {
 	ft_dprintf(2, "minishell: export: `%s\': %s\n", arg->token, INV_ARG);
 	all->return_val = 1;
+	if (arg->token[0] == '-')
+		all->return_val = 2;
 	arg = arg->next;
 	return ;
 }

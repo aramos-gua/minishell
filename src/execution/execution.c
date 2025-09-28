@@ -77,6 +77,8 @@ static int	executron(t_data *all, int i)
 	int	status;
 	int	status2;
 
+	status = 0;
+	status2 = 0;
 	pipe(pipe_fds);
 	first_fork_pid = fork();
 	if (first_fork_pid == 0)
