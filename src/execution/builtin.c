@@ -44,7 +44,7 @@ int	ft_echo(t_data *all, t_token *cmd_node)
 	}
 	if (line_flag)
 		ft_printf("\n");
-	return (0);
+	return (all->return_val = 0, 0);
 }
 
 static void	delete_element(t_token *arg, char **arr)
