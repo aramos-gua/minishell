@@ -67,7 +67,7 @@ char	*keep_exp(t_data *all, t_token *tkn_ptr, char *token, int *i)
 	dq = 0;
 	if (token[*i] == '"' && ++dq && ++(*i))
 		env_var = append_char(env_var, token[*i - 1]);
-	while (token[*i] != '"' && token[*i] != '\0')
+	while (token[*i] != '"' && token[*i] != '\0' && !(token[*i] == '\'' && !dq))
 	{
 		if (token[*i] == '$' && !only_exp(token, *i) && token[*i + 1] != '"')
 		{
