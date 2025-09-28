@@ -12,25 +12,6 @@
 
 #include "../../inc/minishell.h"
 
-// void	ignore_sigquit(void)
-// {
-// 	struct sigaction	act;
-//
-// 	ft_bzero(&act, sizeof(act));
-// 	act.sa_handler = SIG_IGN;
-// 	sigaction(SIGQUIT, &act, NULL);
-// }
-//
-// void	default_sigquit(void)
-// {
-// 	struct sigaction	act;
-//
-// 	ft_bzero(&act, sizeof(act));
-// 	act.sa_handler = SIG_DFL;
-// 	sigaction(SIGQUIT, &act, NULL);
-// 	sigaction(SIGINT, &act, NULL);
-// }
-
 static void	signal_noninteractive(int signal)
 {
 	g_signal = signal;
