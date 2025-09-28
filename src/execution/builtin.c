@@ -32,6 +32,8 @@ int	ft_echo(t_data *all, t_token *cmd_node)
 			all->return_val = 0;
 		if (arg->token[0] == '\0')
 		{
+			if (arg->next->type == ARGUMENT)
+				ft_printf(" ");
 			arg = arg->next;
 			continue ;
 		}
