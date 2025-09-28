@@ -125,6 +125,8 @@ int	valid_exp_arg(char *str)
 
 	i = 0;
 	ret = 0;
+	if (str[0] == '=' || str[0] == '-' || ft_isdigit(str[0]) || str[0] == '+' || str[0] == '?')
+		return (1);
 	while (str[i] && (ft_isalpha(str[0]) || str[0] == '_')) //TODO: changed my mtice
 	{
 		if (str[i] == '=')

@@ -12,23 +12,6 @@
 
 #include "../../inc/minishell.h"
 
-//gets previos directory by searching last slash occurrence and trimming it
-// static char	*get_prev_dir(t_data *all)
-// {
-// 	char	*cwd;
-// 	char	*last_slash;
-//
-// 	cwd = getcwd(NULL, 0);
-// 	if (!cwd)
-// 		return (all->return_val = 1, NULL);
-// 	last_slash = ft_strrchr(cwd, '/');
-// 	if (last_slash && last_slash != cwd)
-// 		*last_slash = '\0';
-// 	else if (last_slash == cwd)
-// 		cwd[1] = '\0';
-// 	return (all->return_val = 0, cwd);
-// }
-
 //looks for HOME defined in the env and if found, returns that path
 static char	*get_home(t_data *all, char **arr)
 {
@@ -73,7 +56,7 @@ int	ft_cd(t_token *cmd, t_data *all, int nodes)
 
 	if (nodes > 2 || all->info->total_proc > 1)
 	{
-		ft_dprintf(2, "minishell: cd: %s\n", TOO_ARGS);
+		ft_dprintf(STDERR_FILENO, "minishell: cd: too many arguments\n");
 		return (all->return_val = 1);
 	}
 	old_dir = getcwd(NULL, 0);

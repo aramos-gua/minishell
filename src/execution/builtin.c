@@ -76,6 +76,12 @@ int	ft_unset(t_data *all, t_token *cmd_node, int proc)
 		arg = cmd_node->next;
 	else
 		return (1);
+	if (arg->token[0] == '-')
+	{
+		ft_dprintf(2, "minishell: unset: %s: invalid option\n", arg->token);
+		ft_dprintf(2, "unset: usage: unset [-f] [-v] [-n] [name ...]\n");
+		all->return_val = 2;
+	}
 	while (arg->type == ARGUMENT && arg->process_nbr == proc)
 	{
 		delete_element(arg, all->c_envp);
@@ -118,7 +124,7 @@ int	ft_exit(t_data *all, int nodes, t_token *cmd_node, bool print)
 	if (all->info->total_proc == 1)
 	{
 		if (print)
-			dprintf(2, "exit\n");
+			ft_dprintf(2, "exit\n");
 		if (nodes == 1)
 			return (exit_helper(all));
 		else if (nodes == 2 && !(isnt_number(all->tokens->token)))

@@ -52,7 +52,7 @@ void	pbonus_s(const char *str, t_form *format, va_list args)
 		padding = (format -> width) - (format -> precision);
 	if (!(format -> flags & FLAG_MINUS))
 		pbonus_s_pad(padding, format);
-	write(1, str, len);
+	write(format->fd, str, len);
 	format->p_chars += len;
 	if (format -> flags & FLAG_MINUS)
 		pbonus_s_pad(padding, format);
