@@ -20,7 +20,6 @@ int	ft_echo(t_data *all, t_token *cmd_node)
 
 	line_flag = 1;
 	arg = cmd_node->next;
-
 	while (arg->token && only_n(arg->token))
 	{
 		line_flag = 0;
@@ -131,15 +130,15 @@ int	ft_exit(t_data *all, int nodes, t_token *cmd_node, bool print)
 		{
 			all->return_val = ft_atoi(all->tokens->token);
 			if (exit_helper(all))
-				return(1);
+				return (1);
 		}
 		else if (nodes >= 2 && isnt_number(cmd_node->next->token))
 		{
 			all->return_val = 2;
 			ft_dprintf(2, "%s exit: %s%s", PROG, \
-			  cmd_node->next->token, INV_EXIT);
+				cmd_node->next->token, INV_EXIT);
 			if (exit_helper(all))
-				return(1);
+				return (1);
 		}
 		else if (nodes > 2 && !(isnt_number(cmd_node->next->token)))
 		{

@@ -63,30 +63,30 @@ void	fill_exp(t_data *all)
 
 //appends a new entry at the end of c_exp array for export of strings 
 //that do or not contain a '=' character
- static	int	update_exp(t_data *all, char *new_element, t_token *arg_node)
- {
- 	char	**array;
- 	int		i;
- 	int		len;
+static	int	update_exp(t_data *all, char *new_element, t_token *arg_node)
+{
+	char	**array;
+	int		i;
+	int		len;
 
 	array = NULL;
- 	len = ft_strlen(new_element);
- 	i = exist_in_arr(new_element, all->c_exp, true);
- 	if (i == -2)
- 		return (0);
+	len = ft_strlen(new_element);
+	i = exist_in_arr(new_element, all->c_exp, true);
+	if (i == -2)
+		return (0);
 	else if (i != -1 && new_element[len - 1] == '=')
- 		return (free(all->c_exp[i]), all->c_exp[i] = ft_strdup(arg_node->token), 0);
- 	i = 0;
- 	while (all->c_exp[i])
- 		i++;
- 	array = ft_calloc((i + 2), sizeof(char *));
- 	if (!array)
- 		return (1);
- 	i = -1;
- 	while (all->c_exp[++i])
+		return (free(all->c_exp[i]), all->c_exp[i] = ft_strdup(arg_node->token), 0);
+	i = 0;
+	while (all->c_exp[i])
+		i++;
+	array = ft_calloc((i + 2), sizeof(char *));
+	if (!array)
+		return (1);
+	i = -1;
+	while (all->c_exp[++i])
 		array[i] = ft_strdup(all->c_exp[i]);
- 	array[i++] = ft_strdup(arg_node->token);
- 	array[i] = NULL;
+	array[i++] = ft_strdup(arg_node->token);
+	array[i] = NULL;
 	free_double_char(all->c_exp);
 	all->c_exp = array;
 	return (0);
@@ -120,14 +120,14 @@ static	int	update_envp(t_data *all, char *new_element, t_token *arg_node)
 
 int	valid_exp_arg(char *str)
 {
-	int i;
+	int	i;
 	int	ret;
 
 	i = 0;
 	ret = 0;
 	if (str[0] == '=' || str[0] == '-' || ft_isdigit(str[0]) || str[0] == '+' || str[0] == '?')
 		return (1);
-	while (str[i] && (ft_isalpha(str[0]) || str[0] == '_')) //TODO: changed my mtice
+	while (str[i] && (ft_isalpha(str[0]) || str[0] == '_'))
 	{
 		if (str[i] == '=')
 			break ;

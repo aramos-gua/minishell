@@ -66,7 +66,7 @@ int	ft_cd(t_token *cmd, t_data *all, int nodes)
 		return (go_home(all, old_dir), free(old_dir), 1);
 	else if (nodes == 2 && !ft_strncmp(cmd->next->token, "~", 2))
 		return (go_home(all, old_dir), free(old_dir), 1);
-	else if (chdir(cmd->next->token) == -1) //TODO: changed by mtice
+	else if (chdir(cmd->next->token) == -1)
 	{
 		if (errno == ENOENT)
 			all->return_val = 1;
