@@ -106,7 +106,7 @@ static int	executron(t_data *all, int i)
 int	execution(t_data *all, int i, int piped, bool run)
 {
 	int	return_val;
-	// dprintf(2, "executing now\n");
+
 	set_signals_noninteractive(all);
 	if (i + 1 == all->info->total_proc || run)
 	{
