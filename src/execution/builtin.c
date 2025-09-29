@@ -14,10 +14,10 @@
 
 int	ft_echo(t_data *all, t_token *cmd_node)
 {
-	(void)all;
 	int		line_flag;
 	t_token	*arg;
 
+	(void)all;
 	line_flag = 1;
 	arg = cmd_node->next;
 	while (arg->token && only_n(arg->token))

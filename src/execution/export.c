@@ -75,7 +75,8 @@ static	int	update_exp(t_data *all, char *new_element, t_token *arg_node)
 	if (i == -2)
 		return (0);
 	else if (i != -1 && new_element[len - 1] == '=')
-		return (free(all->c_exp[i]), all->c_exp[i] = ft_strdup(arg_node->token), 0);
+		return (free(all->c_exp[i]), \
+		all->c_exp[i] = ft_strdup(arg_node->token), 0);
 	i = 0;
 	while (all->c_exp[i])
 		i++;
@@ -87,9 +88,7 @@ static	int	update_exp(t_data *all, char *new_element, t_token *arg_node)
 		array[i] = ft_strdup(all->c_exp[i]);
 	array[i++] = ft_strdup(arg_node->token);
 	array[i] = NULL;
-	free_double_char(all->c_exp);
-	all->c_exp = array;
-	return (0);
+	return (free_double_char(all->c_exp), all->c_exp = array, 0);
 }
 
 //updates the two2d array of env by appending a new key/value delimited by '='
@@ -101,7 +100,8 @@ static	int	update_envp(t_data *all, char *new_element, t_token *arg_node)
 	array = NULL;
 	i = exist_in_arr(new_element, all->c_envp, false);
 	if (i != -1)
-		return (free(all->c_envp[i]), all->c_envp[i] = ft_strdup(arg_node->token), 0);
+		return (free(all->c_envp[i]), \
+		all->c_envp[i] = ft_strdup(arg_node->token), 0);
 	i = 0;
 	while (all->c_envp[i])
 		i++;
@@ -116,26 +116,6 @@ static	int	update_envp(t_data *all, char *new_element, t_token *arg_node)
 	free_double_char(all->c_envp);
 	all->c_envp = array;
 	return (0);
-}
-
-int	valid_exp_arg(char *str)
-{
-	int	i;
-	int	ret;
-
-	i = 0;
-	ret = 0;
-	if (str[0] == '=' || str[0] == '-' || ft_isdigit(str[0]) || str[0] == '+' || str[0] == '?')
-		return (1);
-	while (str[i] && (ft_isalpha(str[0]) || str[0] == '_'))
-	{
-		if (str[i] == '=')
-			break ;
-		if (!ft_isalpha(str[i]) && str[i] != '_' && !ft_isdigit(str[i]) && str[i] != '=')
-			ret = 1;
-		i++;
-	}
-	return (ret);
 }
 
 //recreates the export builtin function, handling keys not containing
