@@ -25,13 +25,12 @@ int	execute_command(t_data *all, int i, int piped)
 	cmd = get_process(all->tokens, i);
 	if (!cmd)
 	{
-		// dprintf(2, "out on !cmd\n");
 		if (!piped)
 			return (0);
 		if (all->c_envp)
-		free_double_char(all->c_envp);
+			free_double_char(all->c_envp);
 		if (all->c_exp)
-		free_double_char(all->c_exp);
+			free_double_char(all->c_exp);
 		free_all(all);
 		exit (0);
 	}
@@ -51,20 +50,15 @@ int	execute_command(t_data *all, int i, int piped)
 		if (!piped)
 			return (2);
 		if (all->c_envp)
-		free_double_char(all->c_envp);
+			free_double_char(all->c_envp);
 		if (all->c_exp)
-		free_double_char(all->c_exp);
+			free_double_char(all->c_exp);
 		free_all(all);
-		// dprintf(2, "out on !is_builtin\n");
 		exit (0);
 	}
 	path = get_cmd_path(cmd->token, all->c_envp);
 	if (!cmd->token || cmd->token[0] == '\0' || !path)
-	{
-		// dprintf(2, "get_cmd_path not found\n");
-		// dprintf(2, "out on command_not_found\n");
 		return (command_not_found(all, cmd), 1);
-	}
 	array_builder(all, i);
 	if (!piped)
 	{
@@ -74,13 +68,11 @@ int	execute_command(t_data *all, int i, int piped)
 			if (get_fd(all, i))
 				return (free(path), all->return_val = 1, 1);
 			default_sigquit();
-			// if (execve("/home/aramos/minishell/testfile", all->arr, all->c_envp) == -1)
 			if (execve(path, all->arr, all->c_envp) == -1)
 			{
 				ft_dprintf(2, "minishell: %s", cmd->token);
 				perror(": ");
 				free(path);
-				// dprintf(2, "out on execve error\n");
 				return (ft_return_val(all, errno), 0);
 			}
 		}
@@ -95,15 +87,12 @@ int	execute_command(t_data *all, int i, int piped)
 	{
 		if (get_fd(all, i))
 			return (free(path), all->return_val = 1, 1);
-		// dprintf(2, "comming till here\n");
 		default_sigquit();
-		// if (execve("/home/aramos/minishell/testfile", all->arr, all->c_envp) == -1)
 		if (execve(path, all->arr, all->c_envp) == -1)
 		{
 			ft_dprintf(2, "minishell: %s", cmd->token);
 			perror(": ");
 			free(path);
-				// dprintf(2, "out on execve error\n");
 			return (ft_return_val(all, errno), 0);
 		}
 	}

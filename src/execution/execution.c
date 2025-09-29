@@ -116,9 +116,9 @@ int	execution(t_data *all, int i, int piped, bool run)
 			if (all->return_val != 0)
 			{
 				if (all->c_envp)
-				free_double_char(all->c_envp);
+					free_double_char(all->c_envp);
 				if (all->c_exp)
-				free_double_char(all->c_exp);
+					free_double_char(all->c_exp);
 				free_all(all);
 				exit (all->return_val);
 			}
@@ -130,13 +130,12 @@ int	execution(t_data *all, int i, int piped, bool run)
 				if (!piped)
 					return (0);
 				if (all->c_envp)
-				free_double_char(all->c_envp);
+					free_double_char(all->c_envp);
 				if (all->c_exp)
-				free_double_char(all->c_exp);
+					free_double_char(all->c_exp);
 				free_all(all);
 				exit (all->return_val);
 			}
-
 		}
 	}
 	else
