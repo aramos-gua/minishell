@@ -6,7 +6,7 @@
 /*   By: Alejandro Ramos <alejandro.ramos.gua@gmai  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 16:12:22 by Alejandro Ram     #+#    #+#             */
-/*   Updated: 2025/09/14 21:44:19 by mtice            ###   ########.fr       */
+/*   Updated: 2025/09/30 00:53:55 by aramos           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ int	get_fd(t_data *all, int proc)
 	int		fd_in;
 	int		fd_out;
 
-	if (!all->info)
-		return (-1);
 	current = all->info;
 	while (current->process_nbr != proc)
 		current = current->next;
@@ -30,21 +28,15 @@ int	get_fd(t_data *all, int proc)
 	if (fd_in != STDIN_FILENO)
 	{
 		if (fd_in > 0)
-		{
-			dup2(fd_in, STDIN_FILENO);
-			close(fd_in);
-			return (all->info->rev_fds = 1, 0);
-		}
+			return (dup2(fd_in, STDIN_FILENO), close(fd_in), \
+			all->info->rev_fds = 1, 0);
 		return (all->return_val = 1, 1);
 	}
 	if (fd_out != STDOUT_FILENO)
 	{
 		if (fd_out > 0)
-		{
-			dup2(fd_out, STDOUT_FILENO);
-			close(fd_out);
-			return (all->info->rev_fds = 1, 0);
-		}
+			return (dup2(fd_out, STDOUT_FILENO), close(fd_out), \
+			all->info->rev_fds = 1, 0);
 		return (all->return_val = 1, 1);
 	}
 	return (0);
@@ -75,10 +67,8 @@ static int	executron(t_data *all, int i)
 	int	first_fork_pid;
 	int	second_fork_pid;
 	int	status;
-	int	status2;
 
 	status = 0;
-	status2 = 0;
 	pipe(pipe_fds);
 	first_fork_pid = fork();
 	if (first_fork_pid == 0)
@@ -89,18 +79,25 @@ static int	executron(t_data *all, int i)
 		if (second_fork_pid == 0)
 			(get_pipe(all, pipe_fds, 0), execution(all, i + 1, 1, 0));
 		else
-		{
-			close(pipe_fds[0]);
-			close(pipe_fds[1]);
-		}
+			(close(pipe_fds[0]), close(pipe_fds[1]));
 	}
 	waitpid(first_fork_pid, &status, 0);
 	if (WIFEXITED(status))
 		all->return_val = WEXITSTATUS(status);
-	waitpid(second_fork_pid, &status2, 0);
-	if (WIFEXITED(status2))
-		all->return_val = WEXITSTATUS(status2);
+	waitpid(second_fork_pid, &status, 0);
+	if (WIFEXITED(status))
+		all->return_val = WEXITSTATUS(status);
 	return (0);
+}
+
+static void	brexit(t_data *all)
+{
+	if (all->c_envp)
+		free_double_char(all->c_envp);
+	if (all->c_exp)
+		free_double_char(all->c_exp);
+	free_all(all);
+	exit (all->return_val);
 }
 
 int	execution(t_data *all, int i, int piped, bool run)
@@ -114,14 +111,7 @@ int	execution(t_data *all, int i, int piped, bool run)
 		if (return_val == 0)
 		{
 			if (all->return_val != 0)
-			{
-				if (all->c_envp)
-					free_double_char(all->c_envp);
-				if (all->c_exp)
-					free_double_char(all->c_exp);
-				free_all(all);
-				exit (all->return_val);
-			}
+				brexit(all);
 		}
 		if (return_val == 1)
 		{
@@ -129,12 +119,7 @@ int	execution(t_data *all, int i, int piped, bool run)
 			{
 				if (!piped)
 					return (0);
-				if (all->c_envp)
-					free_double_char(all->c_envp);
-				if (all->c_exp)
-					free_double_char(all->c_exp);
-				free_all(all);
-				exit (all->return_val);
+				brexit(all);
 			}
 		}
 	}

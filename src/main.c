@@ -6,7 +6,7 @@
 /*   By: mtice <mtice@student.42london.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 14:40:36 by mtice             #+#    #+#             */
-/*   Updated: 2025/09/25 15:49:19 by mtice            ###   ########.fr       */
+/*   Updated: 2025/09/29 23:42:34 by aramos           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,11 @@ int	main(int argc, char *argv[], char *envp[])
 		(set_signals_interactive(&all), free_all(&all), init_all(&all));
 		if (!isatty(fileno(stdin))) //TODO: change back
 		{
-			break ;
-			// char *temp;
-			// temp = get_next_line(fileno(stdin));
-			// input = ft_strtrim(temp, "\n");
-			// free(temp);
+			// break ;
+			char *temp;
+			temp = get_next_line(fileno(stdin));
+			input = ft_strtrim(temp, "\n");
+			free(temp);
 		}
 		else
 			input = readline("minishell> ");

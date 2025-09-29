@@ -35,6 +35,7 @@ SRC :=	$(SRC_DIR)/main.c \
 		$(SRC_DIR)/execution/export_utils.c \
 		$(SRC_DIR)/execution/errors.c \
 		$(SRC_DIR)/execution/cleaner.c \
+		$(SRC_DIR)/execution/valid_input.c \
 		$(SRC_DIR)/execution/errno.c
 
 

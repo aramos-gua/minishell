@@ -6,7 +6,7 @@
 /*   By: aramos <alejandro.ramos.gua@gmail.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/13 16:16:30 by aramos            #+#    #+#             */
-/*   Updated: 2025/09/13 16:55:46 by aramos           ###   ########.fr       */
+/*   Updated: 2025/09/29 23:54:04 by aramos           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,8 @@ int	ft_cd(t_token *cmd, t_data *all, int nodes)
 	char	*new_dir;
 
 	if (nodes > 2 || all->info->total_proc > 1)
-	{
-		ft_dprintf(STDERR_FILENO, "minishell: cd: too many arguments\n");
-		return (all->return_val = 1);
-	}
+		return (ft_dprintf(STDERR_FILENO, \
+			"minishell: cd: too many arguments\n"), all->return_val = 1);
 	old_dir = getcwd(NULL, 0);
 	if (!old_dir)
 		return (all->return_val = 1);
@@ -77,7 +75,5 @@ int	ft_cd(t_token *cmd, t_data *all, int nodes)
 	update_env_cd(all, "OLDPWD=", old_dir);
 	new_dir = getcwd(NULL, 0);
 	update_env_cd(all, "PWD=", new_dir);
-	free(new_dir);
-	free(old_dir);
-	return (all->return_val = 0);
+	return (free(new_dir), free(old_dir), all->return_val = 0);
 }

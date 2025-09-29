@@ -6,7 +6,7 @@
 /*   By: Alejandro Ramos <alejandro.ramos.gua@gmai  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 20:26:01 by Alejandro Ram     #+#    #+#             */
-/*   Updated: 2025/09/09 20:27:48 by Alejandro Ram    ###   ########.fr       */
+/*   Updated: 2025/09/30 00:35:42 by aramos           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ int	which_builtin(char *cmd, t_data *all, int proc)
 	nodes = ft_lstsize(all->tokens, proc);
 	cmd_node = get_cmd_node(all->tokens->next, proc);
 	if (!ft_strncmp(cmd, "echo", len))
-		return (ft_echo(all, cmd_node), 1);
+		return (ft_echo(all, cmd_node->next, 1), 1);
 	else if (!ft_strncmp(cmd, "cd", len))
 		return (ft_cd(cmd_node, all, nodes), 1);
 	else if (!ft_strncmp(cmd, "pwd", len))
