@@ -6,21 +6,14 @@
 /*   By: Alejandro Ramos <alejandro.ramos.gua@gmai  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 11:42:22 by Alejandro Ram     #+#    #+#             */
-/*   Updated: 2025/09/13 17:00:51 by aramos           ###   ########.fr       */
+/*   Updated: 2025/09/30 00:36:01 by aramos           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-int	ft_echo(t_data *all, t_token *cmd_node)
+int	ft_echo(t_data *all, t_token *arg, int line_flag)
 {
-	(void)all;
-	int		line_flag;
-	t_token	*arg;
-
-	line_flag = 1;
-	arg = cmd_node->next;
-
 	while (arg->token && only_n(arg->token))
 	{
 		line_flag = 0;
@@ -118,7 +111,6 @@ int	exit_helper(t_data *all)
 	return (0);
 }
 
-//TODO:Add print of exit to STDERR
 int	ft_exit(t_data *all, int nodes, t_token *cmd_node, bool print)
 {
 	if (all->info->total_proc == 1)
@@ -131,21 +123,19 @@ int	ft_exit(t_data *all, int nodes, t_token *cmd_node, bool print)
 		{
 			all->return_val = ft_atoi(all->tokens->token);
 			if (exit_helper(all))
-				return(1);
+				return (1);
 		}
 		else if (nodes >= 2 && isnt_number(cmd_node->next->token))
 		{
 			all->return_val = 2;
 			ft_dprintf(2, "%s exit: %s%s", PROG, \
-			  cmd_node->next->token, INV_EXIT);
+				cmd_node->next->token, INV_EXIT);
 			if (exit_helper(all))
-				return(1);
+				return (1);
 		}
 		else if (nodes > 2 && !(isnt_number(cmd_node->next->token)))
-		{
-			ft_dprintf(2, "minishell: %s", TOO_ARGS);
-			return (all->return_val = 1, 1);
-		}
+			return (ft_dprintf(2, "minishell: %s", TOO_ARGS), \
+			all->return_val = 1, 1);
 	}
 	return (0);
 }

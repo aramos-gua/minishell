@@ -20,9 +20,7 @@ int	count_cmd_arg(t_token *list, int proc)
 
 	count = 1;
 	tail = list;
-	// dprintf(2, "tail is [%s]\n", tail->token);
 	head = tail->next;
-	// dprintf(2, "head is [%s]\n", head->token);
 	while (head != tail && head->process_nbr != proc)
 		head = head->next;
 	while (head != tail)
@@ -31,7 +29,6 @@ int	count_cmd_arg(t_token *list, int proc)
 			count++;
 		head = head->next;
 	}
-	// dprintf(2, "\n\ncount is [%d]\n\n", count);
 	return (count);
 }
 
@@ -43,8 +40,6 @@ int	array_builder(t_data *all, int proc)
 	int		i;
 	int		len;
 
-	// if (all->arr)
-	// 	free_double_char(all->arr);
 	len = count_cmd_arg(all->tokens, proc);
 	i = 0;
 	array = malloc((len + 1) * sizeof(char *));

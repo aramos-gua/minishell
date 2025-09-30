@@ -6,7 +6,7 @@
 /*   By: mtice <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 15:29:12 by mtice             #+#    #+#             */
-/*   Updated: 2025/09/27 14:44:57 by mtice            ###   ########.fr       */
+/*   Updated: 2025/09/30 00:53:57 by aramos           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,7 +154,7 @@ int				close_pipes(t_data *all, int *pipes);
 void			restore(t_data *all, int backup[2]);
 
 //builtin.c
-int				ft_echo(t_data *all, t_token *cmd_node);
+int				ft_echo(t_data *all, t_token *arg, int line_flag);
 int				ft_unset(t_data *all, t_token *cmd_node, int proc);
 int				ft_exit(t_data *all, int nodes, t_token *cmd_node, bool print);
 
@@ -186,5 +186,8 @@ int				var_len(char *str);
 int				command_not_found(t_data *all, t_token *cmd);
 
 //errno.c
+
+//valid_input.c
+int				valid_exp_arg(char *str);
 unsigned char	ft_return_val(t_data *all, int ft_errno);
 #endif
