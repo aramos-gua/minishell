@@ -14,28 +14,35 @@
 
 volatile sig_atomic_t	g_signal = SA_RESTART;
 
+void	pre_loop(int argc, t_data *all, char *argv[], char **envp)
+{
+	if (argc > 1)
+		exit (126);
+	(first_init(all), (void)argv);
+	if (find_envp(all, envp))
+		(ft_putendl_fd("minishell: envp could not be found", 2), exit(1));
+}
+
+//Testing purposes only
+		// {
+		// 	// break ;
+		// 	char *temp;
+		// 	temp = get_next_line(fileno(stdin));
+		// 	input = ft_strtrim(temp, "\n");
+		// 	free(temp);
+		// }
 int	main(int argc, char *argv[], char *envp[])
 {
 	t_data	all;
 	char	*input;
 
-	if (argc > 1)
-		return (126);
-	(first_init(&all), (void)argv);
-	if (find_envp(&all, envp))
-		return (ft_putendl_fd("minishell: envp could not be found", 2), 1);
+	pre_loop(argc, &all, argv, envp);
 	input = NULL;
 	while (42)
 	{
 		(set_signals_interactive(&all), free_all(&all), init_all(&all));
-		if (!isatty(fileno(stdin))) //TODO: change back
-		{
-			// break ;
-			char *temp;
-			temp = get_next_line(fileno(stdin));
-			input = ft_strtrim(temp, "\n");
-			free(temp);
-		}
+		if (!isatty(fileno(stdin)))
+			break ;
 		else
 			input = readline("minishell> ");
 		if ((!input || rl_on_new_line()) && subtract_shlvl(&all))
@@ -46,11 +53,8 @@ int	main(int argc, char *argv[], char *envp[])
 				break ;
 		}
 		add_history(input);
-		if (is_minishell(input) && ++(all.shlvl))
-			continue ;
-		if (parsing(&all, input))
-			continue ;
-		if (execution(&all, 0, 0, 0))
+		if ((is_minishell(input) && ++(all.shlvl)) || \
+			parsing(&all, input) || execution(&all, 0, 0, 0))
 			continue ;
 	}
 	return (last_free(&all), all.return_val);
