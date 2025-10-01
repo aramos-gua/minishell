@@ -16,14 +16,16 @@ int	count_cmd_arg(t_token *list, int proc)
 {
 	t_token	*tail;
 	t_token	*head;
+	int		n;
 	int		count;
 
-	count = 1;
 	tail = list;
 	head = tail->next;
-	while (head != tail && head->process_nbr != proc)
+	n = tokens_in_process(list, proc);
+	count = 0;
+	while (head->process_nbr != proc)
 		head = head->next;
-	while (head != tail)
+	while (n--)
 	{
 		if (head->type == COMMAND || head->type == ARGUMENT)
 			count++;
@@ -32,10 +34,39 @@ int	count_cmd_arg(t_token *list, int proc)
 	return (count);
 }
 
+//TODO: Original
+// int	array_builder(t_data *all, int proc)
+// {
+// 	t_token	*head;
+// 	t_token	*tail;
+// 	char	**array;
+// 	int		i;
+// 	int		len;
+//
+// 	len = count_cmd_arg(all->tokens, proc);
+// 	i = 0;
+// 	array = malloc((len + 1) * sizeof(char *));
+// 	if (!array)
+// 		return (perror("malloc"), all->return_val = 1, 1);
+// 	tail = all->tokens;
+// 	head = tail->next;
+// 	while (head->process_nbr != proc || head->type != COMMAND)
+// 		head = head->next;
+// 	array[i++] = strdup((head->token));
+// 	head = head->next;
+// 	while (head->type == ARGUMENT && head->process_nbr == proc)
+// 	{
+// 		array[i++] = ft_strdup(head->token);
+// 		head = head->next;
+// 	}
+// 	array[i] = NULL;
+// 	all->arr = array;
+// 	return (0);
+// }
+
 int	array_builder(t_data *all, int proc)
 {
 	t_token	*head;
-	t_token	*tail;
 	char	**array;
 	int		i;
 	int		len;
@@ -45,15 +76,13 @@ int	array_builder(t_data *all, int proc)
 	array = malloc((len + 1) * sizeof(char *));
 	if (!array)
 		return (perror("malloc"), all->return_val = 1, 1);
-	tail = all->tokens;
-	head = tail->next;
-	while (head->process_nbr != proc || head->type != COMMAND)
+	head = all->tokens->next;
+	while (head->process_nbr != proc)
 		head = head->next;
-	array[i++] = strdup((head->token));
-	head = head->next;
-	while (head->type == ARGUMENT && head->process_nbr == proc)
+	while (head->process_nbr == proc && i < len)
 	{
-		array[i++] = ft_strdup(head->token);
+		if (head->type == COMMAND || head->type == ARGUMENT)
+			array[i++] = ft_strdup(head->token);
 		head = head->next;
 	}
 	array[i] = NULL;

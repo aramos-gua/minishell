@@ -132,6 +132,7 @@ int				execution(t_data *all, int i, int piped, bool run);
 int				get_fd(t_data *all, int proc);
 
 //get_binaries.c
+int				count_cmd_arg(t_token *list, int proc);
 int				array_builder(t_data *all, int proc);
 char			*build_path(char *cmd, char **paths);
 char			*get_cmd_path(char *cmd, char **env);

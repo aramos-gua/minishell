@@ -19,8 +19,10 @@ static int	call_execve(t_data *all, int i, char *path, t_token *cmd)
 	default_sigquit();
 	if (execve(path, all->arr, all->c_envp) == -1)
 	{
-		ft_dprintf(2, "minishell: %s", cmd->token);
-		perror(": ");
+		// ft_dprintf(2, "minishell: %s", cmd->token);
+		// perror(": ");
+		ft_dprintf(2, "minishell: ");
+		perror(cmd->token);
 		free(path);
 		return (ft_return_val(all, errno), 0);
 	}
