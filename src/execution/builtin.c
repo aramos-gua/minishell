@@ -19,23 +19,20 @@ int	ft_echo(t_data *all, t_token *arg, int line_flag)
 
 	n = tokens_in_process(all->tokens, arg->prev->process_nbr) - 1;
 	arg_count = count_cmd_arg(all->tokens, arg->prev->process_nbr) - 1;
-	while (arg->token && only_n(arg->token))
+	while (arg->token && only_n(arg->token) && n-- && arg_count--)
 	{
 		line_flag = 0;
 		arg = arg->next;
-		arg_count--, n--;
 	}
 	while (n--)
 	{
-		if (!ft_strncmp(arg->token, "\0", 1))
-			arg_count--;
 		if (arg->type == ARGUMENT)
 		{
 			if (ft_strncmp(arg->token, "$?", 3))
 				all->return_val = 0;
 			if (arg->token[0] == '\0')
 			{
-				if (arg->next->type == ARGUMENT)
+				if (n != arg_count-- && arg_count > 0)
 					ft_printf(" ");
 				arg = arg->next;
 				continue ;
