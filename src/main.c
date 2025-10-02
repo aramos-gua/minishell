@@ -42,7 +42,13 @@ int	main(int argc, char *argv[], char *envp[])
 	{
 		(set_signals_interactive(&all), free_all(&all), init_all(&all));
 		if (!isatty(fileno(stdin)))
+		{
 			break ;
+			// char *temp;
+			// temp = get_next_line(fileno(stdin));
+			// input = ft_strtrim(temp, "\n");
+			// free(temp);
+		}
 		else
 			input = readline("minishell> ");
 		if ((!input || rl_on_new_line()) && subtract_shlvl(&all))
