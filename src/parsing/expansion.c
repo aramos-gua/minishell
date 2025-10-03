@@ -75,11 +75,10 @@ char	*keep_exp(t_data *all, t_token *tkn_ptr, char *token, int *i)
 			prev_env_var = env_var;
 			temp = valid_exp(all, tkn_ptr, token, i);
 			env_var = ft_strjoin(prev_env_var, temp);
-			(free(prev_env_var), free(temp));
+			(free(prev_env_var), free(temp), (*i)++);
 		}
 		else
-			env_var = append_char(env_var, token[*i]);
-		(*i)++;
+			env_var = append_char(env_var, token[(*i)++]);
 	}
 	if (token[*i] == '"' && dq)
 		return (env_var = append_char(env_var, token[*i]), env_var);

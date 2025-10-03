@@ -108,7 +108,7 @@ char	*heredoc(t_data *all)
 				temp->exp = 1;
 			input = write_heredoc(all, temp, temp->exp, &ln);
 			if (input)
-				return (input);
+				return (all->return_val = 130, input);
 		}
 		temp = temp->next;
 	}

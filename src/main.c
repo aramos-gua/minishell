@@ -40,17 +40,17 @@ int	main(int argc, char *argv[], char *envp[])
 	input = NULL;
 	while (42)
 	{
-		(set_signals_interactive(&all), free_all(&all), init_all(&all));
+		(free_all(&all), init_all(&all), set_signals_interactive(&all));
 		if (!isatty(fileno(stdin)))
 			break ;
 		else
 			input = readline("minishell> ");
+		set_signals_interactive(&all);
 		if ((!input || rl_on_new_line()) && subtract_shlvl(&all))
 		{
 			if (all.shlvl)
 				continue ;
-			else
-				break ;
+			break ;
 		}
 		add_history(input);
 		if ((is_minishell(input) && ++(all.shlvl)) || \
