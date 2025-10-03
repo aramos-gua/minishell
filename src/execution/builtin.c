@@ -123,8 +123,9 @@ int	ft_exit(t_data *all, int nodes, t_token *cmd_node, bool print)
 {
 	if (all->info->total_proc == 1)
 	{
-		if (print)
-			ft_dprintf(2, "exit\n");
+		(void)print;
+		// if (print)
+		// 	ft_dprintf(2, "exit\n");
 		if (nodes == 1)
 			return (exit_helper(all));
 		else if (nodes == 2 && !(isnt_number(all->tokens->token)))
