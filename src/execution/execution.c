@@ -66,11 +66,7 @@ static int	executron(t_data *all, int i)
 	int	pipe_fds[2];
 	int	first_fork_pid;
 	int	second_fork_pid;
-	int	status;
-	int	last_pid;
-	int	pid;
 
-	status = 0;
 	pipe(pipe_fds);
 	first_fork_pid = fork();
 	if (first_fork_pid == 0)
@@ -79,17 +75,8 @@ static int	executron(t_data *all, int i)
 	if (second_fork_pid == 0)
 		(get_pipe(all, pipe_fds, 0), execution(all, i + 1, 1, 0));
 	(close(pipe_fds[0]), close(pipe_fds[1]));
-	last_pid = second_fork_pid;
-	while ((pid = wait(&status)) > 0)
-	{
-		if (pid == last_pid)
-		{
-			if (WIFEXITED(status))
-				all->return_val = WEXITSTATUS(status);
-			else if (WIFSIGNALED(status))
-				all->return_val = 128 + WTERMSIG(status);
-		}
-	}
+	all->info->last_pid = second_fork_pid;
+	return_n_signal(all);
 	return (0);
 }
 

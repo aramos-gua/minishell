@@ -24,25 +24,7 @@ int	ft_echo(t_data *all, t_token *arg, int line_flag)
 		line_flag = 0;
 		arg = arg->next;
 	}
-	while (n--)
-	{
-		if (arg->type == ARGUMENT)
-		{
-			if (ft_strncmp(arg->token, "$?", 3))
-				all->return_val = 0;
-			if (arg->token[0] == '\0')
-			{
-				if (n != arg_count-- && arg_count > 0)
-					ft_printf(" ");
-				arg = arg->next;
-				continue ;
-			}
-			ft_printf("%s", arg->token);
-			if (n != arg_count-- && arg_count > 0)
-				ft_printf(" ");
-		}
-		arg = arg->next;
-	}
+	echo_loop(all, arg, n, arg_count);
 	if (line_flag)
 		ft_printf("\n");
 	return (all->return_val = 0, 0);
@@ -123,9 +105,8 @@ int	ft_exit(t_data *all, int nodes, t_token *cmd_node, bool print)
 {
 	if (all->info->total_proc == 1)
 	{
-		(void)print;
-		// if (print)
-		// 	ft_dprintf(2, "exit\n");
+		if (print)
+			ft_dprintf(2, "exit\n");
 		if (nodes == 1)
 			return (exit_helper(all));
 		else if (nodes == 2 && !(isnt_number(all->tokens->token)))

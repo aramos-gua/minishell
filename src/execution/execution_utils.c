@@ -65,3 +65,47 @@ int	ft_lstsize(t_token *list, int proc)
 	}
 	return (i);
 }
+
+void	return_n_signal(t_data *all)
+{
+	int	status;
+	int	pid;
+
+	status = 0;
+	while (42)
+	{
+		pid = wait(&status);
+		if (pid <= 0)
+			break ;
+		if (pid == all->info->last_pid)
+		{
+			if (WIFEXITED(status))
+				all->return_val = WEXITSTATUS(status);
+			else if (WIFSIGNALED(status))
+				all->return_val = 128 + WTERMSIG(status);
+		}
+	}
+}
+
+void	echo_loop(t_data *all, t_token *arg, int n, int arg_count)
+{
+	while (n--)
+	{
+		if (arg->type == ARGUMENT)
+		{
+			if (ft_strncmp(arg->token, "$?", 3))
+				all->return_val = 0;
+			if (arg->token[0] == '\0')
+			{
+				if (n != arg_count-- && arg_count > 0)
+					ft_printf(" ");
+				arg = arg->next;
+				continue ;
+			}
+			ft_printf("%s", arg->token);
+			if (n != arg_count-- && arg_count > 0)
+				ft_printf(" ");
+		}
+		arg = arg->next;
+	}
+}

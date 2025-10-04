@@ -143,6 +143,8 @@ t_token			*get_cmd_node(t_token *list, int i);
 int				ft_lstsize(t_token *list, int proc);
 void			sh_putstr(char *arg, char *str, int fd);
 int				exist_in_arr(char *str, char **array, bool flag);
+void			return_n_signal(t_data *all);
+void			echo_loop(t_data *all, t_token *arg, int n, int arg_count);
 
 //commands.c
 int				first_command(t_data *all, int *pipes);
