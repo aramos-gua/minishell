@@ -66,6 +66,8 @@ int	ft_lstsize(t_token *list, int proc)
 	return (i);
 }
 
+// else if (WIFSIGNALED(status))
+// 	all->return_val = 128 + WTERMSIG(status);
 void	return_n_signal(t_data *all)
 {
 	int	status;
@@ -81,8 +83,6 @@ void	return_n_signal(t_data *all)
 		{
 			if (WIFEXITED(status))
 				all->return_val = WEXITSTATUS(status);
-			else if (WIFSIGNALED(status))
-				all->return_val = 128 + WTERMSIG(status);
 		}
 	}
 }
