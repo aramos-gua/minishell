@@ -12,11 +12,13 @@
 
 #include "../../inc/minishell.h"
 
-static int	check_prev_c(char *prev_c, char input_i)
+static int	check_prev_c(char *prev_c, char input_i, char *input, int i)
 {
-	if (*prev_c == '<' && input_i == '>')
-		return (ft_putstr_fd(SYNTAX, 2), ft_putendl_fd(" `>'", 2), 1);
-	else if (*prev_c == '>' && input_i == '<')
+	if ((*prev_c == '<' && input_i == '>')
+		|| (*prev_c == '<' && input_i == '<' && ft_isspace(input[i - 1])))
+		return (ft_putstr_fd(SYNTAX, 2), ft_putendl_fd(" `<'", 2), 1);
+	else if ((*prev_c == '>' && input_i == '<')
+		|| (*prev_c == '>' && input_i == '>' && ft_isspace(input[i - 1])))
 		return (ft_putstr_fd(SYNTAX, 2), ft_putendl_fd(" `>'", 2), 1);
 	*prev_c = input_i;
 	return (0);
@@ -36,7 +38,7 @@ int	input_check(char *input)
 	{
 		while (ft_isspace(input[i]))
 			i++;
-		if (check_prev_c(&prev_c, input[i]))
+		if (check_prev_c(&prev_c, input[i], input, i))
 			return (1);
 		if ((input[i] == '\'' || input[i] == '"') && syntax_quotes(input, &i))
 			return (1);

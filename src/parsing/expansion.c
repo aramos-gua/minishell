@@ -69,16 +69,16 @@ char	*keep_exp(t_data *all, t_token *tkn_ptr, char *token, int *i)
 		env_var = append_char(env_var, token[*i - 1]);
 	while (token[*i] != '"' && token[*i] != '\0' && !(token[*i] == '\'' && !dq))
 	{
-		if (token[*i] == '$' && !only_exp(token, *i) && token[*i + 1] != '"')
+		if (token[*i] == '$' && !only_exp(token, *i)
+			&& token[*i + 1] != '"' && token[*i + 1] != '/')
 		{
 			prev_env_var = env_var;
 			temp = valid_exp(all, tkn_ptr, token, i);
 			env_var = ft_strjoin(prev_env_var, temp);
-			(free(prev_env_var), free(temp));
+			(free(prev_env_var), free(temp), (*i)++);
 		}
 		else
-			env_var = append_char(env_var, token[*i]);
-		(*i)++;
+			env_var = append_char(env_var, token[(*i)++]);
 	}
 	if (token[*i] == '"' && dq)
 		return (env_var = append_char(env_var, token[*i]), env_var);
@@ -101,7 +101,7 @@ char	*do_expansion(t_data *all, t_token *tkn_ptr, char *token)
 			env_var = ft_itoa(all->return_val);
 		else if (token[i] == '$' && token[i + 1] == '\0')
 			env_var = ft_strdup("$");
-		else if (token[i] == '$' && ++(tkn_ptr->split))
+		else if (token[i] == '$' && token[i + 1] != '/' && ++(tkn_ptr->split))
 			env_var = valid_exp(all, tkn_ptr, token, &i);
 		else if (token[i] == '\'')
 			env_var = single_exp(token, &i);

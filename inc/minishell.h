@@ -81,11 +81,11 @@ void			word_split(t_token *tkn_ptr, char **env_var);
 void			expand_var(t_token *tkn_ptr, char **c_envp, char **env_var);
 char			*append_char(char *s, char c);
 
-//redirects.c
-int				redirects(t_data *all);
-
 //heredoc.c
 char			*heredoc(t_data *all);
+
+//redirects.c
+int				redirects(t_data *all);
 
 //init_utils.c
 void			first_init(t_data *all);
