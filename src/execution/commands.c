@@ -70,9 +70,18 @@ void	parent_waiting(t_data *all, int i)
 {
 	int		status;
 
+	status = 0;
 	waitpid(all->info[i].pid, &status, 0);
 	if (WIFEXITED(status))
 		all->return_val = WEXITSTATUS(status);
+	if (WIFSIGNALED(status))
+	{
+		if (WTERMSIG(status) == 3)
+			ft_dprintf(2, "Quit (core dumped)\n");
+		if (WTERMSIG(status) == 2)
+			ft_dprintf(2, "\n");
+		all->return_val = 128 + WTERMSIG(status);
+	}
 }
 
 int	execute_command(t_data *all, int i, int piped)

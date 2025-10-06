@@ -21,7 +21,8 @@
 # define NO_FILE_OR_D "No such file or directory"
 # define NO_PERM "Permission denied"
 # define INV_OPT "invalid option"
-# define TOO_ARGS "minishell: cd: too many arguments"
+# define TOO_ARGS "minishell: too many arguments"
+# define TOO_ARGS_C "minishell: cd: too many arguments"
 # define INV_ARG "not a valid identifier"
 # define INV_EXIT ": numeric argument required\n"
 

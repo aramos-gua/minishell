@@ -88,7 +88,7 @@ int	ft_cd(t_token *cmd, t_data *all, int nodes)
 	char	*new_dir;
 
 	if (nodes > 2)
-		return (ft_dprintf(2, "%s\n", TOO_ARGS), all->return_val = 1);
+		return (ft_dprintf(2, "%s\n", TOO_ARGS_C), all->return_val = 1);
 	if (all->info->total_proc > 1)
 		return (1);
 	old_dir = getcwd(NULL, 0);

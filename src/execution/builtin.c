@@ -124,7 +124,7 @@ int	ft_exit(t_data *all, int nodes, t_token *cmd_node, bool print)
 				return (1);
 		}
 		else if (nodes > 2 && !(isnt_number(cmd_node->next->token)))
-			return (ft_dprintf(2, "minishell: %s", TOO_ARGS), \
+			return (ft_dprintf(2, "minishell: exit: too many arguments\n"), \
 			all->return_val = 1, 1);
 	}
 	return (0);
