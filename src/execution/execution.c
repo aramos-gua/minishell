@@ -117,5 +117,6 @@ int	execution(t_data *all, int i, int piped, bool run)
 	}
 	else
 		executron(all, i);
+	set_signals_noninteractive(all);
 	return (0);
 }

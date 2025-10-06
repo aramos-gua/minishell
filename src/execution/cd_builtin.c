@@ -99,14 +99,14 @@ int	ft_cd(t_token *cmd, t_data *all, int nodes)
 		return (go_home(all, old_dir), free(old_dir), 1);
 	else if (chdir(cmd->next->token) == -1)
 	{
+		ft_return_val(all, errno);
 		if (errno == ENOENT)
 			all->return_val = 1;
-		else if (errno == EACCES)
-			all->return_val = 126;
-		return (free(old_dir), perror("minishell: cd"), 1);
+		return (free(old_dir),
+			ft_putstr_fd("minishell: cd: ", 2), perror(cmd->next->token), 1);
 	}
 	new_dir = getcwd(NULL, 0);
-	(update_env_cd(all, "OLDPWD=", old_dir), \
+	(update_env_cd(all, "OLDPWD=", old_dir),
 		update_env_cd(all, "PWD=", new_dir));
 	return (free(new_dir), free(old_dir), all->return_val = 0);
 }

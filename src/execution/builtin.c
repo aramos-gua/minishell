@@ -71,7 +71,7 @@ int	ft_unset(t_data *all, t_token *cmd_node, int proc)
 		delete_element(arg, all->c_exp);
 		arg = arg->next;
 	}
-	return (1);
+	return (all->return_val = 0, 1);
 }
 
 int	exit_helper(t_data *all)
@@ -105,8 +105,9 @@ int	ft_exit(t_data *all, int nodes, t_token *cmd_node, bool print)
 {
 	if (all->info->total_proc == 1)
 	{
-		if (print)
-			ft_dprintf(2, "exit\n");
+		(void)print;
+		// if (print)
+		// 	ft_dprintf(2, "exit\n");
 		if (nodes == 1)
 			return (exit_helper(all));
 		else if (nodes == 2 && !(isnt_number(all->tokens->token)))
