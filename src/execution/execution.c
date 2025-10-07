@@ -90,13 +90,11 @@ static void	brexit(t_data *all)
 	exit (all->return_val);
 }
 
-//before return?
-// set_signals_noninteractive(all);
 int	execution(t_data *all, int i, int piped, bool run)
 {
 	int	return_val;
 
-	set_signals_noninteractive(all);
+	set_signals_noninteractive();
 	if (i + 1 == all->info->total_proc || run)
 	{
 		return_val = (execute_command(all, i, piped));
@@ -117,6 +115,5 @@ int	execution(t_data *all, int i, int piped, bool run)
 	}
 	else
 		executron(all, i);
-	set_signals_noninteractive(all);
 	return (0);
 }

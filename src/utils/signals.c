@@ -12,14 +12,7 @@
 
 #include "../../inc/minishell.h"
 
-//TODO:Check with mtice about commentec bits
-//
-static void	signal_noninteractive(int signal)
-{
-	g_signal = signal;
-}
-
-void	set_signals_noninteractive(t_data *all)
+void	set_signals_noninteractive(void)
 {
 	struct sigaction	act;
 
@@ -27,13 +20,6 @@ void	set_signals_noninteractive(t_data *all)
 	act.sa_handler = SIG_IGN;
 	sigaction(SIGINT, &act, NULL);
 	sigaction(SIGQUIT, &act, NULL);
-	act.sa_handler = &signal_noninteractive;
-	sigaction(SIGINT, &act, NULL);
-	sigaction(SIGQUIT, &act, NULL);
-	if (g_signal == SIGINT)
-		all->return_val = 130;
-	else if (g_signal == SIGQUIT)
-		all->return_val = 131;
 }
 
 static void	signal_interactive(int signal)

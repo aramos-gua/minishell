@@ -16,7 +16,7 @@ static int	call_execve(t_data *all, int i, char *path, t_token *cmd)
 {
 	if (get_fd(all, i))
 		return (free(path), all->return_val = 1, 1);
-	default_sigquit();
+	default_signals();
 	if (execve(path, all->arr, all->c_envp) == -1)
 	{
 		ft_dprintf(2, "minishell: ");

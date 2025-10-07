@@ -30,6 +30,8 @@ static void	set_signals_heredoc(t_data *all)
 		all->return_val = 130;
 }
 
+//-----------------------------------------------------------------------------
+//prints the heredoc error message when ^C or ^D are detected
 static int	heredoc_error(t_token *tkn_ptr, int n, int *l_nbr)
 {
 	char	*num;

@@ -111,11 +111,11 @@ int				tokens_in_process(t_token *tokens, int process);
 
 //signals.c
 void			set_signals_interactive(t_data *all);
-void			set_signals_noninteractive(t_data *all);
+void			set_signals_noninteractive(void);
 
 //signal_utils.c
 void			ignore_sigquit(void);
-void			default_sigquit(void);
+void			default_signals(void);
 
 //free_utils
 void			free_double_char(char **arr);

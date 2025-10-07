@@ -87,7 +87,7 @@ void	return_n_signal(t_data *all)
 			{
 				if (WTERMSIG(status) == 3)
 					ft_dprintf(2, "Quit (core dumped)\n");
-				if (WTERMSIG(status) == 2)
+				else if (WTERMSIG(status) == 2)
 					ft_dprintf(2, "\n");
 				all->return_val = 128 + WTERMSIG(status);
 			}

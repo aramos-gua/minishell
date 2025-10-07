@@ -21,12 +21,12 @@ void	ignore_sigquit(void)
 	sigaction(SIGQUIT, &act, NULL);
 }
 
-void	default_sigquit(void)
+void	default_signals(void)
 {
 	struct sigaction	act;
 
 	ft_bzero(&act, sizeof(act));
 	act.sa_handler = SIG_DFL;
-	sigaction(SIGQUIT, &act, NULL);
 	sigaction(SIGINT, &act, NULL);
+	sigaction(SIGQUIT, &act, NULL);
 }
