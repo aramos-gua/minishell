@@ -65,13 +65,15 @@ int	ft_unset(t_data *all, t_token *cmd_node, int proc)
 		ft_dprintf(2, "unset: usage: unset [-f] [-v] [-n] [name ...]\n");
 		all->return_val = 2;
 	}
+	else
+		all->return_val = 0;
 	while (arg->type == ARGUMENT && arg->process_nbr == proc)
 	{
 		delete_element(arg, all->c_envp);
 		delete_element(arg, all->c_exp);
 		arg = arg->next;
 	}
-	return (all->return_val = 0, 1);
+	return (1);
 }
 
 int	exit_helper(t_data *all)
