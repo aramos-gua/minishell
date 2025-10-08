@@ -28,16 +28,6 @@ typedef enum e_type
 	APPEND
 }			t_type;
 
-// //---------------------------------------------------------------------------
-// //enum which helps to assign a mode to the global variable g_mode
-// typedef enum e_mode
-// {
-// 	NON_INTERACTIVE,
-// 	INTERACTIVE,
-// 	H_DOC,
-// 	EXIT,
-// }			t_mode;
-
 //-----------------------------------------------------------------------------
 //holds the string which is the unmodified process in a 2d array
 //t_proc->proc[j][i]: where j is the process_nbr and i the process string

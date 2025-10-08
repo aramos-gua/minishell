@@ -82,7 +82,7 @@ void			expand_var(t_token *tkn_ptr, char **c_envp, char **env_var);
 char			*append_char(char *s, char c);
 
 //heredoc.c
-char			*heredoc(t_data *all);
+int				heredoc(t_data *all);
 
 //redirects.c
 int				redirects(t_data *all);
@@ -110,6 +110,7 @@ void			print_t_token(t_token *tokens);
 int				tokens_in_process(t_token *tokens, int process);
 
 //signals.c
+void			set_signals_heredoc(t_data *all);
 void			set_signals_interactive(t_data *all);
 void			set_signals_noninteractive(void);
 

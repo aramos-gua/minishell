@@ -12,14 +12,22 @@
 
 #include "../../inc/minishell.h"
 
-void	set_signals_noninteractive(void)
+static void	signal_heredoc(int signal)
+{
+	g_signal = signal;
+	ft_putstr_fd("\n", 1);
+}
+
+void	set_signals_heredoc(t_data *all)
 {
 	struct sigaction	act;
 
+	ignore_sigquit();
 	ft_bzero(&act, sizeof(act));
-	act.sa_handler = SIG_IGN;
+	act.sa_handler = &signal_heredoc;
 	sigaction(SIGINT, &act, NULL);
-	sigaction(SIGQUIT, &act, NULL);
+	if (g_signal == SIGINT)
+		all->return_val = 130;
 }
 
 static void	signal_interactive(int signal)
@@ -41,4 +49,14 @@ void	set_signals_interactive(t_data *all)
 	sigaction(SIGINT, &act, NULL);
 	if (g_signal == SIGINT)
 		all->return_val = 130;
+}
+
+void	set_signals_noninteractive(void)
+{
+	struct sigaction	act;
+
+	ft_bzero(&act, sizeof(act));
+	act.sa_handler = SIG_IGN;
+	sigaction(SIGINT, &act, NULL);
+	sigaction(SIGQUIT, &act, NULL);
 }

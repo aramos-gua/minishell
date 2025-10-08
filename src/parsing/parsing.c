@@ -14,8 +14,6 @@
 
 int	parsing(t_data *all, char *input)
 {
-	char	*new_input;
-
 	if (input_check(input))
 		return (all->return_val = 2, all->return_val);
 	else if (find_processes(all, input))
@@ -24,14 +22,8 @@ int	parsing(t_data *all, char *input)
 		return (1);
 	else if (lexing(all))
 		return (1);
-	new_input = heredoc(all);
-	if (!ft_strncmp(new_input, "\0", 1))
+	else if (heredoc(all))
 		return (1);
-	else if (new_input && ft_strncmp(new_input, "\0", 1))
-	{
-		(free_all(all), init_all(all), parsing(all, new_input));
-		add_history(new_input);
-	}
 	else if (redirects(all))
 		return (1);
 	return (0);
