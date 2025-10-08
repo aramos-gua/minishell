@@ -28,9 +28,10 @@ int	get_fd(t_data *all, int proc)
 	if (fd_in != STDIN_FILENO)
 	{
 		if (fd_in > 0)
-			return (dup2(fd_in, STDIN_FILENO), close(fd_in), \
-			all->info->rev_fds = 1, 0);
-		return (all->return_val = 1, 1);
+			(dup2(fd_in, STDIN_FILENO), close(fd_in), \
+			all->info->rev_fds = 1);
+		else
+			return (all->return_val = 1, 1);
 	}
 	if (fd_out != STDOUT_FILENO)
 	{
