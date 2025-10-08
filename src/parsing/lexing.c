@@ -14,7 +14,7 @@
 
 //-----------------------------------------------------------------------------
 //determines if a token is a redirection
-static int	is_redirect(char *token)
+int	is_redirect(char *token)
 {
 	if (!ft_strncmp(token, "<\0", 2))
 		return (RE_IN);

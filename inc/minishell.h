@@ -61,11 +61,13 @@ int				syntax_quotes(char *input, int *i);
 int				find_processes(t_data *all, char *input);
 
 //tokeniser.c
+int				final_token_check(t_token *tokens);
 char			*find_token(char *process, int i, int len);
 int				skip_to(char *process, char skip_to, int *i, int *len);
 int				tokeniser(t_data *all);
 
 //lexing.c
+int				is_redirect(char *token);
 void			delete_quotes(char *token);
 int				lexing(t_data *all);
 

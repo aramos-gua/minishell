@@ -31,36 +31,36 @@ void	init_all(t_data *all)
 	all->total_proc = 0;
 }
 
-int	is_minishell(char *input)
-{
-	int	i;
-
-	if (!ft_strncmp("./minishell\0", input, 12))
-		return (1);
-	else if (!ft_strncmp("./minishell", input, 11))
-	{
-		i = 11;
-		while (ft_isspace(input[i]))
-			i++;
-		if (input[i] == '\0')
-			return (1);
-		else
-			return (0);
-	}
-	return (0);
-}
-
-int	subtract_shlvl(t_data *all)
-{
-	all->shlvl--;
-	ft_putendl_fd("exit", 2);
-	if (all->shlvl > 2)
-	{
-		rl_clear_history();
-		free_double_char(all->c_envp);
-		if (all->c_exp)
-			free_double_char(all->c_exp);
-		find_envp(all, all->envp);
-	}
-	return (1);
-}
+// int	is_minishell(char *input)
+// {
+// 	int	i;
+//
+// 	if (!ft_strncmp("./minishell\0", input, 12))
+// 		return (1);
+// 	else if (!ft_strncmp("./minishell", input, 11))
+// 	{
+// 		i = 11;
+// 		while (ft_isspace(input[i]))
+// 			i++;
+// 		if (input[i] == '\0')
+// 			return (1);
+// 		else
+// 			return (0);
+// 	}
+// 	return (0);
+// }
+//
+// int	subtract_shlvl(t_data *all)
+// {
+// 	all->shlvl--;
+// 	ft_putendl_fd("exit", 2);
+// 	if (all->shlvl > 2)
+// 	{
+// 		rl_clear_history();
+// 		free_double_char(all->c_envp);
+// 		if (all->c_exp)
+// 			free_double_char(all->c_exp);
+// 		find_envp(all, all->envp);
+// 	}
+// 	return (1);
+// }

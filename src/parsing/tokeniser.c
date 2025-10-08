@@ -12,6 +12,28 @@
 
 #include "../../inc/minishell.h"
 
+int	final_token_check(t_token *tokens)
+{
+	t_token	*temp;
+	int		i;
+
+	temp = NULL;
+	i = -1;
+	while (temp != tokens->next)
+	{
+		if (i++ == -1)
+			temp = tokens->next;
+		if (temp->type == OPERATOR && ((temp->next->type != RE_IN
+					&& temp->next->type != RE_OUT
+					&& temp->next->type != HERE_DOC
+					&& temp->next->type != APPEND)
+				|| temp->next == tokens->next))
+			return (ft_putstr_fd(SYNTAX, 2), ft_putendl_fd(" `newline'", 2), 1);
+		temp = temp->next;
+	}
+	return (0);
+}
+
 //------------------------------------------------------------------------------
 //supporting function to tokeniser() function and other functions within my code
 //based on a string, and index and a length, it returns a char *

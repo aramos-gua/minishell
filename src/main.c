@@ -46,15 +46,13 @@ int	main(int argc, char *argv[], char *envp[])
 		else
 			input = readline("minishell> ");
 		set_signals_interactive(&all);
-		if ((!input || rl_on_new_line()) && subtract_shlvl(&all))
+		if (!input || rl_on_new_line())
 		{
-			if (all.shlvl)
-				continue ;
+			ft_putendl_fd("exit", 2);
 			break ;
 		}
 		add_history(input);
-		if ((is_minishell(input) && ++(all.shlvl)) || \
-			parsing(&all, input) || execution(&all, 0, 0, 0))
+		if (parsing(&all, input) || execution(&all, 0, 0, 0))
 			continue ;
 	}
 	return (last_free(&all), all.return_val);

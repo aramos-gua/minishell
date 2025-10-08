@@ -26,5 +26,7 @@ int	parsing(t_data *all, char *input)
 		return (1);
 	else if (redirects(all))
 		return (1);
+	else if (final_token_check(all->tokens))
+		return (1);
 	return (0);
 }

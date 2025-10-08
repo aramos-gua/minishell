@@ -95,6 +95,7 @@ int	execution(t_data *all, int i, int piped, bool run)
 {
 	int	return_val;
 
+	g_signal = SA_RESTART;
 	set_signals_noninteractive();
 	if (i + 1 == all->info->total_proc || run)
 	{

@@ -91,6 +91,7 @@ int	heredoc(t_data *all)
 	i = -1;
 	temp = NULL;
 	ln++;
+	g_signal = SA_RESTART;
 	while (temp != all->tokens->next)
 	{
 		if (i++ == -1)
