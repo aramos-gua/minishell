@@ -105,29 +105,27 @@ int	exit_helper(t_data *all)
 
 int	ft_exit(t_data *all, int nodes, t_token *cmd_node, bool print)
 {
-	if (all->info->total_proc == 1)
+	(void)print;
+	// if (print)
+	// 	ft_dprintf(2, "exit\n");
+	if (nodes == 1)
+		return (exit_helper(all));
+	else if (nodes == 2 && !(isnt_number(all->tokens->token)))
 	{
-		if (print)
-			ft_dprintf(2, "exit\n");
-		if (nodes == 1)
-			return (exit_helper(all));
-		else if (nodes == 2 && !(isnt_number(all->tokens->token)))
-		{
-			all->return_val = ft_atoi(all->tokens->token);
-			if (exit_helper(all))
-				return (1);
-		}
-		else if (nodes >= 2 && isnt_number(cmd_node->next->token))
-		{
-			all->return_val = 2;
-			ft_dprintf(2, "%s exit: %s%s", PROG, \
-				cmd_node->next->token, INV_EXIT);
-			if (exit_helper(all))
-				return (1);
-		}
-		else if (nodes > 2 && !(isnt_number(cmd_node->next->token)))
-			return (ft_dprintf(2, "minishell: exit: too many arguments\n"), \
-			all->return_val = 1, 1);
+		all->return_val = ft_atoi(all->tokens->token);
+		if (exit_helper(all))
+			return (1);
 	}
+	else if (nodes >= 2 && isnt_number(cmd_node->next->token))
+	{
+		all->return_val = 2;
+		ft_dprintf(2, "%s exit: %s%s", PROG, \
+			cmd_node->next->token, INV_EXIT);
+		if (exit_helper(all))
+			return (1);
+	}
+	else if (nodes > 2 && !(isnt_number(cmd_node->next->token)))
+		return (ft_dprintf(2, "minishell: exit: too many arguments\n"), \
+		all->return_val = 1, 1);
 	return (0);
 }
