@@ -17,8 +17,10 @@ int	get_env_index(char **arr, char *to_update, int len)
 	int	i;
 
 	i = 0;
-	while (ft_strncmp(arr[i], to_update, len) != 0)
+	while (arr[i] && ft_strncmp(arr[i], to_update, len) != 0)
 		i++;
+	if (ft_strncmp(arr[i], to_update, len) != 0)
+		return (-1);
 	return (i);
 }
 
@@ -32,6 +34,8 @@ int	update_env_cd(t_data *all, char *search, char *path)
 	if (!updated_path)
 		return (1);
 	i = get_env_index(all->c_envp, search, ft_strlen(search));
+	if (i == -1)
+		return (free(updated_path), all->return_val = 1, 1);
 	temp = updated_path;
 	free(all->c_envp[i]);
 	all->c_envp[i] = temp;

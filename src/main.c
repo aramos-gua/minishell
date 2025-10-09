@@ -42,19 +42,13 @@ int	main(int argc, char *argv[], char *envp[])
 	{
 		(free_all(&all), init_all(&all), set_signals_interactive(&all));
 		if (!isatty(fileno(stdin)))
-		{
-			// break ;
-			char *temp;
-			temp = get_next_line(fileno(stdin));
-			input = ft_strtrim(temp, "\n");
-			free(temp);
-		}
+			break ;
 		else
 			input = readline("minishell> ");
 		set_signals_interactive(&all);
 		if (!input || rl_on_new_line())
 		{
-			// ft_putendl_fd("exit", 2);
+			ft_putendl_fd("exit", 2);
 			break ;
 		}
 		add_history(input);
