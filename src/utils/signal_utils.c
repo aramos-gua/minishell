@@ -12,6 +12,11 @@
 
 #include "../../inc/minishell.h"
 
+int	event(void)
+{
+	return (0);
+}
+
 void	ignore_sigquit(void)
 {
 	struct sigaction	act;

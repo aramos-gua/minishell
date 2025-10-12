@@ -12,6 +12,7 @@
 
 #include "../../inc/minishell.h"
 
+//-----------------------------------------------------------------------------
 //returns a non-zero value if the string is a builtin
 //returns zero if not
 int	is_builtin(char *s)
@@ -34,6 +35,9 @@ int	is_builtin(char *s)
 		return (0);
 }
 
+//-----------------------------------------------------------------------------
+//returns 1 if a string has a whitespace character
+//akin to ft_strchr(char *s, ft_isspace(char c) == 1)
 int	has_whitespace(char *s)
 {
 	if (ft_strchr(s, ' ') || ft_strchr(s, '\t')

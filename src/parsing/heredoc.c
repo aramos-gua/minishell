@@ -13,14 +13,14 @@
 #include "../../inc/minishell.h"
 
 //-----------------------------------------------------------------------------
-//prints the heredoc error message when ^C or ^D are detected
-static int	heredoc_error(t_data *all, t_token *tkn_ptr, int *l_nbr)
+//prints the heredoc error message when ^C is detected
+static int	heredoc_error(t_token *tkn_ptr, int *l_nbr)
 {
 	char	*num;
 
 	if (g_signal == SA_RESTART)
 	{
-		ft_putstr_fd("\nminishell: warning: here-document at line ", 2);
+		ft_putstr_fd("minishell: warning: here-document at line ", 2);
 		num = ft_itoa(*l_nbr);
 		ft_putstr_fd(num, 2);
 		ft_putstr_fd(" delimited by end-of-file (wanted `", 2);
@@ -28,22 +28,7 @@ static int	heredoc_error(t_data *all, t_token *tkn_ptr, int *l_nbr)
 		ft_putendl_fd("')", 2);
 		free(num);
 	}
-	else
-		set_signals_heredoc(all);
 	return (1);
-}
-
-static char	*read_input(void)
-{
-	char	*temp;
-	char	*l;
-
-	temp = NULL;
-	l = NULL;
-	ft_putstr_fd("> ", 1);
-	temp = get_next_line(fileno(stdin));
-	l = ft_strtrim(temp, "\n");
-	return (free(temp), l);
 }
 
 //-----------------------------------------------------------------------------
@@ -63,8 +48,8 @@ static int	write_heredoc(t_data *all, t_token *tkn_ptr, int to_exp, int *ln)
 	l = NULL;
 	while (42)
 	{
-		(set_signals_heredoc(all), l = read_input());
-		if ((!l || g_signal != SA_RESTART) && heredoc_error(all, tkn_ptr, ln))
+		(set_signals_heredoc(all), l = readline("> "));
+		if ((!l  && heredoc_error(tkn_ptr, ln)) || g_signal != SA_RESTART)
 			return (free(proc_nbr), free(path), close(here_fd), 1);
 		else if (!ft_strncmp(l, tkn_ptr->token, ft_strlen(tkn_ptr->token) + 1))
 			break ;
@@ -98,14 +83,15 @@ int	heredoc(t_data *all)
 			temp = all->tokens->next;
 		if (temp->type == HERE_DOC)
 		{
+			temp->exp = 1;
 			if (ft_strchr(temp->token, '"') || ft_strchr(temp->token, '\''))
 				(delete_quotes(temp->token), temp->exp = 0);
-			else
-				temp->exp = 1;
 			if (write_heredoc(all, temp, temp->exp, &ln))
-				return (1);
+				break ;
 		}
 		temp = temp->next;
 	}
+	if (g_signal != SA_RESTART)
+		return (all->return_val = 130, 1);
 	return (0);
 }

@@ -117,6 +117,7 @@ void			set_signals_interactive(t_data *all);
 void			set_signals_noninteractive(void);
 
 //signal_utils.c
+int				event(void);
 void			ignore_sigquit(void);
 void			default_signals(void);
 
