@@ -126,8 +126,6 @@ int	ft_export(t_data *all, int proc, t_token *cmd_node)
 	char	*key_val;
 
 	key_val = NULL;
-	if (all->total_proc > 1)
-		return (all->return_val = 1, 1);
 	if ((ft_lstsize(all->tokens, proc)) == 1)
 		ft_print_exp(all);
 	arg = cmd_node->next;

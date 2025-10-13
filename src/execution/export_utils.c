@@ -48,12 +48,13 @@ void	ft_putexp(char *str)
 		i++;
 	}
 	write(STDOUT_FILENO, &str[i++], 1);
-	write(STDOUT_FILENO, "\"", 2);
+	write(STDOUT_FILENO, "\"", 1);
 	while (str[i])
 	{
-		if (ft_strchr("\"\\$", str[i]))
-			write(STDOUT_FILENO, "\\", 1);
-		write(STDOUT_FILENO, &str[i], 1);
+		if (ft_strchr("\"\\$", str[i]) && str[i] != '\0')
+			ft_putchar_fd(92, STDOUT_FILENO);
+		if (str[i] != '\0')
+			write(STDOUT_FILENO, &str[i], 1);
 		i++;
 	}
 	ft_putendl_fd("\"", STDOUT_FILENO);
@@ -72,11 +73,11 @@ int	ft_print_exp(t_data *all)
 			i++;
 			continue ;
 		}
-		ft_dprintf(STDOUT_FILENO, "declare -x ");
+		ft_printf("declare -x ");
 		if (ft_strchr(all->c_exp[i], '='))
 			ft_putexp(all->c_exp[i]);
 		else
-			ft_dprintf(STDOUT_FILENO, "%s\n", all->c_exp[i]);
+			ft_printf("%s\n", all->c_exp[i]);
 		i++;
 	}
 	return (1);
