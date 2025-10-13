@@ -68,16 +68,14 @@ void	delete_quotes(char *token)
 	{
 		if (token[i] == '"' && del_char(token, i))
 		{
-			while (token[i] != '"' && token[i] != '\0'
-				&& !(token[i] == '\'' && token[i + 1] == '\0'))
+			while (token[i] != '"' && token[i] != '\0')
 				i++;
 			if (token[i] == '"')
 				del_char(token, i);
 		}
 		else if (token[i] == '\'' && del_char(token, i))
 		{
-			while (token[i] != '\'' && token[i] != '\0'
-				&& !(token[i] == '"' && token[i + 1] == '\0'))
+			while (token[i] != '\'' && token[i] != '\0')
 				i++;
 			if (token[i] == '\'')
 				del_char(token, i);
