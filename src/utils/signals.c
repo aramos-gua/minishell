@@ -15,7 +15,8 @@
 static void	signal_heredoc(int signal)
 {
 	g_signal = signal;
-	ft_putstr_fd("\n", 1);
+	rl_event_hook = event;
+	rl_done = 1;
 }
 
 void	set_signals_heredoc(t_data *all)
@@ -23,6 +24,7 @@ void	set_signals_heredoc(t_data *all)
 	struct sigaction	act;
 
 	ignore_sigquit();
+	rl_event_hook = event;
 	ft_bzero(&act, sizeof(act));
 	act.sa_handler = &signal_heredoc;
 	sigaction(SIGINT, &act, NULL);

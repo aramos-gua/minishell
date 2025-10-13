@@ -98,6 +98,7 @@ int				subtract_shlvl(t_data *all);
 //parsing_utils.c
 int				is_builtin(char *s);
 int				has_whitespace(char *s);
+char			*find_command(t_data *all, int process_nbr);
 
 //t_proc_utils.c
 t_proc			*add_t_proc(t_proc *tail, char *proc, int total_proc);
@@ -117,6 +118,7 @@ void			set_signals_interactive(t_data *all);
 void			set_signals_noninteractive(void);
 
 //signal_utils.c
+int				event(void);
 void			ignore_sigquit(void);
 void			default_signals(void);
 

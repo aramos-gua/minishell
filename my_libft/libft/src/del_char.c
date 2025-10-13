@@ -12,14 +12,14 @@
 
 #include "../inc/libft.h"
 //deletes a char at position pos from a string s
-void	del_char(char *s, int pos)
+int	del_char(char *s, int pos)
 {
 	int	i;
 	int	new;
 
 	i = 0;
 	if (pos >= ft_strlen(s))
-		return ;
+		return (1);
 	while (s[i] != '\0')
 	{
 		if (i == pos)
@@ -30,11 +30,12 @@ void	del_char(char *s, int pos)
 				s[new] = s[new + 1];
 				new++;
 			}
-			return ;
+			return (1);
 		}
 		else
 			i++;
 	}
+	return (1);
 }
 // #include <stdio.h>
 // #include <string.h>
