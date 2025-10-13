@@ -56,7 +56,7 @@ void	ft_putnbr_fd(int n, int fd);
 
 //Functions added after submission
 int		ft_isspace(char c);
-void	del_char(char *s, int pos);
+int		del_char(char *s, int pos);
 void	sub_char(char *s, char sub, char r);
 
 #endif

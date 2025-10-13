@@ -90,6 +90,35 @@ void	word_split(t_token *tkn_ptr, char **env_var)
 	tkn_ptr->pos = p;
 }
 
+static int	in_quotes(char *token, char *key)
+{
+	int		ptr1;
+	int		ptr2;
+	char	*cut_str;
+	int		i;
+
+	i = 0;
+	ptr1 = 0;
+	ptr2 = 0;
+	while (token[i] != '"' && token[i] != '\0')
+		i++;
+	if (token[i] == '"')
+	{
+		ptr1 = i;
+		i++;
+	}
+	while (token[i] != '"' && token[i] != '\0')
+		i++;
+	if (token[i] == '"')
+		ptr2 = i;
+	if (ptr2 == ptr1)
+		return (0);
+	cut_str = ft_substr(token, ptr1, ptr2 - ptr1 + 1);
+	if (ft_strnstr(cut_str, key, ft_strlen(cut_str)))
+		return (free(cut_str), 1);
+	return (free(cut_str), 0);
+}
+
 //-----------------------------------------------------------------------------
 //if a variable is found to be an existing environment variable, it is expanded
 void	expand_var(t_token *tkn_ptr, char **c_envp, char **env_var)
@@ -97,11 +126,12 @@ void	expand_var(t_token *tkn_ptr, char **c_envp, char **env_var)
 	int		i;
 	int		j;
 	char	*temp;
+	char	*key;
 
-	j = 0;
+	key = ft_strdup(*env_var);
 	temp = *env_var;
 	*env_var = ft_strjoin(*env_var, "=");
-	(free(temp), temp = *env_var);
+	(free(temp), temp = *env_var, j = 0);
 	while (c_envp[j] != NULL)
 	{
 		i = 0;
@@ -110,13 +140,12 @@ void	expand_var(t_token *tkn_ptr, char **c_envp, char **env_var)
 		if (!ft_strncmp(c_envp[j], *env_var, ++i))
 		{
 			*env_var = ft_strdup(&c_envp[j][i]);
-			if (has_whitespace(*env_var))
+			if (has_whitespace(*env_var) && !in_quotes(tkn_ptr->token, key))
 				tkn_ptr->split = 2;
-			break ;
+			return (free(temp), free(key));
 		}
 		j++;
 	}
 	if (!c_envp[j])
-		*env_var = ft_strdup("");
-	free(temp);
+		(free(temp), free(key), *env_var = ft_strdup(""));
 }
