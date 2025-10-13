@@ -98,6 +98,7 @@ int				subtract_shlvl(t_data *all);
 //parsing_utils.c
 int				is_builtin(char *s);
 int				has_whitespace(char *s);
+char			*find_command(t_data *all, int process_nbr);
 
 //t_proc_utils.c
 t_proc			*add_t_proc(t_proc *tail, char *proc, int total_proc);

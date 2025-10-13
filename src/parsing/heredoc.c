@@ -49,7 +49,7 @@ static int	write_heredoc(t_data *all, t_token *tkn_ptr, int to_exp, int *ln)
 	while (42)
 	{
 		(set_signals_heredoc(all), l = readline("> "));
-		if ((!l  && heredoc_error(tkn_ptr, ln)) || g_signal != SA_RESTART)
+		if ((!l && heredoc_error(tkn_ptr, ln)) || g_signal != SA_RESTART)
 			return (free(proc_nbr), free(path), close(here_fd), 1);
 		else if (!ft_strncmp(l, tkn_ptr->token, ft_strlen(tkn_ptr->token) + 1))
 			break ;

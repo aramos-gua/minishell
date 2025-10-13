@@ -121,6 +121,7 @@ void	expansion(t_data *all, t_token *tkn_ptr)
 	expanded = do_expansion(all, tkn_ptr, tkn_ptr->token);
 	tkn_ptr->exp = 1;
 	tkn_ptr->token = expanded;
-	if (tkn_ptr->split == 2)
+	if (tkn_ptr->split == 2
+		&& ft_strncmp("export\0", find_command(all, tkn_ptr->process_nbr), 7))
 		word_split(tkn_ptr, &expanded);
 }

@@ -47,3 +47,21 @@ int	has_whitespace(char *s)
 	else
 		return (0);
 }
+
+char	*find_command(t_data *all, int process_nbr)
+{
+	t_token	*temp;
+	int		i;
+
+	temp = NULL;
+	i = -1;
+	while (temp != all->tokens->next)
+	{
+		if (i++ == -1)
+			temp = all->tokens->next;
+		if (temp->process_nbr == process_nbr && temp->type == COMMAND)
+			return (temp->token);
+		temp = temp->next;
+	}
+	return (NULL);
+}

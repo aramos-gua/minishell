@@ -132,7 +132,7 @@ int	lexing(t_data *all)
 	t_token	*temp;
 	int		i;
 
-	reformat_tokens(all);
+	(assign_types(all->tokens), reformat_tokens(all));
 	if (all->tokens == all->tokens->next
 		&& !ft_strncmp("\0", all->tokens->token, 1))
 		return (1);
