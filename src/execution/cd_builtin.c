@@ -20,7 +20,7 @@ static char	*get_home(t_data *all, char **arr)
 	char	*home;
 
 	i = 0;
-	while (ft_strncmp(arr[i], "HOME=", 5) != 0)
+	while (arr[i] && ft_strncmp(arr[i], "HOME=", 5) != 0)
 		i++;
 	if (arr[i] == NULL)
 	{
@@ -39,6 +39,8 @@ static int	go_home(t_data *all, char *old_dir)
 	char	*current;
 
 	home = get_home(all, all->c_envp);
+  if (!home)
+    return (1);
 	chdir(home);
 	update_env_cd(all, "OLDPWD=", old_dir);
 	current = getcwd(NULL, 0);
