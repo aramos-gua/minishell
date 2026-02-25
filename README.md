@@ -2,6 +2,7 @@
 Grade achieved: 100% ✅
 
 ## ℹ️Description
+Subject: Kernel Development and Shell Scripting
 - First group project at 42
 - A simple UNIX command-line shell based on Bash
 - Can parse the input, and launch executables with arguments
