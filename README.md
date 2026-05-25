@@ -15,13 +15,8 @@ Behaviour:
 - Built-in commands (echo, cd, pwd, export, unset, env, exit)
 
 
-## ⬇️ Installation
-```bash
-sudo apt install cmake
-```
-
 ## 🛠️ Usage
-```cmake
+```bash
 make
 ./minishell
 minishell> <run your command here>
